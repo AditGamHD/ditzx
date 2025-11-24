@@ -1,0 +1,71 @@
+{
+  "site": {
+    "name": "Adit Developer Portfolio",
+    "shortName": "ADITdev",
+    "tagline": "Membangun Pengalaman Web Modern yang Aman & Interaktif",
+    "logo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJ1cmwoI2dyYWQpIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0ZmFjZmU7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2ZZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzAwZjJmZTtzdG9wLW9wYWNpdHk6MSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgLz48dGV4dCB4PSI1MCIgeT0iNjUiIGZvbnQtc2l6ZT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+PC9zdmc+",
+    "theme": "light",
+    "primaryColor": "#0066ff",
+    "accentGradient": ["#4facfe", "#00f2fe"]
+  },
+  "owner": {
+    "name": "Adit Developer",
+    "role": "Frontend Engineer",
+    "about": "Saya adalah pengembang web profesional yang fokus pada keamanan, performa, dan estetika. Spesialis dalam menciptakan antarmuka modern dengan CSS murni dan animasi yang halus. Setiap baris kode ditulis dengan presisi.",
+    "location": "Surabaya, Indonesia",
+    "email": "adit@ditzx.my.id",
+    "phone": "+62-812-3456-7890",
+    "social": [
+      {"name":"GitHub","url":"https://github.com/aditdev"},
+      {"name":"LinkedIn","url":"https://www.linkedin.com/in/aditdev"}
+    ],
+    "cv": "https://example.com/adit_cv.pdf"
+  },
+  "projects": [
+    {
+      "id": "p-001",
+      "title": "Secure Vault App",
+      "category": "Web App",
+      "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NDc0OGIiIGZvbnQtc2l6ZT0iMjQiPlByb2plY3QgVGh1bWJuYWlsPC90ZXh0Pjwvc3ZnPg==",
+      "description": "Aplikasi manajemen data dengan enkripsi end-to-end dan validasi integritas real-time.",
+      "tags": ["security", "react"],
+      "demo": "https://example.com/demo1",
+      "repo": "https://github.com/aditdev/secure-vault"
+    },
+    { 
+      "id": "p-002", 
+      "title": "Neon Cyber Game", 
+      "category": "Game", 
+      "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NDc0OGIiIGZvbnQtc2l6ZT0iMjQiPkdhbWUgUHJldmlldzwvdGV4dD48L3N2Zz4=", 
+      "description": "Browser-based arcade shooter dengan visual neon dan performance tinggi menggunakan Canvas API.", 
+      "tags": ["canvas", "js"], 
+      "demo": "https://example.com/game", 
+      "repo": "" 
+    },
+    { 
+      "id": "p-003", 
+      "title": "Finance Dashboard", 
+      "category": "UI/UX", 
+      "thumbnail": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NDc0OGIiIGZvbnQtc2l6ZT0iMjQiPkRhc2hib2FyZCBVSTwvdGV4dD48L3N2Zz4=", 
+      "description": "Konsep antarmuka dashboard finansial dengan grafik interaktif dan tema gelap/terang.", 
+      "tags": ["ui", "css"], 
+      "demo": "", 
+      "repo": "https://github.com/aditdev/finance-ui" 
+    }
+  ],
+  "categories": ["All", "Web App", "Game", "UI/UX"],
+  "contacts": [
+    {"type":"email", "label":"Email Resmi", "value":"adit@ditzx.my.id"},
+    {"type":"phone", "label":"WhatsApp", "value":"+62-812-3456-7890"}
+  ],
+  "ui": {
+    "showProjectFilter": true,
+    "defaultTheme": "light",
+    "copyrightText": "© 2025 Adit Developer. All rights reserved. Security Protected.",
+    "copyrightRedirect": "https://ditzx.my.id"
+  },
+  "integrity": {
+    "hash_note": "SHA check performed in runtime"
+  },
+  "edit_instructions": "Ganti teks di file ini untuk update konten. Format gambar bisa URL atau Base64."
+}
