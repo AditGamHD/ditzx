@@ -1,30 +1,31 @@
 {
   "site": {
-    "title": "Professional Portfolio 2025",
-    "tagline": "Modern Solutions • Performance • Security",
+    "title": "ADITdeveloper",
+    "tagline": "pengembang,developer,jasa",
     "themeAccent": ["#0066FF", "#00D4FF"],
     "baseUrl": "/"
   },
   "hero": {
-    "name": "Alex Dev",
-    "role": "Senior Full-Stack Developer",
-    "short": "Membangun ekosistem digital yang aman, cepat, dan interaktif dengan standar industri 2025.",
+    "name": "ADIT Dev",
+    "role": "Web & Game Developer",
+    "short": "Seorang Developer Solo",
     "ctaPrimary": { "label": "Eksplorasi Project", "target": "#projects" },
     "ctaSecondary": { "label": "Unduh CV", "href": "#" },
-    "bgImage": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+    "bgImage": "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ"
   },
   "about": {
-    "text": "Saya adalah developer yang berfokus pada arsitektur kode yang bersih dan keamanan tingkat tinggi. Spesialisasi saya meliputi optimasi performa web dan pengalaman pengguna yang imersif tanpa mengorbankan stabilitas.",
+    "text": "Saya adalah ADIT,saya mempunyai bakat membuat dan mengembangkan Website dan Game.saya membuat dengan menggunakan script2 dan ide2 dari imajinasi.saya bisa membuatkan web atau game atau aplikasi android dan jika tertarik hubungi saya dibawah",
     "timeline": [
-      { "year": "2025", "title": "Lead Developer", "desc": "Memimpin tim untuk migrasi sistem keamanan terpusat." },
-      { "year": "2023", "title": "Full Stack Engineer", "desc": "Membangun platform e-commerce dengan load-time di bawah 1 detik." },
-      { "year": "2021", "title": "S1 Informatika", "desc": "Lulus dengan fokus pada Keamanan Jaringan dan Kriptografi." }
+      { "year": "2025", "title": "Web & Game dev", "desc": "Saya membuat game sekaligus membuat website" },
+      { "year": "2024", "title": "Game dev", "desc": "Saya membuat game menggunakan game enggine Unity dan Godod" },
+      { "year": "2023", "title": "Game Dev", "desc": "Membuat banyak game android menggunakan mobile" }
+      { "year": "2022", "title": "Mobile Game Dev", "desc": "Awal suka membuat dan mengembangkan adalah tahun 2023 menggunakan mobile" }
     ],
     "skills": [ 
-      {"name":"Secure Coding","level":95}, 
-      {"name":"Architecture","level":90},
-      {"name":"Performance","level":92},
-      {"name":"UI/UX Design","level":85}
+      {"name":"Game Dev","level":95}, 
+      {"name":"Web Dev","level":90},
+      {"name":"Programer","level":70},
+      {"name":"Desainer","level":85}
     ]
   },
   "projects": [
