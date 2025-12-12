@@ -1,0 +1,64 @@
+{
+  "site": {
+    "title": "Professional Portfolio 2025",
+    "tagline": "Modern Solutions • Performance • Security",
+    "themeAccent": ["#0066FF", "#00D4FF"],
+    "baseUrl": "/"
+  },
+  "hero": {
+    "name": "Alex Dev",
+    "role": "Senior Full-Stack Developer",
+    "short": "Membangun ekosistem digital yang aman, cepat, dan interaktif dengan standar industri 2025.",
+    "ctaPrimary": { "label": "Eksplorasi Project", "target": "#projects" },
+    "ctaSecondary": { "label": "Unduh CV", "href": "#" },
+    "bgImage": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+  },
+  "about": {
+    "text": "Saya adalah developer yang berfokus pada arsitektur kode yang bersih dan keamanan tingkat tinggi. Spesialisasi saya meliputi optimasi performa web dan pengalaman pengguna yang imersif tanpa mengorbankan stabilitas.",
+    "timeline": [
+      { "year": "2025", "title": "Lead Developer", "desc": "Memimpin tim untuk migrasi sistem keamanan terpusat." },
+      { "year": "2023", "title": "Full Stack Engineer", "desc": "Membangun platform e-commerce dengan load-time di bawah 1 detik." },
+      { "year": "2021", "title": "S1 Informatika", "desc": "Lulus dengan fokus pada Keamanan Jaringan dan Kriptografi." }
+    ],
+    "skills": [ 
+      {"name":"Secure Coding","level":95}, 
+      {"name":"Architecture","level":90},
+      {"name":"Performance","level":92},
+      {"name":"UI/UX Design","level":85}
+    ]
+  },
+  "projects": [
+    {
+      "id":"proj-1",
+      "title":"CyberGuard Dashboard",
+      "tags":["Security","Dashboard"],
+      "thumb":"https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
+      "images":["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070", "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070"],
+      "description":"Sistem monitoring keamanan real-time dengan proteksi backdoor dan deteksi intrusi otomatis.",
+      "repo":"https://github.com/",
+      "live":"#"
+    },
+    { 
+      "id":"proj-2", 
+      "title":"SwiftTrade Engine", 
+      "tags":["Fintech","High-Speed"], 
+      "thumb":"https://images.unsplash.com/photo-1611974717484-245396655979?q=80&w=2070&auto=format&fit=crop", 
+      "images":["https://images.unsplash.com/photo-1611974717484-245396655979?q=80&w=2070"], 
+      "description":"Mesin transaksi dengan latensi rendah dan enkripsi end-to-end standar militer.", 
+      "repo":"", 
+      "live":"" 
+    }
+  ],
+  "contact": {
+    "email":"contact@alexdev.pro",
+    "phone":"+628123456789",
+    "location":"Jakarta, Indonesia",
+    "mailtoSubject":"Inquiry Project Kerjasama 2025",
+    "footerNote":"© 2025 Alex Dev. Diproteksi dengan standar keamanan terkini. Upload semua file ke root repo dan aktifkan GitHub Pages."
+  },
+  "social":[
+    {"name":"github","url":"https://github.com/"},
+    {"name":"linkedin","url":"https://linkedin.com/"},
+    {"name":"twitter","url":"https://twitter.com/"}
+  ]
+}
