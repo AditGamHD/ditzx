@@ -1,31 +1,31 @@
 {
   "site": {
     "title": "ADITdeveloper",
-    "tagline": "pengembang,developer,jasa",
+    "tagline": "pengembang, developer, jasa",
     "themeAccent": ["#0066FF", "#00D4FF"],
     "baseUrl": "/"
   },
   "hero": {
     "name": "ADIT Dev",
     "role": "Web & Game Developer",
-    "short": "Seorang Developer Solo",
+    "short": "Seorang Developer Solo yang fokus pada pembuatan ekosistem digital interaktif.",
     "ctaPrimary": { "label": "Eksplorasi Project", "target": "#projects" },
     "ctaSecondary": { "label": "Unduh CV", "href": "#" },
     "bgImage": "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ"
   },
   "about": {
-    "text": "Saya adalah ADIT,saya mempunyai bakat membuat dan mengembangkan Website dan Game.saya membuat dengan menggunakan script2 dan ide2 dari imajinasi.saya bisa membuatkan web atau game atau aplikasi android dan jika tertarik hubungi saya dibawah",
+    "text": "Saya adalah ADIT, saya mempunyai bakat membuat dan mengembangkan Website dan Game. Saya membuat dengan menggunakan script dan ide dari imajinasi. Saya bisa membuatkan web, game, atau aplikasi android.",
     "timeline": [
-      { "year": "2025", "title": "Web & Game dev", "desc": "Saya membuat game sekaligus membuat website" },
-      { "year": "2024", "title": "Game dev", "desc": "Saya membuat game menggunakan game enggine Unity dan Godod" },
-      { "year": "2023", "title": "Game Dev", "desc": "Membuat banyak game android menggunakan mobile" }
-      { "year": "2022", "title": "Mobile Game Dev", "desc": "Awal suka membuat dan mengembangkan adalah tahun 2023 menggunakan mobile" }
+      { "year": "2025", "title": "Web & Game dev", "desc": "Mengintegrasikan teknologi web modern dengan mekanik game interaktif." },
+      { "year": "2024", "title": "Game dev", "desc": "Mengembangkan logika permainan kompleks menggunakan Unity dan Godot." },
+      { "year": "2023", "title": "Game Dev", "desc": "Produksi berbagai judul game android di lingkungan mobile." },
+      { "year": "2022", "title": "Mobile Game Dev", "desc": "Awal perjalanan eksplorasi pengembangan aplikasi pada platform mobile." }
     ],
     "skills": [ 
       {"name":"Game Dev","level":95}, 
       {"name":"Web Dev","level":90},
-      {"name":"Programer","level":70},
-      {"name":"Desainer","level":85}
+      {"name":"Programmer","level":70},
+      {"name":"Designer","level":85}
     ]
   },
   "projects": [
@@ -54,12 +54,12 @@
     "email":"adit.gam77@gmail.com",
     "phone":"+6285648211278",
     "location":"Jawa Timur, Indonesia",
-    "mailtoSubject":"2025",
-    "footerNote":"© 2025 ADIdev"
+    "mailtoSubject":"Inquiry Project 2025",
+    "footerNote":"© 2025 ADIdev. Upload semua file ke root repo dan aktifkan GitHub Pages."
   },
   "social":[
     {"name":"github","url":"https://github.com/"},
     {"name":"linkedin","url":"https://linkedin.com/"},
-    {"name":"twitter","url":"https://twitter.com/"}
+    {"name":"x-twitter","url":"https://twitter.com/"}
   ]
 }
