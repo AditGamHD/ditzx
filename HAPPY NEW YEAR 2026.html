@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Celebration</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary-glow: #00f2ff;
+            --secondary-glow: #ff0055;
+            --gold-glow: #ffd700;
+            --text-color: #ffffff;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Canvas Layers */
+        #fireworksCanvas, #droneCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        #droneCanvas { z-index: 2; opacity: 0; transition: opacity 2s ease; }
+
+        /* Container Waiting Mode */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+            width: 90%;
+            max-width: 650px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Clock & Text */
+        .clock-wrapper {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .icon-svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary-glow);
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .realtime-clock {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+        }
+
+        .countdown-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 1.5rem;
+            color: #888;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .time-unit div {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(180deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .time-unit span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary-glow);
+            margin-top: 8px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        /* Celebration Overlay */
+        .celebration-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .celebration-overlay.active { opacity: 1; transform: scale(1); }
+
+        .year-display {
+            font-size: 15vw;
+            font-weight: 900;
+            line-height: 0.9;
+            display: flex;
+            align-items: center;
+            filter: drop-shadow(0 0 30px var(--primary-glow));
+        }
+
+        .digit-slider {
+            height: 0.9em;
+            overflow: hidden;
+            display: inline-flex;
+            flex-direction: column;
+        }
+
+        .digit-slider .numbers {
+            display: flex;
+            flex-direction: column;
+            transition: transform 3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .digit-slider.slid .numbers { transform: translateY(-50%); }
+
+        .hny-text {
+            font-size: 3vw;
+            font-weight: 300;
+            letter-spacing: 15px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s 1.5s, transform 1s 1.5s;
+            color: var(--gold-glow);
+            text-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .celebration-overlay.active .hny-text { opacity: 1; transform: translateY(0); }
+
+        /* Fullscreen Button */
+        .fs-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #000;
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .fs-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .countdown-timer { gap: 1rem; }
+            .time-unit div { font-size: 2rem; }
+            .year-display { font-size: 22vw; }
+            .hny-text { font-size: 5vw; letter-spacing: 5px; }
+            .container { padding: 1.5rem; width: 95%; }
+            .fs-btn { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworksCanvas"></canvas>
+    <canvas id="droneCanvas"></canvas>
+
+    <div class="container" id="waitingContainer">
+        <div class="clock-wrapper">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div class="realtime-clock" id="deviceClock">00:00:00</div>
+        </div>
+
+        <div class="countdown-title">Menunggu Tahun 2026</div>
+        
+        <div class="countdown-timer" id="countdown">
+            <div class="time-unit"><div id="d">00</div><span>HARI</span></div>
+            <div class="time-unit"><div id="h">00</div><span>JAM</span></div>
+            <div class="time-unit"><div id="m">00</div><span>MNT</span></div>
+            <div class="time-unit"><div id="s">00</div><span>DTK</span></div>
+        </div>
+    </div>
+
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="year-display">
+            <span>202</span>
+            <div class="digit-slider" id="yearSlider">
+                <div class="numbers">
+                    <span>5</span>
+                    <span style="color: var(--primary-glow); text-shadow: 0 0 40px var(--primary-glow);">6</span>
+                </div>
+            </div>
+        </div>
+        <div class="hny-text">Happy New Year</div>
+    </div>
+
+    <div class="fs-btn" id="fsBtn" title="Toggle Fullscreen">
+        <svg id="iconMax" class="icon-svg" style="stroke: white;" viewBox="0 0 24 24">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+        <svg id="iconMin" class="icon-svg" style="stroke: white; display: none;" viewBox="0 0 24 24">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+        </svg>
+    </div>
+
+    <script>
+        // --- KONFIGURASI TARGET ---
+        // Target: 1 Januari 2026 Pukul 00:00:00
+        const TARGET_YEAR = 2026; 
+        const targetDate = new Date(`Jan 1, ${TARGET_YEAR} 00:00:00`).getTime();
+        
+        // --- DOM ELEMENTS ---
+        const els = {
+            clock: document.getElementById('deviceClock'),
+            waiting: document.getElementById('waitingContainer'),
+            overlay: document.getElementById('celebrationOverlay'),
+            slider: document.getElementById('yearSlider'),
+            fwCanvas: document.getElementById('fireworksCanvas'),
+            drCanvas: document.getElementById('droneCanvas'),
+            fsBtn: document.getElementById('fsBtn'),
+            iconMax: document.getElementById('iconMax'),
+            iconMin: document.getElementById('iconMin')
+        };
+
+        const ctxFw = els.fwCanvas.getContext('2d');
+        const ctxDr = els.drCanvas.getContext('2d');
+
+        // State Global
+        let state = {
+            isNewYear: false,
+            isDroneShow: false,
+            fireworksActive: false
+        };
+
+        // Resize Handlers
+        function resize() {
+            els.fwCanvas.width = window.innerWidth;
+            els.fwCanvas.height = window.innerHeight;
+            els.drCanvas.width = window.innerWidth;
+            els.drCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- TIME MANAGER (REALTIME SYNC) ---
+        function updateTime() {
+            // Mengambil waktu langsung dari perangkat user
+            const now = new Date();
+            const current = now.getTime();
+            
+            // Tampilkan Jam Realtime
+            els.clock.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+
+            const distance = targetDate - current;
+            
+            // Hitung menit sejak tahun baru untuk trigger event lanjutan
+            const msSinceNewYear = current - targetDate;
+            const minSinceNewYear = msSinceNewYear / (1000 * 60);
+
+            if (distance <= 0) {
+                // --- SUDAH MASUK TAHUN BARU ---
+
+                // FASE 1: PERAYAAN AWAL (0 - 5 Menit)
+                if (!state.isNewYear) triggerNewYear();
+
+                // FASE 2: DRONE SHOW (Menit ke-5 sampai ke-15)
+                if (minSinceNewYear > 5 && minSinceNewYear < 15) {
+                    if (!state.isDroneShow) startDroneShow();
+                } 
+                // FASE 3: SELESAI
+                else if (minSinceNewYear >= 15) {
+                     stopDroneShow();
+                }
+
+                // Efek Transisi UI di Menit ke-5
+                if (minSinceNewYear > 5) {
+                    els.overlay.style.opacity = '0'; // Hilangkan teks HNY & Tahun
+                }
+
+            } else {
+                // --- MASIH MENGHITUNG MUNDUR ---
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('d').innerText = String(d).padStart(2, '0');
+                document.getElementById('h').innerText = String(h).padStart(2, '0');
+                document.getElementById('m').innerText = String(m).padStart(2, '0');
+                document.getElementById('s').innerText = String(s).padStart(2, '0');
+            }
+            requestAnimationFrame(updateTime);
+        }
+
+        function triggerNewYear() {
+            state.isNewYear = true;
+            state.fireworksActive = true;
+            
+            // Sembunyikan Countdown
+            els.waiting.style.opacity = '0';
+            setTimeout(() => els.waiting.style.display = 'none', 500);
+            
+            // Munculkan Text & Animasi Slider
+            els.overlay.classList.add('active');
+            setTimeout(() => els.slider.classList.add('slid'), 500);
+
+            // Mulai Kembang Api
+            loopFireworks();
+        }
+
+        // --- FULLSCREEN LOGIC ---
+        els.fsBtn.addEventListener('click', toggleFullScreen);
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log("Fullscreen blocked by browser");
+                });
+                els.iconMax.style.display = 'none';
+                els.iconMin.style.display = 'block';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    els.iconMax.style.display = 'block';
+                    els.iconMin.style.display = 'none';
+                }
+            }
+        }
+
+        // --- ENGINE 1: 5 VARIAN KEMBANG API ---
+        let fireworks = [];
+        let particles = [];
+
+        class Firework {
+            constructor() {
+                this.x = Math.random() * els.fwCanvas.width;
+                this.y = els.fwCanvas.height;
+                this.targetY = Math.random() * (els.fwCanvas.height * 0.5);
+                this.speed = Math.random() * 3 + 12;
+                this.angle = Math.PI / 2 + (Math.random() - 0.5) * 0.3;
+                this.vx = Math.cos(this.angle) * 2;
+                this.vy = -this.speed;
+                this.hue = Math.random() * 360;
+                // TYPE: 0:Standard, 1:Willow, 2:Laser, 3:Petasan, 4:Ring
+                this.type = Math.floor(Math.random() * 5); 
+                this.exploded = false;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.2; // Gravity
+                
+                if (this.vy >= 0 || this.y <= this.targetY) {
+                    this.explode();
+                    return false;
+                }
+                return true;
+            }
+
+            draw() {
+                ctxFw.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
+                ctxFw.beginPath();
+                ctxFw.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctxFw.fill();
+            }
+
+            explode() {
+                this.exploded = true;
+                const count = this.type === 4 ? 60 : 100;
+                for (let i = 0; i < count; i++) {
+                    particles.push(new Particle(this.x, this.y, this.hue, this.type, i, count));
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, hue, type, index, total) {
+                this.x = x;
+                this.y = y;
+                this.hue = hue;
+                this.type = type;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+
+                // LOGIKA VARIAN PARTIKEL
+                if (type === 0) { // STANDARD
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.gravity = 0.1;
+                    this.friction = 0.95;
+                } 
+                else if (type === 1) { // WILLOW (EMAS)
+                    this.hue = 45;
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 4;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.gravity = 0.3;
+                    this.friction = 0.98;
+                    this.decay = 0.008;
+                }
+                else if (type === 2) { // LASER
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 10 + 5;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.gravity = 0;
+                    this.friction = 0.92;
+                }
+                else if (type === 3) { // PETASAN
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 8;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.gravity = 0.2;
+                    this.friction = 0.9;
+                    this.flicker = true;
+                }
+                else if (type === 4) { // RING
+                    const angle = (Math.PI * 2 / total) * index;
+                    const speed = 6;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.gravity = 0.1;
+                    this.friction = 0.96;
+                }
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+                
+                if (this.flicker) this.alpha = Math.random() > 0.5 ? 1 : 0.2;
+                
+                return this.alpha > 0;
+            }
+
+            draw() {
+                ctxFw.save();
+                ctxFw.globalAlpha = this.alpha;
+                ctxFw.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+                
+                if (this.type === 2) {
+                    ctxFw.beginPath();
+                    ctxFw.moveTo(this.x, this.y);
+                    ctxFw.lineTo(this.x - this.vx * 3, this.y - this.vy * 3);
+                    ctxFw.strokeStyle = ctxFw.fillStyle;
+                    ctxFw.lineWidth = 2;
+                    ctxFw.stroke();
+                } else {
+                    ctxFw.beginPath();
+                    ctxFw.arc(this.x, this.y, this.type === 1 ? 1.5 : 2.5, 0, Math.PI * 2);
+                    ctxFw.fill();
+                }
+                ctxFw.restore();
+            }
+        }
+
+        function loopFireworks() {
+            if (!state.fireworksActive) {
+                ctxFw.clearRect(0, 0, els.fwCanvas.width, els.fwCanvas.height);
+                return;
+            }
+            
+            requestAnimationFrame(loopFireworks);
+            ctxFw.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            ctxFw.fillRect(0, 0, els.fwCanvas.width, els.fwCanvas.height);
+
+            if (Math.random() < 0.08) fireworks.push(new Firework());
+
+            fireworks = fireworks.filter(fw => {
+                fw.draw();
+                return fw.update();
+            });
+
+            particles = particles.filter(p => {
+                p.draw();
+                return p.update();
+            });
+        }
+
+        // --- ENGINE 2: DRONE SHOW (PIXEL MAPPING) ---
+        let drones = [];
+        let droneTextIndex = 0;
+        const droneTexts = ["2026", "HAPPY", "NEW", "YEAR", "FUTURE", "SECURE"];
+        let droneInterval;
+
+        class Drone {
+            constructor(x, y) {
+                this.x = Math.random() * els.drCanvas.width;
+                this.y = els.drCanvas.height + 100;
+                this.tx = x;
+                this.ty = y;
+                this.color = '#00f2ff';
+                this.speed = Math.random() * 0.05 + 0.02;
+            }
+            update() {
+                const dx = this.tx - this.x;
+                const dy = this.ty - this.y;
+                this.x += dx * this.speed;
+                this.y += dy * this.speed;
+            }
+            draw() {
+                ctxDr.fillStyle = this.color;
+                ctxDr.beginPath();
+                ctxDr.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctxDr.fill();
+            }
+        }
+
+        function startDroneShow() {
+            state.isDroneShow = true;
+            state.fireworksActive = false; // Stop fireworks
+            els.drCanvas.style.opacity = '1';
+            
+            // Generate Drones
+            for(let i=0; i<1500; i++) {
+                drones.push(new Drone(els.drCanvas.width/2, els.drCanvas.height/2));
+            }
+            
+            loopDrones();
+            changeDroneText();
+            droneInterval = setInterval(changeDroneText, 3000);
+        }
+
+        function stopDroneShow() {
+            state.isDroneShow = false;
+            clearInterval(droneInterval);
+            els.drCanvas.style.opacity = '0';
+        }
+
+        function changeDroneText() {
+            const text = droneTexts[droneTextIndex % droneTexts.length];
+            droneTextIndex++;
+            
+            const tmpCanvas = document.createElement('canvas');
+            const tmpCtx = tmpCanvas.getContext('2d');
+            tmpCanvas.width = els.drCanvas.width;
+            tmpCanvas.height = els.drCanvas.height;
+            
+            tmpCtx.font = "bold 15vw Arial";
+            tmpCtx.fillStyle = "white";
+            tmpCtx.textAlign = "center";
+            tmpCtx.textBaseline = "middle";
+            tmpCtx.fillText(text, tmpCanvas.width/2, tmpCanvas.height/2);
+            
+            const imgData = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height).data;
+            let validPoints = [];
+            const step = 8;
+            
+            for(let y=0; y<tmpCanvas.height; y+=step) {
+                for(let x=0; x<tmpCanvas.width; x+=step) {
+                    const index = (y * tmpCanvas.width + x) * 4;
+                    if(imgData[index+3] > 128) {
+                        validPoints.push({x, y});
+                    }
+                }
+            }
+
+            drones.forEach((drone, i) => {
+                if (i < validPoints.length) {
+                    drone.tx = validPoints[i].x;
+                    drone.ty = validPoints[i].y;
+                    drone.color = i % 2 === 0 ? '#00f2ff' : '#ff0055';
+                } else {
+                    drone.tx = Math.random() * els.drCanvas.width;
+                    drone.ty = -50;
+                }
+            });
+        }
+
+        function loopDrones() {
+            if(!state.isDroneShow) return;
+            requestAnimationFrame(loopDrones);
+            
+            ctxDr.clearRect(0, 0, els.drCanvas.width, els.drCanvas.height);
+            
+            drones.forEach(drone => {
+                drone.update();
+                drone.draw();
+            });
+        }
+
+        // --- INIT ---
+        requestAnimationFrame(updateTime);
+
+    </script>
+</body>
+</html>
