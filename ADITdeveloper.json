@@ -1,0 +1,118 @@
+{
+  "situs": {
+    "judul": "ADIT — Web & Game Dev",
+    "tagline": "Fortofolio",
+    "tema": "light",
+    "tampilkanResume": true,
+    "teksMerekSetiapNBlok": 5,
+    "aktifkanAdmin": false,
+    "aktifkanPWA": false,
+    "bawaanKurangiGerakan": false,
+    "maksProyekPerHalaman": 9
+  },
+  "penulis": {
+    "nama": "ADITdeveloper",
+    "peran": "Pengembang Web & Game",
+    "bioSingkat": "Saya adalah ADIT — pengembang Game dan website",
+    "foto": "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ",
+    "email": "aditgam775@gmail.com",
+    "tautanResume": "https://ditzx.my.id",
+    "keahlian": ["Roblox Studio", "Max2D", "HTML", "CSS", "JavaScript", "Godot", "Unity", "Firebase"]
+  },
+  "linimasa": [
+    {
+      "tahun": 2025,
+      "peran": "Web & Game dev",
+      "deskripsi": "Mengintegrasikan teknologi web modern dengan mekanik game interaktif."
+    },
+    {
+      "tahun": 2024,
+      "peran": "Game dev",
+      "deskripsi": "Mengembangkan logika permainan kompleks menggunakan Unity dan Godot."
+    },
+    {
+      "tahun": 2023,
+      "peran": "Game Dev",
+      "deskripsi": "Produksi berbagai judul game Android di lingkungan mobile."
+    },
+    {
+      "tahun": 2022,
+      "peran": "Mobile Game Dev",
+      "deskripsi": "Awal perjalanan eksplorasi pengembangan aplikasi pada platform mobile."
+    }
+  ],
+  "proyek": [
+    {
+      "id": "Uvoshop",
+      "judul": "UVOSHOP",
+      "tahun": 2025,
+      "kategori": "Webstite",
+      "terlihat": true,
+      "unggulan": true,
+      "deskripsi": "Webstie Topup Game dan Pulsa terlengkap termurah dan terpercaya",
+      "teknologi": ["Cpanel", "My Sql Database", "HTML5"],
+      "gambar": ["https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiP0gyebU80nVJqSGbecupWQ7Q4uhbeMlPXcynVCfH0XTitxCyX_W8owNCr0HAOeRUq-Dq93dSsoFt5dUQq1tr2JCP8s_I_wKiU2o04hYe-t_JP1uqt-V8jTFpJX-Wlcl0KGuFsiWK7NXPsxnL7KoQb4JHc50NHut2pSKbF0eZBOJTn4G6J7Iqsutq4ox6c/s320/logo%20uvoshop%20gaada%20baground.png", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiP0gyebU80nVJqSGbecupWQ7Q4uhbeMlPXcynVCfH0XTitxCyX_W8owNCr0HAOeRUq-Dq93dSsoFt5dUQq1tr2JCP8s_I_wKiU2o04hYe-t_JP1uqt-V8jTFpJX-Wlcl0KGuFsiWK7NXPsxnL7KoQb4JHc50NHut2pSKbF0eZBOJTn4G6J7Iqsutq4ox6c/s320/logo%20uvoshop%20gaada%20baground.png"],
+      "demo": "https://uvoshop.my.id",
+      "repositori": ""
+    },
+    {
+      "id": "Map Gunung Roblox",
+      "judul": "MAP Gunung Roblox",
+      "tahun": 2025,
+      "kategori": "Game",
+      "terlihat": true,
+      "unggulan": false,
+      "deskripsi": "Game Muncak virtual di roblox dengan suasana seperti summit asli!",
+      "teknologi": ["Roblox", "Roblox Studio", "Lua Script", "3D Asset"],
+      "gambar": ["assets/pp.png"],
+      "demo": "",
+      "repositori": ""
+    }
+    
+
+  ],
+  "sosial": {
+    "github": {
+      "tautan": "https://github.com/ADITdeveloper",
+      "terlihat": false,
+      "username": "ADITdeveloper"
+    },
+    "linkedin": {
+      "tautan": "https://linkedin.com/in/adit",
+      "terlihat": false,
+      "username": "Adit"
+    },
+    "instagram": {
+      "tautan": "https://www.instagram.com/ditxgam/",
+      "terlihat": true,
+      "username": "@ditxgam"
+    },
+    "twitter": {
+      "tautan": "https://twitter.com/adit",
+      "terlihat": false,
+      "username": "adit"
+    },
+    "youtube": {
+      "tautan": "https://youtube.com/@adit",
+      "terlihat": false,
+      "username": "Adit Dev"
+    }
+  },
+  "fitur": {
+    "aktifkanPencarian": true,
+    "aktifkanPlaygroundProyek": false,
+    "aktifkanKonfetiKontak": false
+  },
+  "kontak": {
+    "aktifkanFirestore": true,
+    "koleksiFirestore": "contacts"
+  },
+"firebase": {
+  "apiKey": "AIzaSyAfVdLGTgCMxyuRQlRCv-MdIko7EXGcFfo",
+  "authDomain": "ditzxmyid.firebaseapp.com",
+  "projectId": "ditzxmyid",
+  "storageBucket": "ditzxmyid.firebasestorage.app",
+  "messagingSenderId": "849761840848",
+  "appId": "1:849761840848:web:71961dd02e1bd5663f78d5"
+}
+}
