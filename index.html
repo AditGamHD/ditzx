@@ -1,282 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADITdeveloper</title>
-    <meta name="description" content="ADITdeveloper Portofolio">
-    <meta property="og:title" content="Dev Portfolio">
-    <meta property="og:description" content="Jasa Pembuatan Web dan Game">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ADIT — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ADITdeveloper.css">
+  <script src="ADITdeveloper.js" defer></script>
 </head>
-<body>
-    <noscript><div style="text-align:center; padding: 2rem; background: #ff7a59; color: white;">Aktifkan JavaScript untuk melihat portfolio interaktif ini.</div></noscript>
+<body data-theme="light">
 
-    <nav>
-        <div class="logo"><i class="fa-solid fa-shield-halved"></i> <strong>DEV.2025</strong></div>
-        <button class="hamburger" aria-label="Menu" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></button>
-        <div class="nav-links">
-            <a href="#home" class="active">Home</a>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-        </div>
-    </nav>
+  <div class="bg-elements">
+    <div class="grid-move"></div>
+    <div class="noise"></div>
+  </div>
 
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1 id="hero-name"></h1>
-            <p id="hero-short"></p>
-            <div class="hero-btns">
-                <a id="cta-primary" class="btn btn-primary"></a>
-                <a id="cta-secondary" class="btn btn-secondary"></a>
-            </div>
-        </div>
-    </section>
+  <div id="notification-center"></div>
 
-    <section id="about" class="section reveal">
-        <h2 class="section-title"><i class="fa-solid fa-user-gear"></i> Tentang Saya</h2>
-        <div id="about-text" style="max-width: 800px; margin-bottom: 3rem; font-size: 1.1rem;"></div>
-        <div class="timeline" id="timeline"></div>
-        <div class="skill-grid" id="skills"></div>
-    </section>
+  <div class="container">
+    <header>
+      <a href="#" class="brand" id="brand-area">
+        <img src="" alt="A" id="logo-img">
+        <span style="font-weight: 800; letter-spacing: -1px;" id="brand-name"></span>
+      </a>
+      <nav>
+        <button class="nav-link active" onclick="portfolio.renderPage('home')" id="nav-home">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <button class="nav-link" onclick="portfolio.renderPage('projects')" id="nav-projects">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </button>
+        <button class="nav-link" onclick="portfolio.renderPage('contact')" id="nav-contact">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </button>
+        <button class="nav-link" onclick="portfolio.toggleTheme()">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+        </button>
+      </nav>
+    </header>
 
-    <section id="projects" class="section reveal">
-        <h2 class="section-title"><i class="fa-solid fa-code-merge"></i> Koleksi Proyek</h2>
-        <div class="filter-bar">
-            <input type="text" id="search" placeholder="Cari project..." class="search-input">
-            <div id="filters" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
-        </div>
-        <div class="projects-grid" id="project-list"></div>
-    </section>
+    <main id="main-content" class="hero"></main>
 
-    <section id="contact" class="section reveal">
-        <h2 class="section-title"><i class="fa-solid fa-paper-plane"></i> Hubungi Saya</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-            <div id="contact-info">
-                <div class="skill-item" style="margin-bottom: 1rem; cursor: pointer;" onclick="copyTxt('email')">
-                    <i class="fa-solid fa-envelope"></i> <strong id="email-val"></strong>
-                </div>
-                <div class="skill-item" style="cursor: pointer;" onclick="copyTxt('phone')">
-                    <i class="fa-solid fa-phone"></i> <strong id="phone-val"></strong>
-                </div>
-            </div>
-            <div style="text-align: center;">
-                <a id="mailto-btn" class="btn btn-primary" style="width: 100%; justify-content: center;">Kirim Email</a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="social-links" id="socials"></div>
-        <p id="footer-note" style="color: var(--muted); font-size: 0.8rem;"></p>
+    <footer style="text-align: center; padding: 40px; color: var(--muted); font-size: 12px;">
+      <p id="footer-text"></p>
     </footer>
+  </div>
 
-    <button id="back-to-top" onclick="window.scrollTo(0,0)"><i class="fa-solid fa-chevron-up"></i></button>
-
-    <div id="modal" class="modal" role="dialog" aria-modal="true">
-        <div class="modal-overlay" onclick="closeModal()"></div>
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
-    <div id="toast-container" class="toast-container"></div>
-
-    <script>
-        let siteData = {};
-        let activeFilter = 'All';
-        let currentCarouselIdx = 0;
-
-        async function init() {
-            try {
-                const res = await fetch('data.json');
-                siteData = await res.json();
-                renderPage();
-                setupObservers();
-            } catch (e) {
-                console.error("Data Load Error:", e);
-            }
-        }
-
-        function renderPage() {
-            document.title = siteData.site.title;
-            const root = document.documentElement;
-            root.style.setProperty('--accent', siteData.site.themeAccent[0]);
-            root.style.setProperty('--accent-2', siteData.site.themeAccent[1]);
-
-            document.getElementById('hero-name').innerText = siteData.hero.name;
-            document.getElementById('hero-short').innerText = siteData.hero.short;
-            document.getElementById('cta-primary').innerText = siteData.hero.ctaPrimary.label;
-            document.getElementById('cta-primary').href = siteData.hero.ctaPrimary.target;
-            document.getElementById('cta-secondary').innerText = siteData.hero.ctaSecondary.label;
-            document.getElementById('cta-secondary').href = siteData.hero.ctaSecondary.href;
-
-            document.getElementById('about-text').innerText = siteData.about.text;
-            document.getElementById('timeline').innerHTML = siteData.about.timeline.map(item => `
-                <div class="timeline-item">
-                    <div class="timeline-year">${item.year}</div>
-                    <strong>${item.title}</strong>
-                    <p>${item.desc}</p>
-                </div>
-            `).join('');
-
-            document.getElementById('skills').innerHTML = siteData.about.skills.map(s => `
-                <div class="skill-item">
-                    <div style="display:flex; justify-content:space-between"><span>${s.name}</span><strong>${s.level}%</strong></div>
-                    <div class="skill-bar"><div class="skill-progress" data-level="${s.level}"></div></div>
-                </div>
-            `).join('');
-
-            const allTags = ['All', ...new Set(siteData.projects.flatMap(p => p.tags))];
-            document.getElementById('filters').innerHTML = allTags.map(tag => `
-                <button class="filter-btn ${tag==='All'?'active':''}" onclick="setFilter('${tag}', this)">${tag}</button>
-            `).join('');
-
-            renderProjects();
-
-            document.getElementById('email-val').innerText = siteData.contact.email;
-            document.getElementById('phone-val').innerText = siteData.contact.phone;
-            document.getElementById('mailto-btn').href = `mailto:${siteData.contact.email}?subject=${encodeURIComponent(siteData.contact.mailtoSubject)}`;
-            document.getElementById('footer-note').innerText = siteData.contact.footerNote;
-
-            document.getElementById('socials').innerHTML = siteData.social.map(s => `
-                <a href="${s.url}" target="_blank" aria-label="${s.name}"><i class="fa-brands fa-${s.name}"></i></a>
-            `).join('');
-        }
-
-        function renderProjects() {
-            const query = document.getElementById('search').value.toLowerCase();
-            const filtered = siteData.projects.filter(p => {
-                const matchesTag = activeFilter === 'All' || p.tags.includes(activeFilter);
-                const matchesSearch = p.title.toLowerCase().includes(query) || p.tags.some(t => t.toLowerCase().includes(query));
-                return matchesTag && matchesSearch;
-            });
-
-            document.getElementById('project-list').innerHTML = filtered.map(p => `
-                <div class="project-card reveal">
-                    <img src="${p.thumb}" alt="${p.title}" loading="lazy">
-                    <div class="project-info">
-                        <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-                        <h3>${p.title}</h3>
-                        <button class="btn btn-secondary" style="margin-top:1rem; width:100%" onclick="openModal('${p.id}')">Lihat Detail</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function setFilter(tag, el) {
-            activeFilter = tag;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            renderProjects();
-        }
-
-        document.getElementById('search').addEventListener('input', renderProjects);
-
-        function openModal(id) {
-            const p = siteData.projects.find(x => x.id === id);
-            currentCarouselIdx = 0;
-            document.getElementById('modal-body').innerHTML = `
-                <div class="carousel">
-                    <div class="carousel-inner" id="carousel-inner">
-                        ${p.images.map(img => `<img src="${img}" alt="">`).join('')}
-                    </div>
-                    ${p.images.length > 1 ? `
-                        <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="carousel-btn next-btn" onclick="moveCarousel(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                    ` : ''}
-                </div>
-                <div style="padding: 2rem;">
-                    <h2>${p.title}</h2>
-                    <p style="margin: 1rem 0; color: var(--muted);">${p.description}</p>
-                    <div style="display:flex; gap: 1rem;">
-                        ${p.live ? `<a href="${p.live}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>` : ''}
-                        ${p.repo ? `<a href="${p.repo}" target="_blank" class="btn btn-secondary"><i class="fa-brands fa-github"></i> Source</a>` : ''}
-                    </div>
-                </div>
-            `;
-            document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            console.log(`Analytics: View project ${id}`);
-        }
-
-        function moveCarousel(dir) {
-            const inner = document.getElementById('carousel-inner');
-            const total = inner.children.length;
-            currentCarouselIdx = (currentCarouselIdx + dir + total) % total;
-            inner.style.transform = `translateX(-${currentCarouselIdx * 100}%)`;
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function showToast(msg) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
-            document.getElementById('toast-container').appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function copyTxt(type) {
-            const txt = type === 'email' ? siteData.contact.email : siteData.contact.phone;
-            navigator.clipboard.writeText(txt);
-            showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} disalin ke clipboard!`);
-        }
-
-        function toggleMenu() {
-            document.querySelector('.nav-links').classList.toggle('open');
-        }
-
-        function setupObservers() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        if(entry.target.id === 'about') {
-                            document.querySelectorAll('.skill-progress').forEach(p => p.style.width = p.dataset.level + '%');
-                        }
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-            window.addEventListener('scroll', () => {
-                const topBtn = document.getElementById('back-to-top');
-                if (window.scrollY > 500) topBtn.classList.add('visible');
-                else topBtn.classList.remove('visible');
-
-                document.querySelectorAll('section').forEach(sec => {
-                    const top = window.scrollY;
-                    const offset = sec.offsetTop - 150;
-                    const height = sec.offsetHeight;
-                    const id = sec.getAttribute('id');
-                    if (top >= offset && top < offset + height) {
-                        document.querySelectorAll('.nav-links a').forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === '#' + id) link.classList.add('active');
-                        });
-                    }
-                });
-            });
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-            if (document.getElementById('modal').classList.contains('active')) {
-                if (e.key === 'ArrowLeft') moveCarousel(-1);
-                if (e.key === 'ArrowRight') moveCarousel(1);
-            }
-        });
-
-        init();
-    </script>
+  <script>
+    // Inisialisasi portfolio saat DOM siap
+    document.addEventListener('DOMContentLoaded', () => {
+      portfolio.initialize();
+    });
+  </script>
 </body>
 </html>
