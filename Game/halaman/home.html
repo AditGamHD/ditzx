@@ -1,0 +1,387 @@
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Selamat Datang di <span class="highlight">UvoWorld</span></h1>
+        <p>Platform game 2D di mana Anda bisa membuat, bermain, dan berbagi pengalaman game dengan komunitas.</p>
+        
+        <div class="hero-buttons">
+            <button class="hero-btn primary" id="homeLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+            </button>
+            <button class="hero-btn secondary" id="homeRegisterBtn">
+                <i class="fas fa-user-plus"></i> Daftar
+            </button>
+        </div>
+    </div>
+
+    <div class="features-section">
+        <h2><i class="fas fa-star"></i> Fitur Unggulan</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-gamepad"></i>
+                <h3>Bermain Game</h3>
+                <p>Jelajahi ribuan game 2D yang dibuat oleh komunitas</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Buat Game</h3>
+                <p>Gunakan UvoWorld Studio untuk membuat game 2D tanpa coding</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Komunitas</h3>
+                <p>Bergabung dengan komunitas kreator dan pemain</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-coins"></i>
+                <h3>Ekonomi Virtual</h3>
+                <p>Dapatkan koin dan item eksklusif</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="games-section">
+        <h2><i class="fas fa-fire"></i> Game Populer</h2>
+        <div class="games-grid" id="featuredGames">
+            <!-- Game akan dimuat via JavaScript -->
+            <div class="game-card placeholder">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+            </div>
+            <!-- Repeat for more placeholders -->
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <h3 id="totalPlayers">0</h3>
+                <p>Pemain Aktif</p>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-gamepad"></i>
+                <h3 id="totalGames">0</h3>
+                <p>Game Tersedia</p>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-cogs"></i>
+                <h3 id="totalCreators">0</h3>
+                <p>Kreator</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .hero-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, rgba(0,173,181,0.1) 0%, rgba(26,26,46,0.3) 100%);
+        border-radius: 20px;
+        margin-bottom: 40px;
+        border: 2px solid rgba(0,173,181,0.3);
+    }
+
+    .hero-section h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+
+    .highlight {
+        color: #00adb5;
+    }
+
+    .hero-section p {
+        font-size: 1.2em;
+        color: #8a8da0;
+        max-width: 600px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        padding: 15px 30px;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+    }
+
+    .hero-btn.primary {
+        background: #00adb5;
+        color: white;
+    }
+
+    .hero-btn.secondary {
+        background: transparent;
+        color: #00adb5;
+        border: 2px solid #00adb5;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .features-section {
+        margin-bottom: 40px;
+    }
+
+    .features-section h2 {
+        font-size: 2em;
+        margin-bottom: 30px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .feature-card {
+        background: rgba(255,255,255,0.05);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: #00adb5;
+        box-shadow: 0 10px 20px rgba(0,173,181,0.2);
+    }
+
+    .feature-card i {
+        font-size: 40px;
+        color: #00adb5;
+        margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        color: #fff;
+    }
+
+    .feature-card p {
+        color: #8a8da0;
+        line-height: 1.6;
+    }
+
+    .games-section {
+        margin-bottom: 40px;
+    }
+
+    .games-section h2 {
+        font-size: 2em;
+        margin-bottom: 30px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .game-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .game-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .game-card h4 {
+        padding: 15px 15px 5px;
+        font-size: 1.2em;
+        color: #fff;
+    }
+
+    .game-card p {
+        padding: 0 15px;
+        color: #8a8da0;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+
+    .play-btn {
+        width: calc(100% - 30px);
+        margin: 0 15px 15px;
+        padding: 10px;
+        background: #00adb5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s;
+    }
+
+    .play-btn:hover {
+        background: #0097a7;
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, rgba(0,173,181,0.1) 0%, rgba(26,26,46,0.3) 100%);
+        border-radius: 20px;
+        padding: 40px;
+        border: 2px solid rgba(0,173,181,0.3);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item i {
+        font-size: 40px;
+        color: #00adb5;
+        margin-bottom: 15px;
+    }
+
+    .stat-item h3 {
+        font-size: 2.5em;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .stat-item p {
+        color: #8a8da0;
+        font-size: 1.1em;
+    }
+
+    /* Skeleton loading */
+    .skeleton-image {
+        width: 100%;
+        height: 160px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    .skeleton-text {
+        height: 20px;
+        background: rgba(255,255,255,0.1);
+        margin: 15px;
+        border-radius: 4px;
+        animation: loading 1.5s infinite;
+    }
+
+    .skeleton-text.short {
+        width: 60%;
+        margin-top: 5px;
+    }
+
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+        
+        .hero-section p {
+            font-size: 1em;
+        }
+        
+        .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hero-btn {
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    // Update stats when home page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const database = firebase.database();
+        
+        // Update total players
+        database.ref('status').on('value', (snapshot) => {
+            const onlineUsers = snapshot.val() || {};
+            document.getElementById('totalPlayers').textContent = Object.keys(onlineUsers).length;
+        });
+        
+        // Update total games
+        database.ref('games').once('value').then((snapshot) => {
+            const totalGames = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+            document.getElementById('totalGames').textContent = totalGames;
+        });
+        
+        // Update total creators
+        database.ref('users').orderByChild('role').equalTo('creator').once('value').then((snapshot) => {
+            const totalCreators = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+            document.getElementById('totalCreators').textContent = totalCreators;
+        });
+        
+        // Add click event to play buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.play-btn')) {
+                const gameId = e.target.closest('.play-btn').dataset.game;
+                showToast(`Memulai game ${gameId}...`);
+                // Implement game launch logic here
+            }
+        });
+    });
+</script>
