@@ -1,0 +1,573 @@
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2><i class="fas fa-sign-in-alt"></i> Masuk ke UvoWorld</h2>
+            <p>Masuk untuk mengakses semua fitur platform</p>
+        </div>
+
+        <div class="login-form">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="loginEmail" placeholder="nama@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="loginPassword" placeholder="Password Anda">
+            </div>
+            
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <span>Ingat saya</span>
+                </label>
+                <a href="#" class="forgot-password">Lupa password?</a>
+            </div>
+            
+            <button class="login-btn" id="loginSubmitBtn">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+            </button>
+            
+            <div class="divider">
+                <span>atau masuk dengan</span>
+            </div>
+            
+            <div class="social-login">
+                <button class="social-btn google" id="googleLoginBtn">
+                    <i class="fab fa-google"></i> Google
+                </button>
+                <button class="social-btn facebook" id="facebookLoginBtn">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+            </div>
+            
+            <div class="register-link">
+                <p>Belum punya akun? <a href="#" id="showRegisterBtn">Daftar sekarang</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-info">
+        <h3><i class="fas fa-star"></i> Keuntungan Bergabung</h3>
+        <ul class="benefits-list">
+            <li><i class="fas fa-check"></i> Akses ke ribuan game 2D gratis</li>
+            <li><i class="fas fa-check"></i> Buat game sendiri dengan UvoWorld Studio</li>
+            <li><i class="fas fa-check"></i> Dapatkan koin virtual dan item eksklusif</li>
+            <li><i class="fas fa-check"></i> Bergabung dengan komunitas kreatif</li>
+            <li><i class="fas fa-check"></i> Simpan progress dan achievements</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+
+    .login-card {
+        background: rgba(255,255,255,0.05);
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h2 {
+        font-size: 2em;
+        color: #fff;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .login-header p {
+        color: #8a8da0;
+        font-size: 1.1em;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #8a8da0;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #00adb5;
+        box-shadow: 0 0 0 2px rgba(0,173,181,0.3);
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #8a8da0;
+        cursor: pointer;
+    }
+
+    .remember-me input {
+        width: auto;
+        margin: 0;
+    }
+
+    .forgot-password {
+        color: #00adb5;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .forgot-password:hover {
+        color: #0097a7;
+        text-decoration: underline;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 16px;
+        background: #00adb5;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .login-btn:hover {
+        background: #0097a7;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,173,181,0.3);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+        color: #8a8da0;
+        font-size: 14px;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(255,255,255,0.1);
+    }
+
+    .divider span {
+        background: rgba(26,26,46,0.95);
+        padding: 0 15px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .social-login {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .social-btn {
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+
+    .social-btn.google {
+        background: #4285F4;
+        color: white;
+    }
+
+    .social-btn.facebook {
+        background: #4267B2;
+        color: white;
+    }
+
+    .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .social-btn.google:hover {
+        background: #357ae8;
+    }
+
+    .social-btn.facebook:hover {
+        background: #365899;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .register-link p {
+        color: #8a8da0;
+    }
+
+    .register-link a {
+        color: #00adb5;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+
+    .login-info {
+        background: linear-gradient(135deg, rgba(0,173,181,0.1) 0%, rgba(26,26,46,0.3) 100%);
+        padding: 40px;
+        border-radius: 20px;
+        border: 2px solid rgba(0,173,181,0.3);
+    }
+
+    .login-info h3 {
+        font-size: 1.8em;
+        color: #fff;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .benefits-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .benefits-list li {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        color: #8a8da0;
+        font-size: 1.1em;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .benefits-list li:hover {
+        background: rgba(255,255,255,0.05);
+        color: white;
+        transform: translateX(5px);
+    }
+
+    .benefits-list li i {
+        color: #00adb5;
+        font-size: 1.2em;
+    }
+
+    /* Modal styles */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 1002;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: #1a1a2e;
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 400px;
+        border: 2px solid #00adb5;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const auth = firebase.auth();
+        
+        // Login form submission
+        document.getElementById('loginSubmitBtn').addEventListener('click', loginWithEmail);
+        
+        // Enter key for login
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loginWithEmail();
+        });
+        
+        // Social login buttons
+        document.getElementById('googleLoginBtn').addEventListener('click', loginWithGoogle);
+        document.getElementById('facebookLoginBtn').addEventListener('click', loginWithFacebook);
+        
+        // Show register modal
+        document.getElementById('showRegisterBtn').addEventListener('click', showRegisterModal);
+        
+        // Forgot password
+        document.querySelector('.forgot-password').addEventListener('click', showForgotPasswordModal);
+        
+        async function loginWithEmail() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showToast('Email dan password harus diisi');
+                return;
+            }
+            
+            showLoading();
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showToast('Login berhasil!');
+                navigateTo('home');
+            } catch (error) {
+                showToast(`Error: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        async function loginWithGoogle() {
+            showToast('Google login akan diimplementasikan');
+            // Implement Google login with Firebase
+            // const provider = new firebase.auth.GoogleAuthProvider();
+            // await auth.signInWithPopup(provider);
+        }
+        
+        async function loginWithFacebook() {
+            showToast('Facebook login akan diimplementasikan');
+            // Implement Facebook login with Firebase
+            // const provider = new firebase.auth.FacebookAuthProvider();
+            // await auth.signInWithPopup(provider);
+        }
+        
+        function showRegisterModal() {
+            const modalHTML = `
+                <div class="modal active" id="registerModal">
+                    <div class="modal-content">
+                        <h3 style="margin-bottom: 20px; color: #00adb5;">
+                            <i class="fas fa-user-plus"></i> Daftar Akun Baru
+                        </h3>
+                        <div class="form-group">
+                            <label>Nama Pengguna</label>
+                            <input type="text" id="regUsername" placeholder="Pilih nama pengguna">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" placeholder="nama@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="regPassword" placeholder="Minimal 6 karakter">
+                        </div>
+                        <div class="form-group">
+                            <label>Konfirmasi Password</label>
+                            <input type="password" id="regConfirmPassword" placeholder="Ulangi password">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 30px;">
+                            <button id="confirmRegisterBtn" style="flex: 1; background: #00adb5; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer;">
+                                Daftar
+                            </button>
+                            <button id="cancelRegisterBtn" style="flex: 1; background: #555; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer;">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.innerHTML = modalHTML;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('#cancelRegisterBtn').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            modal.querySelector('#confirmRegisterBtn').addEventListener('click', async () => {
+                const email = modal.querySelector('#regEmail').value;
+                const password = modal.querySelector('#regPassword').value;
+                const confirmPassword = modal.querySelector('#regConfirmPassword').value;
+                const username = modal.querySelector('#regUsername').value;
+                
+                if (!email || !password || !username) {
+                    showToast('Semua field harus diisi');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showToast('Password tidak cocok');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showToast('Password minimal 6 karakter');
+                    return;
+                }
+                
+                showLoading();
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    await userCredential.user.updateProfile({
+                        displayName: username
+                    });
+                    
+                    // Create user record in database
+                    const database = firebase.database();
+                    await database.ref(`users/${userCredential.user.uid}`).set({
+                        email: email,
+                        displayName: username,
+                        createdAt: Date.now(),
+                        coins: 1000,
+                        avatar: 'fas fa-user',
+                        role: 'player'
+                    });
+                    
+                    showToast('Registrasi berhasil!');
+                    document.body.removeChild(modal);
+                    navigateTo('home');
+                } catch (error) {
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    hideLoading();
+                }
+            });
+        }
+        
+        function showForgotPasswordModal() {
+            const modalHTML = `
+                <div class="modal active" id="forgotPasswordModal">
+                    <div class="modal-content">
+                        <h3 style="margin-bottom: 20px; color: #00adb5;">
+                            <i class="fas fa-key"></i> Reset Password
+                        </h3>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="resetEmail" placeholder="Masukkan email Anda">
+                        </div>
+                        <p style="color: #8a8da0; font-size: 14px; margin-bottom: 20px;">
+                            Kami akan mengirimkan link reset password ke email Anda.
+                        </p>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="sendResetBtn" style="flex: 1; background: #00adb5; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer;">
+                                Kirim
+                            </button>
+                            <button id="cancelResetBtn" style="flex: 1; background: #555; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer;">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.innerHTML = modalHTML;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('#cancelResetBtn').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            modal.querySelector('#sendResetBtn').addEventListener('click', async () => {
+                const email = modal.querySelector('#resetEmail').value;
+                
+                if (!email) {
+                    showToast('Masukkan email Anda');
+                    return;
+                }
+                
+                showLoading();
+                try {
+                    await auth.sendPasswordResetEmail(email);
+                    showToast('Link reset password telah dikirim ke email Anda');
+                    document.body.removeChild(modal);
+                } catch (error) {
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    hideLoading();
+                }
+            });
+        }
+    });
+</script>
