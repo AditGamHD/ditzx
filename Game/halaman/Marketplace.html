@@ -1,0 +1,1123 @@
+<div class="marketplace-container">
+    <div class="marketplace-header">
+        <h2><i class="fas fa-store"></i> UvoWorld Marketplace</h2>
+        <div class="marketplace-stats">
+            <div class="market-stat">
+                <i class="fas fa-coins"></i>
+                <span>Your Coins: <strong id="userCoinsMarket">0</strong></span>
+            </div>
+            <div class="market-stat">
+                <i class="fas fa-box"></i>
+                <span>Items: <strong id="totalItems">0</strong></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="marketplace-tabs">
+        <button class="market-tab active" data-tab="games">🎮 Games</button>
+        <button class="market-tab" data-tab="assets">🎨 Assets</button>
+        <button class="market-tab" data-tab="avatars">👤 Avatars</button>
+        <button class="market-tab" data-tab="my-items">📦 My Items</button>
+    </div>
+    
+    <div class="marketplace-content">
+        <!-- Games Tab -->
+        <div class="market-tab-content active" id="gamesTab">
+            <div class="market-filters">
+                <input type="text" id="gameSearch" placeholder="Search games..." class="search-input">
+                <select id="gameSort" class="sort-select">
+                    <option value="popular">Most Popular</option>
+                    <option value="newest">Newest</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="price">Price: Low to High</option>
+                </select>
+            </div>
+            
+            <div class="games-grid" id="gamesGrid">
+                <!-- Games will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Assets Tab -->
+        <div class="market-tab-content" id="assetsTab">
+            <div class="asset-categories">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="platforms">Platforms</button>
+                <button class="category-btn" data-category="characters">Characters</button>
+                <button class="category-btn" data-category="obstacles">Obstacles</button>
+                <button class="category-btn" data-category="effects">Effects</button>
+            </div>
+            
+            <div class="assets-grid" id="assetsGrid">
+                <!-- Assets will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Avatars Tab -->
+        <div class="market-tab-content" id="avatarsTab">
+            <div class="avatars-container">
+                <div class="avatar-preview">
+                    <div class="avatar-display" id="currentAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="equip-btn" id="equipAvatarBtn" disabled>Equip</button>
+                </div>
+                
+                <div class="avatars-grid" id="avatarsGrid">
+                    <!-- Avatars will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- My Items Tab -->
+        <div class="market-tab-content" id="myItemsTab">
+            <div class="my-items-container">
+                <h3>Purchased Games</h3>
+                <div class="my-games-list" id="myGamesList">
+                    <!-- Purchased games will appear here -->
+                </div>
+                
+                <h3>Purchased Assets</h3>
+                <div class="my-assets-grid" id="myAssetsGrid">
+                    <!-- Purchased assets will appear here -->
+                </div>
+                
+                <h3>My Avatars</h3>
+                <div class="my-avatars-grid" id="myAvatarsGrid">
+                    <!-- Purchased avatars will appear here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .marketplace-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .marketplace-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #00adb5;
+    }
+    
+    .marketplace-header h2 {
+        color: #00adb5;
+        font-size: 2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .marketplace-stats {
+        display: flex;
+        gap: 30px;
+    }
+    
+    .market-stat {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: rgba(0, 173, 181, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(0, 173, 181, 0.3);
+    }
+    
+    .market-stat i {
+        color: gold;
+        font-size: 1.5em;
+    }
+    
+    .market-stat span {
+        color: white;
+    }
+    
+    .marketplace-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .market-tab {
+        padding: 15px 30px;
+        background: #252547;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 1.1em;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s;
+    }
+    
+    .market-tab:hover {
+        background: #3a3a6a;
+        transform: translateY(-2px);
+    }
+    
+    .market-tab.active {
+        background: #00adb5;
+    }
+    
+    .marketplace-content {
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        padding: 20px;
+        min-height: 500px;
+    }
+    
+    .market-tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .market-tab-content.active {
+        display: block;
+    }
+    
+    .market-filters {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 300px;
+        padding: 12px 20px;
+        background: #252547;
+        border: 1px solid #3a3a6a;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+    }
+    
+    .sort-select {
+        padding: 12px 20px;
+        background: #252547;
+        border: 1px solid #3a3a6a;
+        border-radius: 8px;
+        color: white;
+        min-width: 200px;
+    }
+    
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .game-card-market {
+        background: #252547;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .game-card-market:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        border-color: #00adb5;
+    }
+    
+    .game-card-image {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .game-card-price {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: gold;
+        color: #333;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    
+    .game-card-free {
+        background: #00adb5;
+        color: white;
+    }
+    
+    .game-card-content {
+        padding: 20px;
+    }
+    
+    .game-card-title {
+        color: white;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .game-card-author {
+        color: #8a8da0;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+    }
+    
+    .game-card-description {
+        color: #8a8da0;
+        font-size: 0.95em;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    
+    .game-card-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        color: #8a8da0;
+        font-size: 0.9em;
+    }
+    
+    .game-card-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .buy-btn {
+        flex: 1;
+        padding: 10px;
+        background: #00adb5;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    
+    .buy-btn:hover:not(:disabled) {
+        background: #0097a7;
+    }
+    
+    .buy-btn:disabled {
+        background: #27ae60;
+        cursor: not-allowed;
+    }
+    
+    .buy-btn.owned {
+        background: #27ae60;
+    }
+    
+    .preview-btn {
+        padding: 10px 15px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    
+    .preview-btn:hover {
+        background: #4a4a8a;
+    }
+    
+    .asset-categories {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .category-btn {
+        padding: 10px 20px;
+        background: #252547;
+        border: 1px solid #3a3a6a;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .category-btn:hover {
+        background: #3a3a6a;
+    }
+    
+    .category-btn.active {
+        background: #00adb5;
+        border-color: #00adb5;
+    }
+    
+    .assets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .asset-card {
+        background: #252547;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #3a3a6a;
+        transition: all 0.3s;
+    }
+    
+    .asset-card:hover {
+        transform: translateY(-5px);
+        border-color: #00adb5;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .asset-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        color: white;
+    }
+    
+    .asset-name {
+        color: white;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    
+    .asset-price {
+        color: gold;
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    
+    .asset-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .avatars-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+    }
+    
+    @media (max-width: 768px) {
+        .avatars-container {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .avatar-preview {
+        background: #252547;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        border: 2px solid #00adb5;
+    }
+    
+    .avatar-display {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+        color: white;
+        border: 5px solid white;
+    }
+    
+    .equip-btn {
+        padding: 12px 30px;
+        background: #00adb5;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    
+    .equip-btn:hover:not(:disabled) {
+        background: #0097a7;
+        transform: translateY(-2px);
+    }
+    
+    .equip-btn:disabled {
+        background: #27ae60;
+        cursor: not-allowed;
+    }
+    
+    .avatars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+    }
+    
+    .avatar-item {
+        background: #252547;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .avatar-item:hover {
+        transform: translateY(-5px);
+        background: #3a3a6a;
+    }
+    
+    .avatar-item.selected {
+        border-color: #00adb5;
+        background: rgba(0, 173, 181, 0.1);
+    }
+    
+    .avatar-item-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--avatar-color, #667eea) 0%, var(--avatar-color2, #764ba2) 100%);
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        color: white;
+    }
+    
+    .avatar-item-name {
+        color: white;
+        margin-bottom: 10px;
+    }
+    
+    .avatar-item-price {
+        color: gold;
+        font-weight: bold;
+    }
+    
+    .my-items-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .my-items-container h3 {
+        color: #00adb5;
+        font-size: 1.5em;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #3a3a6a;
+    }
+    
+    .my-games-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .my-game-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+        background: #252547;
+        border-radius: 10px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .my-game-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5em;
+        color: white;
+    }
+    
+    .my-game-info {
+        flex: 1;
+    }
+    
+    .my-game-title {
+        color: white;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+    }
+    
+    .my-game-author {
+        color: #8a8da0;
+        font-size: 0.9em;
+    }
+    
+    .my-game-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .my-assets-grid, .my-avatars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (!window.currentUser()) {
+            showToast('Harap login untuk mengakses marketplace');
+            navigateTo('home');
+            return;
+        }
+        
+        // Initialize marketplace
+        initializeMarketplace();
+        
+        // Load user coins
+        loadUserCoins();
+        
+        // Load games
+        loadGames();
+        
+        // Load assets
+        loadAssets();
+        
+        // Load avatars
+        loadAvatars();
+        
+        // Load user's items
+        loadMyItems();
+        
+        // Setup event listeners
+        setupMarketplaceEvents();
+    });
+    
+    function initializeMarketplace() {
+        window.marketplace = {
+            selectedAvatar: null,
+            purchasedItems: new Set(),
+            userCoins: 0
+        };
+    }
+    
+    async function loadUserCoins() {
+        const user = window.currentUser();
+        if (!user) return;
+        
+        try {
+            const userRef = window.firebaseDatabase.ref(`users/${user.uid}`);
+            const snapshot = await userRef.once('value');
+            
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                marketplace.userCoins = userData.coins || 0;
+                document.getElementById('userCoinsMarket').textContent = marketplace.userCoins;
+            }
+        } catch (error) {
+            console.error('Error loading user coins:', error);
+        }
+    }
+    
+    async function loadGames() {
+        try {
+            const gamesRef = window.firebaseDatabase.ref('games');
+            const snapshot = await gamesRef.orderByChild('publishedAt').limitToLast(50).once('value');
+            
+            const gamesGrid = document.getElementById('gamesGrid');
+            if (!snapshot.exists()) {
+                gamesGrid.innerHTML = '<div class="empty-state">No games available yet</div>';
+                return;
+            }
+            
+            const games = snapshot.val();
+            gamesGrid.innerHTML = '';
+            
+            Object.entries(games).forEach(([id, game]) => {
+                if (!game.published) return;
+                
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card-market';
+                
+                const isFree = !game.price || game.price === 0;
+                const isPurchased = marketplace.purchasedItems.has(`game_${id}`);
+                
+                gameCard.innerHTML = `
+                    <div class="game-card-image">
+                        <div class="game-card-price ${isFree ? 'game-card-free' : ''}">
+                            ${isFree ? 'FREE' : `${game.price} Coins`}
+                        </div>
+                    </div>
+                    <div class="game-card-content">
+                        <div class="game-card-title">
+                            <span>${game.name || 'Untitled Game'}</span>
+                            <span style="color: gold; font-size: 0.9em;">
+                                <i class="fas fa-star"></i> ${game.rating || 'N/A'}
+                            </span>
+                        </div>
+                        <div class="game-card-author">
+                            By: ${game.ownerName || 'Unknown'}
+                        </div>
+                        <div class="game-card-description">
+                            ${game.description || 'No description available.'}
+                        </div>
+                        <div class="game-card-stats">
+                            <span><i class="fas fa-users"></i> ${game.plays || 0}</span>
+                            <span><i class="fas fa-calendar"></i> ${new Date(game.publishedAt).toLocaleDateString()}</span>
+                            <span><i class="fas fa-gamepad"></i> ${game.difficulty || 'Medium'}</span>
+                        </div>
+                        <div class="game-card-actions">
+                            <button class="buy-btn ${isPurchased ? 'owned' : ''}" 
+                                    data-game-id="${id}" 
+                                    data-price="${game.price || 0}"
+                                    ${isPurchased ? 'disabled' : ''}>
+                                <i class="fas ${isPurchased ? 'fa-check' : 'fa-shopping-cart'}"></i>
+                                ${isPurchased ? 'Owned' : (isFree ? 'Get Free' : 'Buy Now')}
+                            </button>
+                            <button class="preview-btn" data-game-id="${id}">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                gamesGrid.appendChild(gameCard);
+            });
+            
+            document.getElementById('totalItems').textContent = Object.keys(games).length;
+            
+        } catch (error) {
+            console.error('Error loading games:', error);
+        }
+    }
+    
+    async function loadAssets() {
+        // Sample assets data
+        const assets = [
+            { id: 'asset1', name: 'Grass Platform', category: 'platforms', price: 50, icon: 'fas fa-square', color: '#2ecc71' },
+            { id: 'asset2', name: 'Stone Platform', category: 'platforms', price: 75, icon: 'fas fa-square', color: '#95a5a6' },
+            { id: 'asset3', name: 'Ice Platform', category: 'platforms', price: 100, icon: 'fas fa-square', color: '#3498db' },
+            { id: 'asset4', name: 'Spike Obstacle', category: 'obstacles', price: 30, icon: 'fas fa-chevron-up', color: '#e74c3c' },
+            { id: 'asset5', name: 'Moving Platform', category: 'platforms', price: 150, icon: 'fas fa-arrows-alt-h', color: '#9b59b6' },
+            { id: 'asset6', name: 'Coin', category: 'collectibles', price: 10, icon: 'fas fa-coins', color: '#FFD700' },
+            { id: 'asset7', name: 'Health Pack', category: 'collectibles', price: 80, icon: 'fas fa-heart', color: '#e74c3c' },
+            { id: 'asset8', name: 'Slime Enemy', category: 'enemies', price: 120, icon: 'fas fa-ghost', color: '#9b59b6' },
+            { id: 'asset9', name: 'Fire Effect', category: 'effects', price: 200, icon: 'fas fa-fire', color: '#e67e22' },
+            { id: 'asset10', name: 'Water Effect', category: 'effects', price: 200, icon: 'fas fa-water', color: '#3498db' }
+        ];
+        
+        const assetsGrid = document.getElementById('assetsGrid');
+        assetsGrid.innerHTML = '';
+        
+        assets.forEach(asset => {
+            const assetCard = document.createElement('div');
+            assetCard.className = 'asset-card';
+            assetCard.dataset.category = asset.category;
+            
+            const isPurchased = marketplace.purchasedItems.has(`asset_${asset.id}`);
+            
+            assetCard.innerHTML = `
+                <div class="asset-icon" style="background: linear-gradient(135deg, ${asset.color} 0%, ${adjustColor(asset.color, -20)} 100%);">
+                    <i class="${asset.icon}"></i>
+                </div>
+                <div class="asset-name">${asset.name}</div>
+                <div class="asset-price">${asset.price} Coins</div>
+                <div class="asset-actions">
+                    <button class="buy-btn ${isPurchased ? 'owned' : ''}" 
+                            data-asset-id="${asset.id}" 
+                            data-price="${asset.price}"
+                            ${isPurchased ? 'disabled' : ''}>
+                        <i class="fas ${isPurchased ? 'fa-check' : 'fa-shopping-cart'}"></i>
+                        ${isPurchased ? 'Owned' : 'Buy'}
+                    </button>
+                </div>
+            `;
+            
+            assetsGrid.appendChild(assetCard);
+        });
+    }
+    
+    function adjustColor(color, amount) {
+        let usePound = false;
+        if (color[0] == "#") {
+            color = color.slice(1);
+            usePound = true;
+        }
+        const num = parseInt(color, 16);
+        let r = (num >> 16) + amount;
+        if (r > 255) r = 255;
+        else if (r < 0) r = 0;
+        let b = ((num >> 8) & 0x00FF) + amount;
+        if (b > 255) b = 255;
+        else if (b < 0) b = 0;
+        let g = (num & 0x0000FF) + amount;
+        if (g > 255) g = 255;
+        else if (g < 0) g = 0;
+        return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
+    }
+    
+    async function loadAvatars() {
+        // Sample avatars data
+        const avatars = [
+            { id: 'avatar1', name: 'Classic', price: 0, icon: 'fas fa-user', color: '#3498db', color2: '#2980b9' },
+            { id: 'avatar2', name: 'Wizard', price: 100, icon: 'fas fa-hat-wizard', color: '#9b59b6', color2: '#8e44ad' },
+            { id: 'avatar3', name: 'Ninja', price: 150, icon: 'fas fa-user-ninja', color: '#2c3e50', color2: '#1a252f' },
+            { id: 'avatar4', name: 'Astronaut', price: 200, icon: 'fas fa-user-astronaut', color: '#34495e', color2: '#2c3e50' },
+            { id: 'avatar5', name: 'Robot', price: 300, icon: 'fas fa-robot', color: '#7f8c8d', color2: '#5d6d6e' },
+            { id: 'avatar6', name: 'Cat', price: 250, icon: 'fas fa-cat', color: '#e74c3c', color2: '#c0392b' },
+            { id: 'avatar7', name: 'Dragon', price: 500, icon: 'fas fa-dragon', color: '#e67e22', color2: '#d35400' },
+            { id: 'avatar8', name: 'King', price: 400, icon: 'fas fa-crown', color: '#f1c40f', color2: '#f39c12' },
+            { id: 'avatar9', name: 'Alien', price: 350, icon: 'fas fa-user-alien', color: '#27ae60', color2: '#229954' },
+            { id: 'avatar10', name: 'Superhero', price: 450, icon: 'fas fa-mask', color: '#e74c3c', color2: '#3498db' }
+        ];
+        
+        const avatarsGrid = document.getElementById('avatarsGrid');
+        avatarsGrid.innerHTML = '';
+        
+        // Get user's current avatar
+        const user = window.currentUser();
+        let currentAvatar = 'avatar1';
+        
+        try {
+            const userRef = window.firebaseDatabase.ref(`users/${user.uid}`);
+            const snapshot = await userRef.once('value');
+            if (snapshot.exists()) {
+                currentAvatar = snapshot.val().avatar || 'avatar1';
+            }
+        } catch (error) {
+            console.error('Error loading user avatar:', error);
+        }
+        
+        // Set current avatar preview
+        const currentAvatarData = avatars.find(a => a.id === currentAvatar) || avatars[0];
+        document.getElementById('currentAvatar').innerHTML = `<i class="${currentAvatarData.icon}"></i>`;
+        document.getElementById('currentAvatar').style.background = `linear-gradient(135deg, ${currentAvatarData.color} 0%, ${currentAvatarData.color2} 100%)`;
+        
+        avatars.forEach(avatar => {
+            const avatarItem = document.createElement('div');
+            avatarItem.className = `avatar-item ${avatar.id === currentAvatar ? 'selected' : ''}`;
+            avatarItem.dataset.avatarId = avatar.id;
+            
+            const isPurchased = avatar.price === 0 || marketplace.purchasedItems.has(`avatar_${avatar.id}`);
+            
+            avatarItem.innerHTML = `
+                <div class="avatar-item-icon" style="--avatar-color: ${avatar.color}; --avatar-color2: ${avatar.color2};">
+                    <i class="${avatar.icon}"></i>
+                </div>
+                <div class="avatar-item-name">${avatar.name}</div>
+                <div class="avatar-item-price">${avatar.price === 0 ? 'FREE' : `${avatar.price} Coins`}</div>
+            `;
+            
+            if (avatar.id === currentAvatar) {
+                marketplace.selectedAvatar = avatar.id;
+                document.getElementById('equipAvatarBtn').disabled = true;
+                document.getElementById('equipAvatarBtn').textContent = 'Equipped';
+            }
+            
+            avatarItem.addEventListener('click', () => {
+                selectAvatar(avatar.id, avatar.price, isPurchased);
+            });
+            
+            avatarsGrid.appendChild(avatarItem);
+        });
+    }
+    
+    async function loadMyItems() {
+        // This would load from user's purchased items in database
+        // For now, show placeholder data
+        const myGamesList = document.getElementById('myGamesList');
+        const myAssetsGrid = document.getElementById('myAssetsGrid');
+        const myAvatarsGrid = document.getElementById('myAvatarsGrid');
+        
+        myGamesList.innerHTML = '<div class="empty-state">No games purchased yet</div>';
+        myAssetsGrid.innerHTML = '<div class="empty-state">No assets purchased yet</div>';
+        myAvatarsGrid.innerHTML = '<div class="empty-state">No avatars purchased yet</div>';
+    }
+    
+    function setupMarketplaceEvents() {
+        // Tab switching
+        document.querySelectorAll('.market-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.market-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show selected tab content
+                document.querySelectorAll('.market-tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + 'Tab').classList.add('active');
+            });
+        });
+        
+        // Category filtering
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                
+                // Update active category
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Filter assets
+                filterAssets(category);
+            });
+        });
+        
+        // Game search
+        document.getElementById('gameSearch').addEventListener('input', (e) => {
+            searchGames(e.target.value);
+        });
+        
+        // Game sort
+        document.getElementById('gameSort').addEventListener('change', (e) => {
+            sortGames(e.target.value);
+        });
+        
+        // Buy buttons
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.buy-btn')) {
+                const button = e.target.closest('.buy-btn');
+                const gameId = button.dataset.gameId;
+                const assetId = button.dataset.assetId;
+                const price = parseInt(button.dataset.price) || 0;
+                
+                if (gameId) {
+                    await purchaseGame(gameId, price);
+                } else if (assetId) {
+                    await purchaseAsset(assetId, price);
+                }
+            }
+            
+            // Play game button
+            if (e.target.closest('.preview-btn')) {
+                const button = e.target.closest('.preview-btn');
+                const gameId = button.dataset.gameId;
+                navigateTo('play', { id: gameId });
+            }
+        });
+        
+        // Equip avatar button
+        document.getElementById('equipAvatarBtn').addEventListener('click', equipAvatar);
+    }
+    
+    function selectAvatar(avatarId, price, isPurchased) {
+        marketplace.selectedAvatar = avatarId;
+        
+        // Update UI
+        document.querySelectorAll('.avatar-item').forEach(item => {
+            item.classList.remove('selected');
+            if (item.dataset.avatarId === avatarId) {
+                item.classList.add('selected');
+            }
+        });
+        
+        // Update preview
+        const avatarItem = document.querySelector(`.avatar-item[data-avatar-id="${avatarId}"]`);
+        const icon = avatarItem.querySelector('.avatar-item-icon i').className;
+        const style = window.getComputedStyle(avatarItem.querySelector('.avatar-item-icon'));
+        const bg = style.background;
+        
+        document.getElementById('currentAvatar').innerHTML = `<i class="${icon}"></i>`;
+        document.getElementById('currentAvatar').style.background = bg;
+        
+        // Update equip button
+        const equipBtn = document.getElementById('equipAvatarBtn');
+        if (isPurchased) {
+            equipBtn.disabled = false;
+            equipBtn.textContent = 'Equip';
+        } else {
+            equipBtn.disabled = false;
+            equipBtn.textContent = `Buy for ${price} Coins`;
+        }
+    }
+    
+    async function equipAvatar() {
+        if (!marketplace.selectedAvatar) return;
+        
+        const user = window.currentUser();
+        if (!user) return;
+        
+        try {
+            const userRef = window.firebaseDatabase.ref(`users/${user.uid}`);
+            await userRef.update({
+                avatar: marketplace.selectedAvatar
+            });
+            
+            // Update UI
+            document.getElementById('equipAvatarBtn').disabled = true;
+            document.getElementById('equipAvatarBtn').textContent = 'Equipped';
+            
+            showToast('Avatar equipped successfully!');
+        } catch (error) {
+            console.error('Error equipping avatar:', error);
+            showToast('Failed to equip avatar');
+        }
+    }
+    
+    async function purchaseGame(gameId, price) {
+        const user = window.currentUser();
+        if (!user) return;
+        
+        if (marketplace.userCoins < price) {
+            showToast('Not enough coins!');
+            return;
+        }
+        
+        try {
+            // Deduct coins
+            const userRef = window.firebaseDatabase.ref(`users/${user.uid}`);
+            await userRef.update({
+                coins: firebase.database.ServerValue.increment(-price)
+            });
+            
+            // Add to purchased items
+            const purchaseRef = window.firebaseDatabase.ref(`purchases/${user.uid}`).push();
+            await purchaseRef.set({
+                type: 'game',
+                itemId: gameId,
+                price: price,
+                purchasedAt: Date.now()
+            });
+            
+            // Update local state
+            marketplace.userCoins -= price;
+            marketplace.purchasedItems.add(`game_${gameId}`);
+            
+            // Update UI
+            document.getElementById('userCoinsMarket').textContent = marketplace.userCoins;
+            
+            // Update buy button
+            const buyBtn = document.querySelector(`.buy-btn[data-game-id="${gameId}"]`);
+            if (buyBtn) {
+                buyBtn.innerHTML = '<i class="fas fa-check"></i> Owned';
+                buyBtn.disabled = true;
+                buyBtn.classList.add('owned');
+            }
+            
+            showToast(`Game purchased successfully! -${price} Coins`);
+            
+        } catch (error) {
+            console.error('Error purchasing game:', error);
+            showToast('Failed to purchase game');
+        }
+    }
+    
+    async function purchaseAsset(assetId, price) {
+        const user = window.currentUser();
+        if (!user) return;
+        
+        if (marketplace.userCoins < price) {
+            showToast('Not enough coins!');
+            return;
+        }
+        
+        try {
+            // Deduct coins
+            const userRef = window.firebaseDatabase.ref(`users/${user.uid}`);
+            await userRef.update({
+                coins: firebase.database.ServerValue.increment(-price)
+            });
+            
+            // Add to purchased items
+            const purchaseRef = window.firebaseDatabase.ref(`purchases/${user.uid}`).push();
+            await purchaseRef.set({
+                type: 'asset',
+                itemId: assetId,
+                price: price,
+                purchasedAt: Date.now()
+            });
+            
+            // Update local state
+            marketplace.userCoins -= price;
+            marketplace.purchasedItems.add(`asset_${assetId}`);
+            
+            // Update UI
+            document.getElementById('userCoinsMarket').textContent = marketplace.userCoins;
+            
+            // Update buy button
+            const buyBtn = document.querySelector(`.buy-btn[data-asset-id="${assetId}"]`);
+            if (buyBtn) {
+                buyBtn.innerHTML = '<i class="fas fa-check"></i> Owned';
+                buyBtn.disabled = true;
+                buyBtn.classList.add('owned');
+            }
+            
+            showToast(`Asset purchased successfully! -${price} Coins`);
+            
+        } catch (error) {
+            console.error('Error purchasing asset:', error);
+            showToast('Failed to purchase asset');
+        }
+    }
+    
+    function filterAssets(category) {
+        const assets = document.querySelectorAll('.asset-card');
+        
+        assets.forEach(asset => {
+            if (category === 'all' || asset.dataset.category === category) {
+                asset.style.display = 'block';
+            } else {
+                asset.style.display = 'none';
+            }
+        });
+    }
+    
+    function searchGames(query) {
+        const gameCards = document.querySelectorAll('.game-card-market');
+        const lowerQuery = query.toLowerCase();
+        
+        gameCards.forEach(card => {
+            const title = card.querySelector('.game-card-title span:first-child').textContent.toLowerCase();
+            const description = card.querySelector('.game-card-description').textContent.toLowerCase();
+            const author = card.querySelector('.game-card-author').textContent.toLowerCase();
+            
+            if (title.includes(lowerQuery) || description.includes(lowerQuery) || author.includes(lowerQuery)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    function sortGames(sortBy) {
+        // This would implement sorting logic
+        // For now, just show a message
+        showToast(`Sorted by: ${sortBy}`);
+    }
+</script>
