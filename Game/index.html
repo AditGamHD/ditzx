@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UvoWorld - Platform Game 2D</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Font Awesome untuk icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid #00adb5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00adb5;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 173, 181, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #00adb5;
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #00adb5;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #8a8da0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00adb5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(26, 26, 46, 0.98);
+                flex-direction: column;
+                padding: 20px;
+                gap: 10px;
+                border-bottom: 2px solid #00adb5;
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #00adb5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #00adb5;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Mobile Action Buttons */
+        .mobile-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #00adb5;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            background: #0097a7;
+        }
+
+        /* Studio Container */
+        #studioContainer {
+            width: 100%;
+            height: calc(100vh - 180px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #00adb5;
+        }
+
+        /* Online Users Indicator */
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: rgba(0, 173, 181, 0.2);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px;">Memuat UvoWorld...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-gamepad"></i>
+            <span>UvoWorld</span>
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <nav class="nav-menu" id="navMenu">
+            <button class="nav-btn active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-page="game">
+                <i class="fas fa-play-circle"></i>
+                <span>Game</span>
+            </button>
+            <button class="nav-btn" data-page="studio" id="studioBtn">
+                <i class="fas fa-cogs"></i>
+                <span>Studio</span>
+            </button>
+            <button class="nav-btn" data-page="akun" id="accountBtn">
+                <i class="fas fa-user"></i>
+                <span>Akun</span>
+            </button>
+            <button class="nav-btn" id="logoutBtn" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+            <div class="online-indicator" id="onlineIndicator">
+                <div class="online-dot"></div>
+                <span id="onlineCount">0 Online</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page active" id="homePage"></div>
+        <div class="page" id="gamePage"></div>
+        <div class="page" id="studioPage">
+            <div style="padding: 20px;">
+                <h2 style="margin-bottom: 20px; color: #00adb5;">
+                    <i class="fas fa-cogs"></i> UvoWorld Studio
+                </h2>
+                <div id="studioContainer">
+                    <!-- Studio akan dimuat di sini -->
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="nav-btn" id="newProjectBtn">
+                        <i class="fas fa-plus"></i> Proyek Baru
+                    </button>
+                    <button class="nav-btn" id="saveProjectBtn">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                    <button class="nav-btn" id="testProjectBtn">
+                        <i class="fas fa-play"></i> Test
+                    </button>
+                    <button class="nav-btn" id="publishBtn">
+                        <i class="fas fa-cloud-upload-alt"></i> Publish
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="page" id="akunPage"></div>
+    </main>
+
+    <!-- Mobile Action Buttons -->
+    <div class="mobile-actions">
+        <button class="action-btn" id="mobileHomeBtn" title="Home">
+            <i class="fas fa-home"></i>
+        </button>
+        <button class="action-btn" id="mobileGameBtn" title="Game">
+            <i class="fas fa-gamepad"></i>
+        </button>
+        <button class="action-btn" id="mobileStudioBtn" title="Studio">
+            <i class="fas fa-cogs"></i>
+        </button>
+        <button class="action-btn" id="mobileAccountBtn" title="Akun">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>UvoWorld © 2024</span>
+            </div>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-shield-alt"></i> Keamanan</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Bantuan</a>
+                <a href="#"><i class="fas fa-file-alt"></i> Ketentuan</a>
+                <a href="#"><i class="fas fa-lock"></i> Privasi</a>
+            </div>
+            <div id="userStatus">
+                Belum login
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Inisialisasi Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAumGENjQDZuC6XKj2LqSNuw_Ejz7yKk0",
+            authDomain: "uvoworld-1.firebaseapp.com",
+            databaseURL: "https://uvoworld-1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "uvoworld-1",
+            storageBucket: "uvoworld-1.firebasestorage.app",
+            messagingSenderId: "885277532590",
+            appId: "1:885277532590:web:a809fb385ef500f744683f",
+            measurementId: "G-5BWB5HXH7R"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // State aplikasi
+        let currentUser = null;
+        let currentPage = 'home';
+        let onlineUsers = {};
+
+        // Elemen DOM
+        const pages = {
+            home: document.getElementById('homePage'),
+            game: document.getElementById('gamePage'),
+            studio: document.getElementById('studioPage'),
+            akun: document.getElementById('akunPage')
+        };
+
+        const loading = document.getElementById('loading');
+        const toast = document.getElementById('toast');
+        const navMenu = document.getElementById('navMenu');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const onlineIndicator = document.getElementById('onlineIndicator');
+        const onlineCount = document.getElementById('onlineCount');
+        const userStatus = document.getElementById('userStatus');
+        const studioBtn = document.getElementById('studioBtn');
+        const accountBtn = document.getElementById('accountBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Fungsi untuk menampilkan toast
+        function showToast(message, duration = 3000) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, duration);
+        }
+
+        // Fungsi untuk menampilkan loading
+        function showLoading() {
+            loading.classList.add('active');
+        }
+
+        function hideLoading() {
+            loading.classList.remove('active');
+        }
+
+        // Fungsi untuk mengganti halaman
+        async function navigateTo(page) {
+            if (page === currentPage) return;
+            
+            // Validasi akses
+            if ((page === 'studio' || page === 'akun') && !currentUser) {
+                showToast('Harap login terlebih dahulu!');
+                page = 'home';
+            }
+            
+            // Update tombol aktif
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === page) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Sembunyikan semua halaman
+            Object.values(pages).forEach(p => p.classList.remove('active'));
+            
+            // Tampilkan halaman yang dipilih
+            if (pages[page]) {
+                pages[page].classList.add('active');
+                currentPage = page;
+                
+                // Load konten halaman
+                await loadPageContent(page);
+                
+                // Update status user di footer
+                updateUserStatus();
+            }
+        }
+
+        // Fungsi untuk memuat konten halaman
+        async function loadPageContent(page) {
+            showLoading();
+            try {
+                const response = await fetch(`halaman/${page.charAt(0).toUpperCase() + page.slice(1)}.html`);
+                if (response.ok) {
+                    const content = await response.text();
+                    pages[page].innerHTML = content;
+                    
+                    // Inisialisasi konten halaman
+                    if (page === 'home') initHomePage();
+                    else if (page === 'game') initGamePage();
+                    else if (page === 'akun') initAccountPage();
+                }
+            } catch (error) {
+                console.error('Error loading page:', error);
+                pages[page].innerHTML = '<div style="padding: 40px; text-align: center;"><h3>Error memuat halaman</h3></div>';
+            }
+            hideLoading();
+        }
+
+        // Fungsi untuk mengupdate status user
+        function updateUserStatus() {
+            if (currentUser) {
+                userStatus.innerHTML = `
+                    <i class="fas fa-user-circle"></i> ${currentUser.displayName || currentUser.email}
+                    <span style="color: #4CAF50;"> • Online</span>
+                `;
+                logoutBtn.style.display = 'flex';
+            } else {
+                userStatus.innerHTML = 'Belum login';
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        // Fungsi untuk mengupdate jumlah user online
+        function updateOnlineUsers() {
+            const count = Object.keys(onlineUsers).length;
+            onlineCount.textContent = `${count} Online`;
+        }
+
+        // Event Listeners
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+
+        // Navigasi dari tombol
+        document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                navigateTo(btn.dataset.page);
+                if (window.innerWidth <= 768) {
+                    navMenu.classList.remove('show');
+                }
+            });
+        });
+
+        // Mobile action buttons
+        document.getElementById('mobileHomeBtn').addEventListener('click', () => navigateTo('home'));
+        document.getElementById('mobileGameBtn').addEventListener('click', () => navigateTo('game'));
+        document.getElementById('mobileStudioBtn').addEventListener('click', () => navigateTo('studio'));
+        document.getElementById('mobileAccountBtn').addEventListener('click', () => navigateTo('akun'));
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut();
+            showToast('Berhasil logout');
+        });
+
+        // Firebase Auth State Observer
+        auth.onAuthStateChanged(async (user) => {
+            currentUser = user;
+            
+            if (user) {
+                // Update status online di database
+                const userStatusRef = database.ref(`status/${user.uid}`);
+                const isOfflineForDatabase = {
+                    state: 'offline',
+                    last_changed: firebase.database.ServerValue.TIMESTAMP,
+                };
+                const isOnlineForDatabase = {
+                    state: 'online',
+                    last_changed: firebase.database.ServerValue.TIMESTAMP,
+                };
+                
+                database.ref('.info/connected').on('value', (snapshot) => {
+                    if (snapshot.val() === false) return;
+                    
+                    userStatusRef.onDisconnect().set(isOfflineForDatabase).then(() => {
+                        userStatusRef.set(isOnlineForDatabase);
+                    });
+                });
+                
+                // Monitor user online
+                database.ref('status').on('value', (snapshot) => {
+                    onlineUsers = snapshot.val() || {};
+                    updateOnlineUsers();
+                });
+                
+                // Update user profile di database jika belum ada
+                const userRef = database.ref(`users/${user.uid}`);
+                userRef.once('value').then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        userRef.set({
+                            email: user.email,
+                            displayName: user.displayName || user.email.split('@')[0],
+                            createdAt: Date.now(),
+                            coins: 1000,
+                            avatar: 'default',
+                            role: 'player'
+                        });
+                    }
+                });
+                
+            } else {
+                // Redirect ke home jika tidak login dan di halaman terbatas
+                if (currentPage === 'studio' || currentPage === 'akun') {
+                    navigateTo('home');
+                }
+            }
+            
+            updateUserStatus();
+        });
+
+        // Inisialisasi halaman home pertama kali
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPageContent('home');
+            updateUserStatus();
+        });
+
+        // Fungsi inisialisasi halaman
+        function initHomePage() {
+            // Load featured games
+            loadFeaturedGames();
+            
+            // Event listeners untuk home page
+            const loginBtn = document.getElementById('homeLoginBtn');
+            const registerBtn = document.getElementById('homeRegisterBtn');
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => navigateTo('akun'));
+            }
+            if (registerBtn) {
+                registerBtn.addEventListener('click', () => {
+                    // Tampilkan modal registrasi
+                    showRegisterModal();
+                });
+            }
+        }
+
+        function initGamePage() {
+            // Load game list
+            loadGameList();
+        }
+
+        function initAccountPage() {
+            // Implementasi akan di-load dari file Akun.html
+        }
+
+        // Fungsi untuk load featured games
+        async function loadFeaturedGames() {
+            const gamesRef = database.ref('games');
+            gamesRef.orderByChild('featured').equalTo(true).limitToFirst(6).once('value').then((snapshot) => {
+                const gamesContainer = document.getElementById('featuredGames');
+                if (gamesContainer && snapshot.exists()) {
+                    const games = snapshot.val();
+                    gamesContainer.innerHTML = Object.keys(games).map(key => `
+                        <div class="game-card">
+                            <img src="${games[key].thumbnail || 'https://via.placeholder.com/300x200'}" alt="${games[key].title}">
+                            <h4>${games[key].title}</h4>
+                            <p>${games[key].description || 'Game seru!'}</p>
+                            <button class="play-btn" data-game="${key}">
+                                <i class="fas fa-play"></i> Mainkan
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        // Fungsi untuk load game list
+        async function loadGameList() {
+            const gamesRef = database.ref('games');
+            gamesRef.limitToFirst(20).once('value').then((snapshot) => {
+                const gamesList = document.getElementById('gamesList');
+                if (gamesList) {
+                    if (snapshot.exists()) {
+                        const games = snapshot.val();
+                        gamesList.innerHTML = Object.keys(games).map(key => `
+                            <div class="game-item">
+                                <img src="${games[key].thumbnail || 'https://via.placeholder.com/100x100'}" alt="${games[key].title}">
+                                <div class="game-info">
+                                    <h4>${games[key].title}</h4>
+                                    <p>${games[key].description || 'No description'}</p>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> ${games[key].players || 0}</span>
+                                        <span><i class="fas fa-star"></i> ${games[key].rating || 'N/A'}</span>
+                                    </div>
+                                </div>
+                                <button class="play-btn" data-game="${key}">
+                                    <i class="fas fa-play"></i> Main
+                                </button>
+                            </div>
+                        `).join('');
+                    } else {
+                        gamesList.innerHTML = '<p style="text-align: center; padding: 40px;">Belum ada game tersedia</p>';
+                    }
+                }
+            });
+        }
+
+        // Fungsi untuk menampilkan modal registrasi
+        function showRegisterModal() {
+            const modalHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1002; display: flex; justify-content: center; align-items: center;">
+                    <div style="background: #1a1a2e; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; border: 2px solid #00adb5;">
+                        <h3 style="margin-bottom: 20px; color: #00adb5;">
+                            <i class="fas fa-user-plus"></i> Daftar Akun Baru
+                        </h3>
+                        <input type="email" id="regEmail" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
+                        <input type="password" id="regPassword" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
+                        <input type="text" id="regDisplayName" placeholder="Nama Pengguna" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
+                        <div style="display: flex; gap: 10px;">
+                            <button id="confirmRegister" style="flex: 1; background: #00adb5; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">
+                                Daftar
+                            </button>
+                            <button id="cancelRegister" style="flex: 1; background: #555; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.innerHTML = modalHTML;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('#cancelRegister').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            modal.querySelector('#confirmRegister').addEventListener('click', async () => {
+                const email = modal.querySelector('#regEmail').value;
+                const password = modal.querySelector('#regPassword').value;
+                const displayName = modal.querySelector('#regDisplayName').value;
+                
+                if (!email || !password) {
+                    showToast('Email dan password harus diisi!');
+                    return;
+                }
+                
+                showLoading();
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    await userCredential.user.updateProfile({
+                        displayName: displayName || email.split('@')[0]
+                    });
+                    showToast('Registrasi berhasil!');
+                    document.body.removeChild(modal);
+                } catch (error) {
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    hideLoading();
+                }
+            });
+        }
+
+        // Initialize simple studio
+        document.getElementById('newProjectBtn')?.addEventListener('click', () => {
+            showToast('Membuat proyek baru...');
+            // Implementasi studio akan dikembangkan lebih lanjut
+        });
+
+        document.getElementById('saveProjectBtn')?.addEventListener('click', () => {
+            showToast('Menyimpan proyek...');
+        });
+
+        document.getElementById('testProjectBtn')?.addEventListener('click', () => {
+            showToast('Menjalankan test...');
+        });
+
+        document.getElementById('publishBtn')?.addEventListener('click', () => {
+            showToast('Mempublish game...');
+        });
+    </script>
+</body>
+</html>
