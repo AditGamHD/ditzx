@@ -1,0 +1,1718 @@
+<div class="studio-editor-container">
+    <div class="studio-header">
+        <h2><i class="fas fa-cogs"></i> UvoWorld Studio</h2>
+        <div class="studio-controls">
+            <button class="studio-btn" id="newProjectBtn">
+                <i class="fas fa-file"></i> Baru
+            </button>
+            <button class="studio-btn" id="loadProjectBtn">
+                <i class="fas fa-folder-open"></i> Buka
+            </button>
+            <button class="studio-btn" id="saveProjectBtn">
+                <i class="fas fa-save"></i> Simpan
+            </button>
+            <button class="studio-btn" id="testGameBtn">
+                <i class="fas fa-play"></i> Test
+            </button>
+            <button class="studio-btn" id="publishGameBtn">
+                <i class="fas fa-cloud-upload-alt"></i> Publish
+            </button>
+        </div>
+    </div>
+
+    <div class="studio-container">
+        <!-- Left Toolbar -->
+        <div class="studio-toolbar">
+            <h3><i class="fas fa-tools"></i> Tools</h3>
+            <div id="toolButtons">
+                <!-- Tools will be added dynamically -->
+            </div>
+            
+            <h3><i class="fas fa-layer-group"></i> Layers</h3>
+            <div class="layer-list" id="layerList">
+                <!-- Layers will be added dynamically -->
+            </div>
+            
+            <h3><i class="fas fa-palette"></i> Assets</h3>
+            <div class="asset-library">
+                <div class="asset-category">
+                    <h4>Platforms</h4>
+                    <div class="asset-grid">
+                        <div class="asset-item" data-type="platform" data-asset="grass">
+                            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #27ae60, #2ecc71); border: 1px solid #1e8449;"></div>
+                            <span>Grass</span>
+                        </div>
+                        <div class="asset-item" data-type="platform" data-asset="stone">
+                            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #7f8c8d, #95a5a6); border: 1px solid #5d6d6e;"></div>
+                            <span>Stone</span>
+                        </div>
+                        <div class="asset-item" data-type="platform" data-asset="ice">
+                            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3498db, #85c1e9); border: 1px solid #2980b9;"></div>
+                            <span>Ice</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="asset-category">
+                    <h4>Obstacles</h4>
+                    <div class="asset-grid">
+                        <div class="asset-item" data-type="spike" data-asset="spike">
+                            <div style="width: 32px; height: 32px; background: #e74c3c; clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+                            <span>Spike</span>
+                        </div>
+                        <div class="asset-item" data-type="enemy" data-asset="slime">
+                            <div style="width: 32px; height: 32px; background: #9b59b6; border-radius: 50% 50% 30% 30%;"></div>
+                            <span>Slime</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="asset-category">
+                    <h4>Collectibles</h4>
+                    <div class="asset-grid">
+                        <div class="asset-item" data-type="coin" data-asset="coin">
+                            <div style="width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500); border-radius: 50%;"></div>
+                            <span>Coin</span>
+                        </div>
+                        <div class="asset-item" data-type="heart" data-asset="heart">
+                            <div style="width: 32px; height: 32px; background: #e74c3c; clip-path: polygon(50% 15%, 80% 40%, 100% 60%, 50% 100%, 0% 60%, 20% 40%);"></div>
+                            <span>Heart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Center Canvas -->
+        <div class="studio-canvas-container">
+            <button class="grid-toggle" id="gridToggle">
+                <i class="fas fa-th"></i> Grid: ON
+            </button>
+            <button class="snap-toggle" id="snapToggle">
+                <i class="fas fa-magnet"></i> Snap: ON
+            </button>
+            
+            <div class="canvas-wrapper">
+                <canvas id="studioCanvas" width="1600" height="1200"></canvas>
+                <canvas id="gridOverlay" class="grid-overlay" width="1600" height="1200"></canvas>
+            </div>
+            
+            <div class="canvas-info">
+                <span id="cursorPos">X: 0, Y: 0</span>
+                <span id="selectedTool">Tool: Select</span>
+                <span id="zoomLevel">Zoom: 100%</span>
+            </div>
+        </div>
+        
+        <!-- Right Properties Panel -->
+        <div class="studio-properties">
+            <h3><i class="fas fa-sliders-h"></i> Properties</h3>
+            
+            <div id="objectProperties" style="display: none;">
+                <div class="property-group">
+                    <h4>Object Properties</h4>
+                    <div class="property-item">
+                        <label>Type</label>
+                        <input type="text" id="propType" class="property-input" readonly>
+                    </div>
+                    <div class="property-item">
+                        <label>Position X</label>
+                        <input type="number" id="propX" class="property-input" step="1">
+                    </div>
+                    <div class="property-item">
+                        <label>Position Y</label>
+                        <input type="number" id="propY" class="property-input" step="1">
+                    </div>
+                    <div class="property-item">
+                        <label>Width</label>
+                        <input type="number" id="propWidth" class="property-input" min="1" step="1">
+                    </div>
+                    <div class="property-item">
+                        <label>Height</label>
+                        <input type="number" id="propHeight" class="property-input" min="1" step="1">
+                    </div>
+                    <div class="property-item">
+                        <label>Rotation</label>
+                        <input type="number" id="propRotation" class="property-input" min="0" max="360" step="1">
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h4>Physics Properties</h4>
+                    <div class="property-item">
+                        <label>Static</label>
+                        <input type="checkbox" id="propStatic" class="property-checkbox">
+                    </div>
+                    <div class="property-item">
+                        <label>Collision</label>
+                        <select id="propCollision" class="property-input">
+                            <option value="solid">Solid</option>
+                            <option value="platform">Platform (One-way)</option>
+                            <option value="trigger">Trigger</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+                    <div class="property-item">
+                        <label>Friction</label>
+                        <input type="range" id="propFriction" class="property-range" min="0" max="1" step="0.1" value="0.8">
+                        <span id="propFrictionValue">0.8</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h4>Game Properties</h4>
+                    <div class="property-item">
+                        <label>Value (Coins)</label>
+                        <input type="number" id="propValue" class="property-input" min="0" step="1" value="1">
+                    </div>
+                    <div class="property-item">
+                        <label>Damage (if obstacle)</label>
+                        <input type="number" id="propDamage" class="property-input" min="0" step="1" value="10">
+                    </div>
+                </div>
+                
+                <button class="studio-btn danger" id="deleteObjectBtn">
+                    <i class="fas fa-trash"></i> Delete Object
+                </button>
+            </div>
+            
+            <div id="levelProperties">
+                <div class="property-group">
+                    <h4>Level Properties</h4>
+                    <div class="property-item">
+                        <label>Level Name</label>
+                        <input type="text" id="levelName" class="property-input" value="New Level">
+                    </div>
+                    <div class="property-item">
+                        <label>Description</label>
+                        <textarea id="levelDescription" class="property-input" rows="3" placeholder="Describe your level..."></textarea>
+                    </div>
+                    <div class="property-item">
+                        <label>Difficulty</label>
+                        <select id="levelDifficulty" class="property-input">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="extreme">Extreme</option>
+                        </select>
+                    </div>
+                    <div class="property-item">
+                        <label>Time Limit (seconds)</label>
+                        <input type="number" id="levelTimeLimit" class="property-input" min="0" value="0">
+                        <small>0 = no limit</small>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h4>Level Settings</h4>
+                    <div class="property-item">
+                        <label>Background Color</label>
+                        <input type="color" id="levelBgColor" class="property-input" value="#1a1a2e">
+                    </div>
+                    <div class="property-item">
+                        <label>Gravity</label>
+                        <input type="range" id="levelGravity" class="property-range" min="0" max="2" step="0.1" value="0.5">
+                        <span id="levelGravityValue">0.5</span>
+                    </div>
+                    <div class="property-item">
+                        <label>Player Jump Force</label>
+                        <input type="range" id="levelJumpForce" class="property-range" min="5" max="20" step="0.5" value="12">
+                        <span id="levelJumpForceValue">12</span>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <h4>Script Editor</h4>
+                    <div class="property-item">
+                        <label>Level Script</label>
+                        <div class="script-editor">
+                            <textarea id="levelScript" class="property-input" rows="8" placeholder="// Add custom JavaScript for level events...
+// Available events: onStart, onUpdate, onFinish, onPlayerDeath
+// Example:
+// function onStart() {
+//   console.log('Level started!');
+// }
+
+// function onUpdate(deltaTime) {
+//   // Update logic here
+// }"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Object List Panel -->
+    <div class="studio-bottom-panel">
+        <h3><i class="fas fa-list"></i> Object List</h3>
+        <div class="object-list-container" id="objectList">
+            <!-- Objects will be listed here -->
+        </div>
+    </div>
+</div>
+
+<style>
+    .studio-editor-container {
+        height: calc(100vh - 150px);
+        display: flex;
+        flex-direction: column;
+        background: #1a1a2e;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .studio-header {
+        background: #252547;
+        padding: 15px 20px;
+        border-bottom: 2px solid #00adb5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .studio-header h2 {
+        color: #00adb5;
+        font-size: 1.5em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .studio-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .studio-btn {
+        padding: 10px 15px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    
+    .studio-btn:hover {
+        background: #4a4a8a;
+        transform: translateY(-2px);
+    }
+    
+    .studio-btn.primary {
+        background: #00adb5;
+    }
+    
+    .studio-btn.danger {
+        background: #e74c3c;
+    }
+    
+    .studio-btn.success {
+        background: #27ae60;
+    }
+    
+    .studio-container {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 250px 1fr 300px;
+        gap: 10px;
+        padding: 15px;
+        overflow: hidden;
+    }
+    
+    @media (max-width: 1200px) {
+        .studio-container {
+            grid-template-columns: 200px 1fr 250px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .studio-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+        }
+    }
+    
+    .studio-toolbar {
+        background: #252547;
+        border-radius: 8px;
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    .studio-toolbar h3 {
+        color: #00adb5;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .tool-btn {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s;
+        text-align: left;
+    }
+    
+    .tool-btn:hover {
+        background: #4a4a8a;
+    }
+    
+    .tool-btn.active {
+        background: #00adb5;
+    }
+    
+    .layer-list {
+        margin-bottom: 20px;
+    }
+    
+    .layer-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        background: #3a3a6a;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .layer-item:hover {
+        background: #4a4a8a;
+    }
+    
+    .layer-item.active {
+        background: #00adb5;
+    }
+    
+    .layer-controls {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .layer-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 5px;
+    }
+    
+    .asset-library {
+        margin-top: 20px;
+    }
+    
+    .asset-category {
+        margin-bottom: 20px;
+    }
+    
+    .asset-category h4 {
+        color: #8a8da0;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+    }
+    
+    .asset-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .asset-item {
+        background: #3a3a6a;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.2s;
+    }
+    
+    .asset-item:hover {
+        background: #4a4a8a;
+        transform: scale(1.05);
+    }
+    
+    .asset-item.active {
+        background: #00adb5;
+    }
+    
+    .asset-item span {
+        font-size: 0.8em;
+        color: white;
+        text-align: center;
+    }
+    
+    .studio-canvas-container {
+        background: #0f0f1f;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .canvas-wrapper {
+        position: relative;
+        width: 100%;
+        height: calc(100% - 40px);
+        overflow: auto;
+    }
+    
+    #studioCanvas {
+        background: #2d2d44;
+        display: block;
+        cursor: crosshair;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    
+    #gridOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+    }
+    
+    .grid-toggle, .snap-toggle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .snap-toggle {
+        top: 50px;
+    }
+    
+    .canvas-info {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        display: flex;
+        gap: 15px;
+    }
+    
+    .studio-properties {
+        background: #252547;
+        border-radius: 8px;
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    .property-group {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #3a3a6a;
+    }
+    
+    .property-group h4 {
+        color: #00adb5;
+        margin-bottom: 15px;
+        font-size: 1em;
+    }
+    
+    .property-item {
+        margin-bottom: 15px;
+    }
+    
+    .property-item label {
+        display: block;
+        color: #8a8da0;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+    
+    .property-input, .property-range, .property-checkbox {
+        width: 100%;
+        padding: 8px;
+        background: #3a3a6a;
+        border: 1px solid #555;
+        border-radius: 4px;
+        color: white;
+    }
+    
+    .property-range {
+        padding: 0;
+    }
+    
+    .property-checkbox {
+        width: auto;
+        margin-right: 10px;
+    }
+    
+    .studio-bottom-panel {
+        background: #252547;
+        margin: 0 15px 15px;
+        border-radius: 8px;
+        padding: 15px;
+        max-height: 200px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .studio-bottom-panel h3 {
+        color: #00adb5;
+        margin-bottom: 10px;
+        font-size: 1em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .object-list-container {
+        flex: 1;
+        overflow-y: auto;
+        background: #1a1a2e;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    
+    .object-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        background: #3a3a6a;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .object-list-item:hover {
+        background: #4a4a8a;
+    }
+    
+    .object-list-item.selected {
+        background: #00adb5;
+    }
+    
+    .object-icon {
+        width: 20px;
+        height: 20px;
+        background: #00adb5;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+    
+    .object-name {
+        flex: 1;
+        color: white;
+        font-size: 0.9em;
+    }
+    
+    .object-type {
+        color: #8a8da0;
+        font-size: 0.8em;
+        margin-right: 10px;
+    }
+</style>
+
+<script>
+    // Studio Editor JavaScript
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (!window.currentUser || !window.currentUser()) {
+            showToast('Harap login untuk menggunakan Studio');
+            navigateTo('home');
+            return;
+        }
+        
+        // Initialize studio
+        initializeStudio();
+        
+        // Setup event listeners
+        setupStudioEvents();
+        
+        // Load tools
+        loadTools();
+        
+        // Load layers
+        loadLayers();
+        
+        // Setup canvas
+        setupCanvas();
+        
+        // Load previous project if exists
+        await loadLastProject();
+    });
+    
+    function initializeStudio() {
+        window.studio = {
+            canvas: null,
+            ctx: null,
+            gridCanvas: null,
+            gridCtx: null,
+            selectedTool: 'platform',
+            gridSize: 32,
+            showGrid: true,
+            snapToGrid: true,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            isDragging: false,
+            dragStartX: 0,
+            dragStartY: 0,
+            objects: [],
+            selectedObject: null,
+            isDrawing: false,
+            drawingStartX: 0,
+            drawingStartY: 0,
+            currentAsset: 'grass',
+            
+            layers: [
+                { id: 'background', name: 'Background', visible: true, locked: false },
+                { id: 'ground', name: 'Ground', visible: true, locked: false },
+                { id: 'obstacles', name: 'Obstacles', visible: true, locked: false },
+                { id: 'collectibles', name: 'Collectibles', visible: true, locked: false },
+                { id: 'players', name: 'Players', visible: true, locked: false },
+                { id: 'effects', name: 'Effects', visible: true, locked: false }
+            ],
+            currentLayer: 'ground',
+            
+            tools: [
+                { id: 'select', name: 'Select', icon: 'fas fa-mouse-pointer' },
+                { id: 'platform', name: 'Platform', icon: 'fas fa-square' },
+                { id: 'spike', name: 'Spike', icon: 'fas fa-chevron-up' },
+                { id: 'coin', name: 'Coin', icon: 'fas fa-coins' },
+                { id: 'player', name: 'Player Start', icon: 'fas fa-user' },
+                { id: 'flag', name: 'Finish Flag', icon: 'fas fa-flag' },
+                { id: 'enemy', name: 'Enemy', icon: 'fas fa-ghost' },
+                { id: 'move', name: 'Move Canvas', icon: 'fas fa-arrows-alt' },
+                { id: 'delete', name: 'Delete', icon: 'fas fa-trash' }
+            ],
+            
+            currentProject: {
+                name: 'New Project',
+                description: '',
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                version: '1.0.0',
+                objects: [],
+                settings: {
+                    gravity: 0.5,
+                    jumpForce: 12,
+                    backgroundColor: '#1a1a2e',
+                    timeLimit: 0,
+                    difficulty: 'medium'
+                }
+            }
+        };
+    }
+    
+    function setupStudioEvents() {
+        // Tool buttons
+        document.getElementById('newProjectBtn').addEventListener('click', createNewProject);
+        document.getElementById('loadProjectBtn').addEventListener('click', loadProjectDialog);
+        document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+        document.getElementById('testGameBtn').addEventListener('click', testGame);
+        document.getElementById('publishGameBtn').addEventListener('click', publishGame);
+        
+        // Grid toggle
+        document.getElementById('gridToggle').addEventListener('click', toggleGrid);
+        document.getElementById('snapToggle').addEventListener('click', toggleSnap);
+        
+        // Delete object button
+        document.getElementById('deleteObjectBtn').addEventListener('click', deleteSelectedObject);
+        
+        // Property change events
+        setupPropertyEvents();
+        
+        // Asset selection
+        setupAssetEvents();
+    }
+    
+    function loadTools() {
+        const toolButtons = document.getElementById('toolButtons');
+        toolButtons.innerHTML = '';
+        
+        studio.tools.forEach(tool => {
+            const button = document.createElement('button');
+            button.className = 'tool-btn';
+            button.innerHTML = `<i class="${tool.icon}"></i> ${tool.name}`;
+            button.dataset.tool = tool.id;
+            
+            if (tool.id === studio.selectedTool) {
+                button.classList.add('active');
+            }
+            
+            button.addEventListener('click', () => {
+                selectTool(tool.id);
+                document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+            
+            toolButtons.appendChild(button);
+        });
+    }
+    
+    function loadLayers() {
+        const layerList = document.getElementById('layerList');
+        layerList.innerHTML = '';
+        
+        studio.layers.forEach(layer => {
+            const layerItem = document.createElement('div');
+            layerItem.className = `layer-item ${layer.id === studio.currentLayer ? 'active' : ''}`;
+            layerItem.dataset.layer = layer.id;
+            
+            layerItem.innerHTML = `
+                <div>
+                    <i class="fas ${layer.visible ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                    ${layer.name}
+                </div>
+                <div class="layer-controls">
+                    <button class="layer-btn toggle-visibility" title="Toggle Visibility">
+                        <i class="fas ${layer.visible ? 'fa-eye-slash' : 'fa-eye'}"></i>
+                    </button>
+                    <button class="layer-btn toggle-lock" title="Toggle Lock">
+                        <i class="fas ${layer.locked ? 'fa-lock-open' : 'fa-lock'}"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Layer selection
+            layerItem.addEventListener('click', (e) => {
+                if (!e.target.closest('.layer-controls')) {
+                    selectLayer(layer.id);
+                    document.querySelectorAll('.layer-item').forEach(item => item.classList.remove('active'));
+                    layerItem.classList.add('active');
+                }
+            });
+            
+            // Toggle visibility
+            layerItem.querySelector('.toggle-visibility').addEventListener('click', (e) => {
+                e.stopPropagation();
+                layer.visible = !layer.visible;
+                layerItem.querySelector('.toggle-visibility i').className = layer.visible ? 'fas fa-eye-slash' : 'fas fa-eye';
+                layerItem.querySelector('.layer-item i:first-child').className = layer.visible ? 'fas fa-eye' : 'fas fa-eye-slash';
+                renderCanvas();
+            });
+            
+            // Toggle lock
+            layerItem.querySelector('.toggle-lock').addEventListener('click', (e) => {
+                e.stopPropagation();
+                layer.locked = !layer.locked;
+                layerItem.querySelector('.toggle-lock i').className = layer.locked ? 'fas fa-lock-open' : 'fas fa-lock';
+            });
+            
+            layerList.appendChild(layerItem);
+        });
+    }
+    
+    function setupCanvas() {
+        studio.canvas = document.getElementById('studioCanvas');
+        studio.ctx = studio.canvas.getContext('2d');
+        
+        studio.gridCanvas = document.getElementById('gridOverlay');
+        studio.gridCtx = studio.gridCanvas.getContext('2d');
+        
+        // Set canvas size
+        resizeCanvas();
+        
+        // Event listeners for canvas
+        studio.canvas.addEventListener('mousedown', handleCanvasMouseDown);
+        studio.canvas.addEventListener('mousemove', handleCanvasMouseMove);
+        studio.canvas.addEventListener('mouseup', handleCanvasMouseUp);
+        studio.canvas.addEventListener('wheel', handleCanvasWheel);
+        
+        // Touch events for mobile
+        studio.canvas.addEventListener('touchstart', handleCanvasTouchStart);
+        studio.canvas.addEventListener('touchmove', handleCanvasTouchMove);
+        studio.canvas.addEventListener('touchend', handleCanvasTouchEnd);
+        
+        // Initial render
+        renderGrid();
+        renderCanvas();
+    }
+    
+    function resizeCanvas() {
+        const container = studio.canvas.parentElement;
+        studio.canvas.width = container.clientWidth;
+        studio.canvas.height = container.clientHeight;
+        studio.gridCanvas.width = container.clientWidth;
+        studio.gridCanvas.height = container.clientHeight;
+    }
+    
+    function renderGrid() {
+        if (!studio.showGrid) return;
+        
+        studio.gridCtx.clearRect(0, 0, studio.gridCanvas.width, studio.gridCanvas.height);
+        
+        const gridSize = studio.gridSize * studio.zoom;
+        const offsetX = studio.offsetX % gridSize;
+        const offsetY = studio.offsetY % gridSize;
+        
+        studio.gridCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        studio.gridCtx.lineWidth = 1;
+        
+        // Draw vertical lines
+        for (let x = offsetX; x < studio.gridCanvas.width; x += gridSize) {
+            studio.gridCtx.beginPath();
+            studio.gridCtx.moveTo(x, 0);
+            studio.gridCtx.lineTo(x, studio.gridCanvas.height);
+            studio.gridCtx.stroke();
+        }
+        
+        // Draw horizontal lines
+        for (let y = offsetY; y < studio.gridCanvas.height; y += gridSize) {
+            studio.gridCtx.beginPath();
+            studio.gridCtx.moveTo(0, y);
+            studio.gridCtx.lineTo(studio.gridCanvas.width, y);
+            studio.gridCtx.stroke();
+        }
+    }
+    
+    function renderCanvas() {
+        // Clear canvas
+        studio.ctx.clearRect(0, 0, studio.canvas.width, studio.canvas.height);
+        
+        // Draw background
+        studio.ctx.fillStyle = studio.currentProject.settings.backgroundColor;
+        studio.ctx.fillRect(0, 0, studio.canvas.width, studio.canvas.height);
+        
+        // Draw objects
+        studio.objects.forEach(obj => {
+            const layer = studio.layers.find(l => l.id === obj.layer);
+            if (!layer || !layer.visible) return;
+            
+            // Apply zoom and offset
+            const x = (obj.x * studio.zoom) + studio.offsetX;
+            const y = (obj.y * studio.zoom) + studio.offsetY;
+            const width = obj.width * studio.zoom;
+            const height = obj.height * studio.zoom;
+            
+            // Save context
+            studio.ctx.save();
+            studio.ctx.translate(x + width/2, y + height/2);
+            studio.ctx.rotate(obj.rotation * Math.PI / 180);
+            
+            // Draw based on object type
+            switch(obj.type) {
+                case 'platform':
+                    drawPlatform(obj, -width/2, -height/2, width, height);
+                    break;
+                case 'spike':
+                    drawSpike(obj, -width/2, -height/2, width, height);
+                    break;
+                case 'coin':
+                    drawCoin(obj, -width/2, -height/2, width, height);
+                    break;
+                case 'player':
+                    drawPlayer(obj, -width/2, -height/2, width, height);
+                    break;
+                case 'flag':
+                    drawFlag(obj, -width/2, -height/2, width, height);
+                    break;
+                case 'enemy':
+                    drawEnemy(obj, -width/2, -height/2, width, height);
+                    break;
+                default:
+                    drawGeneric(obj, -width/2, -height/2, width, height);
+            }
+            
+            // Draw selection outline if selected
+            if (studio.selectedObject === obj) {
+                studio.ctx.strokeStyle = '#00adb5';
+                studio.ctx.lineWidth = 2;
+                studio.ctx.strokeRect(-width/2, -height/2, width, height);
+                
+                // Draw rotation handle
+                studio.ctx.fillStyle = '#00adb5';
+                studio.ctx.beginPath();
+                studio.ctx.arc(0, -height/2 - 20, 5, 0, Math.PI * 2);
+                studio.ctx.fill();
+            }
+            
+            studio.ctx.restore();
+        });
+        
+        // Update object list
+        updateObjectList();
+    }
+    
+    function drawPlatform(obj, x, y, width, height) {
+        // Platform with grass on top
+        studio.ctx.fillStyle = obj.color || '#2ecc71';
+        studio.ctx.fillRect(x, y, width, height);
+        
+        // Grass top
+        studio.ctx.fillStyle = '#27ae60';
+        studio.ctx.fillRect(x, y, width, 4);
+        
+        // Platform shadow
+        studio.ctx.strokeStyle = '#1e8449';
+        studio.ctx.lineWidth = 1;
+        studio.ctx.strokeRect(x, y, width, height);
+    }
+    
+    function drawSpike(obj, x, y, width, height) {
+        studio.ctx.fillStyle = obj.color || '#e74c3c';
+        studio.ctx.beginPath();
+        studio.ctx.moveTo(x + width/2, y);
+        studio.ctx.lineTo(x, y + height);
+        studio.ctx.lineTo(x + width, y + height);
+        studio.ctx.closePath();
+        studio.ctx.fill();
+    }
+    
+    function drawCoin(obj, x, y, width, height) {
+        // Gold coin with shine
+        const gradient = studio.ctx.createRadialGradient(
+            x + width/2, y + height/2, 0,
+            x + width/2, y + height/2, width/2
+        );
+        gradient.addColorStop(0, '#FFD700');
+        gradient.addColorStop(0.7, '#FFA500');
+        gradient.addColorStop(1, '#FF8C00');
+        
+        studio.ctx.fillStyle = gradient;
+        studio.ctx.beginPath();
+        studio.ctx.arc(x + width/2, y + height/2, width/2, 0, Math.PI * 2);
+        studio.ctx.fill();
+        
+        // Coin shine
+        studio.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        studio.ctx.beginPath();
+        studio.ctx.arc(x + width/2 - width/4, y + height/2 - height/4, width/6, 0, Math.PI * 2);
+        studio.ctx.fill();
+    }
+    
+    function drawPlayer(obj, x, y, width, height) {
+        // Player character
+        studio.ctx.fillStyle = obj.color || '#3498db';
+        studio.ctx.fillRect(x, y, width, height);
+        
+        // Player face
+        studio.ctx.fillStyle = 'white';
+        studio.ctx.fillRect(x + width/4, y + height/4, width/8, height/8);
+        studio.ctx.fillRect(x + width - width/4 - width/8, y + height/4, width/8, height/8);
+        
+        // Player smile
+        studio.ctx.beginPath();
+        studio.ctx.arc(x + width/2, y + height/2, width/4, 0, Math.PI);
+        studio.ctx.strokeStyle = 'white';
+        studio.ctx.lineWidth = 2;
+        studio.ctx.stroke();
+    }
+    
+    function drawFlag(obj, x, y, width, height) {
+        // Flag pole
+        studio.ctx.fillStyle = '#7f8c8d';
+        studio.ctx.fillRect(x, y, 4, height);
+        
+        // Flag
+        studio.ctx.fillStyle = obj.color || '#e74c3c';
+        studio.ctx.beginPath();
+        studio.ctx.moveTo(x + 4, y);
+        studio.ctx.lineTo(x + width, y + height/3);
+        studio.ctx.lineTo(x + 4, y + height/1.5);
+        studio.ctx.closePath();
+        studio.ctx.fill();
+    }
+    
+    function drawEnemy(obj, x, y, width, height) {
+        // Slime enemy
+        studio.ctx.fillStyle = obj.color || '#9b59b6';
+        studio.ctx.beginPath();
+        studio.ctx.ellipse(x + width/2, y + height/2, width/2, height/2, 0, 0, Math.PI * 2);
+        studio.ctx.fill();
+        
+        // Eyes
+        studio.ctx.fillStyle = 'white';
+        studio.ctx.beginPath();
+        studio.ctx.arc(x + width/3, y + height/3, width/8, 0, Math.PI * 2);
+        studio.ctx.arc(x + width - width/3, y + height/3, width/8, 0, Math.PI * 2);
+        studio.ctx.fill();
+        
+        // Pupils
+        studio.ctx.fillStyle = '#2c3e50';
+        studio.ctx.beginPath();
+        studio.ctx.arc(x + width/3, y + height/3, width/16, 0, Math.PI * 2);
+        studio.ctx.arc(x + width - width/3, y + height/3, width/16, 0, Math.PI * 2);
+        studio.ctx.fill();
+    }
+    
+    function drawGeneric(obj, x, y, width, height) {
+        studio.ctx.fillStyle = obj.color || '#95a5a6';
+        studio.ctx.fillRect(x, y, width, height);
+        studio.ctx.strokeStyle = '#7f8c8d';
+        studio.ctx.lineWidth = 1;
+        studio.ctx.strokeRect(x, y, width, height);
+    }
+    
+    function handleCanvasMouseDown(e) {
+        const rect = studio.canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left - studio.offsetX) / studio.zoom;
+        const y = (e.clientY - rect.top - studio.offsetY) / studio.zoom;
+        
+        // Handle different tools
+        switch(studio.selectedTool) {
+            case 'select':
+                selectObjectAt(x, y);
+                if (studio.selectedObject) {
+                    studio.isDragging = true;
+                    studio.dragStartX = x;
+                    studio.dragStartY = y;
+                }
+                break;
+                
+            case 'move':
+                studio.isDragging = true;
+                studio.dragStartX = e.clientX;
+                studio.dragStartY = e.clientY;
+                break;
+                
+            case 'delete':
+                deleteObjectAt(x, y);
+                break;
+                
+            default:
+                // Drawing tools
+                studio.isDrawing = true;
+                studio.drawingStartX = snapToGrid(x);
+                studio.drawingStartY = snapToGrid(y);
+        }
+        
+        e.preventDefault();
+    }
+    
+    function handleCanvasMouseMove(e) {
+        const rect = studio.canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left - studio.offsetX) / studio.zoom;
+        const y = (e.clientY - rect.top - studio.offsetY) / studio.zoom;
+        
+        // Update cursor position display
+        document.getElementById('cursorPos').textContent = `X: ${Math.round(x)}, Y: ${Math.round(y)}`;
+        
+        if (studio.isDragging && studio.selectedTool === 'move') {
+            // Move canvas
+            studio.offsetX += e.clientX - studio.dragStartX;
+            studio.offsetY += e.clientY - studio.dragStartY;
+            studio.dragStartX = e.clientX;
+            studio.dragStartY = e.clientY;
+            renderGrid();
+            renderCanvas();
+        } else if (studio.isDragging && studio.selectedObject) {
+            // Move selected object
+            studio.selectedObject.x = snapToGrid(x - (studio.dragStartX - studio.selectedObject.x));
+            studio.selectedObject.y = snapToGrid(y - (studio.dragStartY - studio.selectedObject.y));
+            updateObjectProperties();
+            renderCanvas();
+        } else if (studio.isDrawing) {
+            // Draw preview
+            renderCanvas();
+            
+            const currentX = snapToGrid(x);
+            const currentY = snapToGrid(y);
+            
+            // Draw preview rectangle
+            studio.ctx.save();
+            studio.ctx.strokeStyle = '#00adb5';
+            studio.ctx.lineWidth = 2;
+            studio.ctx.setLineDash([5, 5]);
+            studio.ctx.strokeRect(
+                studio.drawingStartX * studio.zoom + studio.offsetX,
+                studio.drawingStartY * studio.zoom + studio.offsetY,
+                (currentX - studio.drawingStartX) * studio.zoom,
+                (currentY - studio.drawingStartY) * studio.zoom
+            );
+            studio.ctx.restore();
+        }
+        
+        e.preventDefault();
+    }
+    
+    function handleCanvasMouseUp(e) {
+        const rect = studio.canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left - studio.offsetX) / studio.zoom;
+        const y = (e.clientY - rect.top - studio.offsetY) / studio.zoom;
+        
+        if (studio.isDrawing && studio.selectedTool !== 'select' && studio.selectedTool !== 'move' && studio.selectedTool !== 'delete') {
+            // Create new object
+            const currentX = snapToGrid(x);
+            const currentY = snapToGrid(y);
+            
+            const width = Math.abs(currentX - studio.drawingStartX);
+            const height = Math.abs(currentY - studio.drawingStartY);
+            
+            if (width > 0 || height > 0) {
+                createObject({
+                    x: Math.min(studio.drawingStartX, currentX),
+                    y: Math.min(studio.drawingStartY, currentY),
+                    width: width || studio.gridSize,
+                    height: height || studio.gridSize,
+                    type: studio.selectedTool,
+                    layer: studio.currentLayer,
+                    asset: studio.currentAsset
+                });
+            }
+        }
+        
+        studio.isDragging = false;
+        studio.isDrawing = false;
+        e.preventDefault();
+    }
+    
+    function handleCanvasWheel(e) {
+        e.preventDefault();
+        
+        const rect = studio.canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        
+        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        const newZoom = Math.min(Math.max(studio.zoom * zoomFactor, 0.1), 5);
+        
+        // Adjust offset to zoom towards mouse position
+        studio.offsetX = mouseX - (mouseX - studio.offsetX) * (newZoom / studio.zoom);
+        studio.offsetY = mouseY - (mouseY - studio.offsetY) * (newZoom / studio.zoom);
+        
+        studio.zoom = newZoom;
+        
+        document.getElementById('zoomLevel').textContent = `Zoom: ${Math.round(studio.zoom * 100)}%`;
+        renderGrid();
+        renderCanvas();
+    }
+    
+    function handleCanvasTouchStart(e) {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            studio.canvas.dispatchEvent(mouseEvent);
+        }
+        e.preventDefault();
+    }
+    
+    function handleCanvasTouchMove(e) {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            studio.canvas.dispatchEvent(mouseEvent);
+        }
+        e.preventDefault();
+    }
+    
+    function handleCanvasTouchEnd(e) {
+        const mouseEvent = new MouseEvent('mouseup');
+        studio.canvas.dispatchEvent(mouseEvent);
+        e.preventDefault();
+    }
+    
+    function snapToGrid(value) {
+        return studio.snapToGrid ? Math.round(value / studio.gridSize) * studio.gridSize : value;
+    }
+    
+    function selectTool(toolId) {
+        studio.selectedTool = toolId;
+        document.getElementById('selectedTool').textContent = `Tool: ${studio.tools.find(t => t.id === toolId)?.name || toolId}`;
+        
+        // Change cursor based on tool
+        switch(toolId) {
+            case 'select':
+                studio.canvas.style.cursor = 'default';
+                break;
+            case 'move':
+                studio.canvas.style.cursor = 'move';
+                break;
+            case 'delete':
+                studio.canvas.style.cursor = 'not-allowed';
+                break;
+            default:
+                studio.canvas.style.cursor = 'crosshair';
+        }
+    }
+    
+    function selectLayer(layerId) {
+        studio.currentLayer = layerId;
+        const layer = studio.layers.find(l => l.id === layerId);
+        if (layer && layer.locked) {
+            showToast('Layer terkunci!');
+            selectTool('select');
+        }
+    }
+    
+    function selectObjectAt(x, y) {
+        // Find object at position (check from top layer to bottom)
+        const layersReversed = [...studio.layers].reverse();
+        
+        for (const layer of layersReversed) {
+            if (!layer.visible || layer.locked) continue;
+            
+            const obj = studio.objects.find(o => 
+                o.layer === layer.id &&
+                x >= o.x && x <= o.x + o.width &&
+                y >= o.y && y <= o.y + o.height
+            );
+            
+            if (obj) {
+                studio.selectedObject = obj;
+                showObjectProperties(obj);
+                return;
+            }
+        }
+        
+        // If no object selected, hide properties
+        studio.selectedObject = null;
+        document.getElementById('objectProperties').style.display = 'none';
+        document.getElementById('levelProperties').style.display = 'block';
+    }
+    
+    function showObjectProperties(obj) {
+        document.getElementById('objectProperties').style.display = 'block';
+        document.getElementById('levelProperties').style.display = 'none';
+        
+        // Set property values
+        document.getElementById('propType').value = obj.type;
+        document.getElementById('propX').value = obj.x;
+        document.getElementById('propY').value = obj.y;
+        document.getElementById('propWidth').value = obj.width;
+        document.getElementById('propHeight').value = obj.height;
+        document.getElementById('propRotation').value = obj.rotation || 0;
+        document.getElementById('propStatic').checked = obj.static || false;
+        document.getElementById('propCollision').value = obj.collision || 'solid';
+        document.getElementById('propFriction').value = obj.friction || 0.8;
+        document.getElementById('propFrictionValue').textContent = obj.friction || 0.8;
+        document.getElementById('propValue').value = obj.value || 1;
+        document.getElementById('propDamage').value = obj.damage || 10;
+    }
+    
+    function setupPropertyEvents() {
+        // Property input events
+        const properties = ['propX', 'propY', 'propWidth', 'propHeight', 'propRotation'];
+        properties.forEach(prop => {
+            document.getElementById(prop).addEventListener('change', (e) => {
+                if (studio.selectedObject) {
+                    studio.selectedObject[prop.replace('prop', '').toLowerCase()] = parseFloat(e.target.value);
+                    renderCanvas();
+                }
+            });
+        });
+        
+        // Checkbox events
+        document.getElementById('propStatic').addEventListener('change', (e) => {
+            if (studio.selectedObject) {
+                studio.selectedObject.static = e.target.checked;
+            }
+        });
+        
+        // Select events
+        document.getElementById('propCollision').addEventListener('change', (e) => {
+            if (studio.selectedObject) {
+                studio.selectedObject.collision = e.target.value;
+            }
+        });
+        
+        // Range events
+        document.getElementById('propFriction').addEventListener('input', (e) => {
+            document.getElementById('propFrictionValue').textContent = e.target.value;
+            if (studio.selectedObject) {
+                studio.selectedObject.friction = parseFloat(e.target.value);
+            }
+        });
+        
+        // Level settings
+        document.getElementById('levelGravity').addEventListener('input', (e) => {
+            document.getElementById('levelGravityValue').textContent = e.target.value;
+            studio.currentProject.settings.gravity = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('levelJumpForce').addEventListener('input', (e) => {
+            document.getElementById('levelJumpForceValue').textContent = e.target.value;
+            studio.currentProject.settings.jumpForce = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('levelBgColor').addEventListener('change', (e) => {
+            studio.currentProject.settings.backgroundColor = e.target.value;
+            renderCanvas();
+        });
+        
+        document.getElementById('levelName').addEventListener('change', (e) => {
+            studio.currentProject.name = e.target.value;
+        });
+        
+        document.getElementById('levelDescription').addEventListener('change', (e) => {
+            studio.currentProject.description = e.target.value;
+        });
+        
+        document.getElementById('levelDifficulty').addEventListener('change', (e) => {
+            studio.currentProject.settings.difficulty = e.target.value;
+        });
+        
+        document.getElementById('levelTimeLimit').addEventListener('change', (e) => {
+            studio.currentProject.settings.timeLimit = parseInt(e.target.value);
+        });
+    }
+    
+    function setupAssetEvents() {
+        document.querySelectorAll('.asset-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.asset-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                studio.currentAsset = item.dataset.asset;
+                selectTool(item.dataset.type);
+            });
+        });
+    }
+    
+    function createObject(properties) {
+        const defaultProps = {
+            id: 'obj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            type: 'platform',
+            x: 0,
+            y: 0,
+            width: studio.gridSize,
+            height: studio.gridSize,
+            rotation: 0,
+            color: getColorForType(properties.type),
+            static: true,
+            collision: 'solid',
+            friction: 0.8,
+            value: 1,
+            damage: 10,
+            layer: studio.currentLayer,
+            createdAt: Date.now()
+        };
+        
+        const obj = { ...defaultProps, ...properties };
+        studio.objects.push(obj);
+        studio.selectedObject = obj;
+        showObjectProperties(obj);
+        updateObjectList();
+        renderCanvas();
+    }
+    
+    function getColorForType(type) {
+        const colors = {
+            platform: '#2ecc71',
+            spike: '#e74c3c',
+            coin: '#FFD700',
+            player: '#3498db',
+            flag: '#e74c3c',
+            enemy: '#9b59b6'
+        };
+        return colors[type] || '#95a5a6';
+    }
+    
+    function deleteObjectAt(x, y) {
+        const index = studio.objects.findIndex(obj => 
+            x >= obj.x && x <= obj.x + obj.width &&
+            y >= obj.y && y <= obj.y + obj.height
+        );
+        
+        if (index !== -1) {
+            studio.objects.splice(index, 1);
+            studio.selectedObject = null;
+            document.getElementById('objectProperties').style.display = 'none';
+            document.getElementById('levelProperties').style.display = 'block';
+            updateObjectList();
+            renderCanvas();
+        }
+    }
+    
+    function deleteSelectedObject() {
+        if (studio.selectedObject) {
+            const index = studio.objects.indexOf(studio.selectedObject);
+            if (index !== -1) {
+                studio.objects.splice(index, 1);
+                studio.selectedObject = null;
+                document.getElementById('objectProperties').style.display = 'none';
+                document.getElementById('levelProperties').style.display = 'block';
+                updateObjectList();
+                renderCanvas();
+            }
+        }
+    }
+    
+    function updateObjectList() {
+        const objectList = document.getElementById('objectList');
+        objectList.innerHTML = '';
+        
+        studio.objects.forEach(obj => {
+            const item = document.createElement('div');
+            item.className = `object-list-item ${studio.selectedObject === obj ? 'selected' : ''}`;
+            item.dataset.objectId = obj.id;
+            
+            const typeIcon = getIconForType(obj.type);
+            
+            item.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="${typeIcon}" style="color: ${obj.color};"></i>
+                    <span class="object-name">${obj.type} (${obj.x}, ${obj.y})</span>
+                </div>
+                <span class="object-type">${obj.layer}</span>
+            `;
+            
+            item.addEventListener('click', () => {
+                studio.selectedObject = obj;
+                showObjectProperties(obj);
+                renderCanvas();
+            });
+            
+            objectList.appendChild(item);
+        });
+    }
+    
+    function getIconForType(type) {
+        const icons = {
+            platform: 'fas fa-square',
+            spike: 'fas fa-chevron-up',
+            coin: 'fas fa-coins',
+            player: 'fas fa-user',
+            flag: 'fas fa-flag',
+            enemy: 'fas fa-ghost'
+        };
+        return icons[type] || 'fas fa-shapes';
+    }
+    
+    function toggleGrid() {
+        studio.showGrid = !studio.showGrid;
+        const button = document.getElementById('gridToggle');
+        button.innerHTML = `<i class="fas fa-th"></i> Grid: ${studio.showGrid ? 'ON' : 'OFF'}`;
+        renderGrid();
+    }
+    
+    function toggleSnap() {
+        studio.snapToGrid = !studio.snapToGrid;
+        const button = document.getElementById('snapToggle');
+        button.innerHTML = `<i class="fas fa-magnet"></i> Snap: ${studio.snapToGrid ? 'ON' : 'OFF'}`;
+    }
+    
+    async function createNewProject() {
+        if (studio.objects.length > 0) {
+            if (!confirm('Buat proyek baru? Perubahan yang belum disimpan akan hilang.')) {
+                return;
+            }
+        }
+        
+        studio.objects = [];
+        studio.selectedObject = null;
+        studio.currentProject = {
+            name: 'New Project',
+            description: '',
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            version: '1.0.0',
+            objects: [],
+            settings: {
+                gravity: 0.5,
+                jumpForce: 12,
+                backgroundColor: '#1a1a2e',
+                timeLimit: 0,
+                difficulty: 'medium'
+            }
+        };
+        
+        // Reset UI
+        document.getElementById('levelName').value = 'New Project';
+        document.getElementById('levelDescription').value = '';
+        document.getElementById('levelDifficulty').value = 'medium';
+        document.getElementById('levelTimeLimit').value = 0;
+        document.getElementById('levelBgColor').value = '#1a1a2e';
+        document.getElementById('levelGravity').value = 0.5;
+        document.getElementById('levelGravityValue').textContent = '0.5';
+        document.getElementById('levelJumpForce').value = 12;
+        document.getElementById('levelJumpForceValue').textContent = '12';
+        
+        document.getElementById('objectProperties').style.display = 'none';
+        document.getElementById('levelProperties').style.display = 'block';
+        
+        updateObjectList();
+        renderCanvas();
+        
+        showToast('Proyek baru dibuat');
+    }
+    
+    async function loadProjectDialog() {
+        // In a real implementation, this would show a modal with project list
+        // For now, load from localStorage
+        const saved = localStorage.getItem('uvoworld_last_project');
+        if (saved) {
+            if (confirm('Load proyek terakhir?')) {
+                loadProject(JSON.parse(saved));
+            }
+        } else {
+            showToast('Tidak ada proyek tersimpan');
+        }
+    }
+    
+    async function loadLastProject() {
+        const saved = localStorage.getItem('uvoworld_last_project');
+        if (saved) {
+            try {
+                loadProject(JSON.parse(saved));
+            } catch (error) {
+                console.error('Error loading project:', error);
+            }
+        }
+    }
+    
+    function loadProject(projectData) {
+        studio.currentProject = projectData;
+        studio.objects = projectData.objects || [];
+        
+        // Update UI
+        document.getElementById('levelName').value = projectData.name || 'New Project';
+        document.getElementById('levelDescription').value = projectData.description || '';
+        document.getElementById('levelDifficulty').value = projectData.settings?.difficulty || 'medium';
+        document.getElementById('levelTimeLimit').value = projectData.settings?.timeLimit || 0;
+        document.getElementById('levelBgColor').value = projectData.settings?.backgroundColor || '#1a1a2e';
+        document.getElementById('levelGravity').value = projectData.settings?.gravity || 0.5;
+        document.getElementById('levelGravityValue').textContent = projectData.settings?.gravity || 0.5;
+        document.getElementById('levelJumpForce').value = projectData.settings?.jumpForce || 12;
+        document.getElementById('levelJumpForceValue').textContent = projectData.settings?.jumpForce || 12;
+        
+        studio.selectedObject = null;
+        document.getElementById('objectProperties').style.display = 'none';
+        document.getElementById('levelProperties').style.display = 'block';
+        
+        updateObjectList();
+        renderCanvas();
+        
+        showToast(`Proyek "${projectData.name}" dimuat`);
+    }
+    
+    async function saveProject() {
+        if (!window.currentUser()) {
+            showToast('Harap login untuk menyimpan proyek');
+            return;
+        }
+        
+        studio.currentProject.updatedAt = Date.now();
+        studio.currentProject.objects = studio.objects;
+        
+        // Get level settings from UI
+        studio.currentProject.settings = {
+            gravity: parseFloat(document.getElementById('levelGravity').value),
+            jumpForce: parseFloat(document.getElementById('levelJumpForce').value),
+            backgroundColor: document.getElementById('levelBgColor').value,
+            timeLimit: parseInt(document.getElementById('levelTimeLimit').value),
+            difficulty: document.getElementById('levelDifficulty').value
+        };
+        
+        try {
+            // Save to localStorage for now
+            localStorage.setItem('uvoworld_last_project', JSON.stringify(studio.currentProject));
+            
+            // Also save to Firebase
+            const user = window.currentUser();
+            const projectRef = window.firebaseDatabase.ref(`projects/${user.uid}/${Date.now()}`);
+            await projectRef.set({
+                ...studio.currentProject,
+                owner: user.uid,
+                ownerName: user.displayName
+            });
+            
+            showToast('Proyek berhasil disimpan!');
+        } catch (error) {
+            console.error('Error saving project:', error);
+            showToast('Gagal menyimpan proyek');
+        }
+    }
+    
+    async function testGame() {
+        // Save first
+        await saveProject();
+        
+        // Convert to game data
+        const gameData = {
+            name: studio.currentProject.name,
+            description: studio.currentProject.description,
+            settings: studio.currentProject.settings,
+            objects: studio.objects.map(obj => ({
+                ...obj,
+                // Remove temporary properties
+                id: undefined
+            })),
+            createdAt: Date.now(),
+            isTest: true
+        };
+        
+        // Navigate to play page with game data
+        navigateTo('play', { gameData: gameData });
+    }
+    
+    async function publishGame() {
+        if (!window.currentUser()) {
+            showToast('Harap login untuk mempublish game');
+            return;
+        }
+        
+        await saveProject();
+        
+        // Create game data for publishing
+        const gameData = {
+            ...studio.currentProject,
+            published: true,
+            publishedAt: Date.now(),
+            owner: window.currentUser().uid,
+            ownerName: window.currentUser().displayName,
+            plays: 0,
+            likes: 0,
+            rating: 0
+        };
+        
+        try {
+            const gamesRef = window.firebaseDatabase.ref('games');
+            const newGameRef = gamesRef.push();
+            await newGameRef.set(gameData);
+            
+            // Update user stats
+            const userRef = window.firebaseDatabase.ref(`users/${window.currentUser().uid}`);
+            await userRef.update({
+                gamesCreated: firebase.database.ServerValue.increment(1),
+                coins: firebase.database.ServerValue.increment(100) // Reward for publishing
+            });
+            
+            showToast(`Game "${gameData.name}" berhasil dipublish! +100 Coins`);
+            
+            // Reset studio for new project
+            createNewProject();
+            
+        } catch (error) {
+            console.error('Error publishing game:', error);
+            showToast('Gagal mempublish game');
+        }
+    }
+    
+    // Initialize when page loads
+    setTimeout(() => {
+        renderGrid();
+        renderCanvas();
+    }, 100);
+</script>
