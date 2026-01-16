@@ -1,0 +1,1332 @@
+<div class="community-container">
+    <div class="community-header">
+        <h2><i class="fas fa-users"></i> UvoWorld Community</h2>
+        <div class="community-stats">
+            <div class="community-stat">
+                <i class="fas fa-user-friends"></i>
+                <span>Total Users: <strong id="totalUsers">0</strong></span>
+            </div>
+            <div class="community-stat">
+                <i class="fas fa-gamepad"></i>
+                <span>Games Created: <strong id="totalGamesCreated">0</strong></span>
+            </div>
+            <div class="community-stat">
+                <i class="fas fa-comments"></i>
+                <span>Messages Today: <strong id="messagesToday">0</strong></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="community-content">
+        <div class="community-sidebar">
+            <div class="online-users">
+                <h3><i class="fas fa-wifi"></i> Online Now</h3>
+                <div class="users-list" id="onlineUsersList">
+                    <!-- Online users will appear here -->
+                </div>
+            </div>
+            
+            <div class="community-events">
+                <h3><i class="fas fa-calendar-alt"></i> Events</h3>
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-date">Today</div>
+                        <div class="event-title">Game Jam: Platformer Challenge</div>
+                        <div class="event-desc">Create the best platformer game!</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">Tomorrow</div>
+                        <div class="event-title">Community Play Session</div>
+                        <div class="event-desc">Play games together with the community</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                <button class="action-btn" id="createGameBtn">
+                    <i class="fas fa-plus"></i> Create Game
+                </button>
+                <button class="action-btn" id="joinVoiceBtn">
+                    <i class="fas fa-phone-alt"></i> Voice Chat
+                </button>
+                <button class="action-btn" id="createGroupBtn">
+                    <i class="fas fa-users"></i> Create Group
+                </button>
+            </div>
+        </div>
+        
+        <div class="community-main">
+            <div class="community-tabs">
+                <button class="comm-tab active" data-tab="feed">📰 Feed</button>
+                <button class="comm-tab" data-tab="groups">👥 Groups</button>
+                <button class="comm-tab" data-tab="leaderboards">🏆 Leaderboards</button>
+                <button class="comm-tab" data-tab="forums">💬 Forums</button>
+            </div>
+            
+            <div class="comm-tab-content active" id="feedTab">
+                <div class="post-creator">
+                    <div class="post-input">
+                        <textarea id="postContent" placeholder="What's on your mind? Share with the community!"></textarea>
+                        <div class="post-actions">
+                            <button class="post-btn" id="addImageBtn">
+                                <i class="fas fa-image"></i>
+                            </button>
+                            <button class="post-btn" id="addGameBtn">
+                                <i class="fas fa-gamepad"></i>
+                            </button>
+                            <button class="post-btn primary" id="submitPostBtn">
+                                <i class="fas fa-paper-plane"></i> Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feed-container" id="communityFeed">
+                    <!-- Posts will appear here -->
+                </div>
+            </div>
+            
+            <div class="comm-tab-content" id="groupsTab">
+                <div class="groups-header">
+                    <h3>Community Groups</h3>
+                    <button class="create-group-btn" id="createNewGroupBtn">
+                        <i class="fas fa-plus"></i> Create Group
+                    </button>
+                </div>
+                
+                <div class="groups-grid" id="groupsGrid">
+                    <!-- Groups will appear here -->
+                </div>
+            </div>
+            
+            <div class="comm-tab-content" id="leaderboardsTab">
+                <div class="leaderboards-container">
+                    <div class="leaderboard-category">
+                        <h3><i class="fas fa-gamepad"></i> Top Game Creators</h3>
+                        <div class="leaderboard-list" id="creatorsLeaderboard">
+                            <!-- Creators leaderboard -->
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard-category">
+                        <h3><i class="fas fa-trophy"></i> Top Players</h3>
+                        <div class="leaderboard-list" id="playersLeaderboard">
+                            <!-- Players leaderboard -->
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard-category">
+                        <h3><i class="fas fa-coins"></i> Richest Players</h3>
+                        <div class="leaderboard-list" id="coinsLeaderboard">
+                            <!-- Coins leaderboard -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comm-tab-content" id="forumsTab">
+                <div class="forums-container">
+                    <div class="forum-categories">
+                        <div class="forum-category">
+                            <div class="category-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>Game Development</h4>
+                                <p>Discuss game creation, share tips, get feedback</p>
+                            </div>
+                            <div class="category-stats">
+                                <span>125 Topics</span>
+                                <span>1.2K Posts</span>
+                            </div>
+                        </div>
+                        
+                        <div class="forum-category">
+                            <div class="category-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>Art & Assets</h4>
+                                <p>Share artwork, discuss asset creation</p>
+                            </div>
+                            <div class="category-stats">
+                                <span>89 Topics</span>
+                                <span>856 Posts</span>
+                            </div>
+                        </div>
+                        
+                        <div class="forum-category">
+                            <div class="category-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>Scripting & Code</h4>
+                                <p>Programming help and script sharing</p>
+                            </div>
+                            <div class="category-stats">
+                                <span>67 Topics</span>
+                                <span>543 Posts</span>
+                            </div>
+                        </div>
+                        
+                        <div class="forum-category">
+                            <div class="category-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>Help & Support</h4>
+                                <p>Get help with UvoWorld features</p>
+                            </div>
+                            <div class="category-stats">
+                                <span>45 Topics</span>
+                                <span>321 Posts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .community-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .community-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #00adb5;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .community-header h2 {
+        color: #00adb5;
+        font-size: 2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .community-stats {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .community-stat {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: rgba(0, 173, 181, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(0, 173, 181, 0.3);
+    }
+    
+    .community-stat i {
+        color: #00adb5;
+        font-size: 1.2em;
+    }
+    
+    .community-stat span {
+        color: white;
+    }
+    
+    .community-content {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .community-content {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .community-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .online-users {
+        background: #252547;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .online-users h3 {
+        color: #00adb5;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .users-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .user-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .user-item:hover {
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .user-info {
+        flex: 1;
+    }
+    
+    .user-name {
+        color: white;
+        font-weight: bold;
+        font-size: 0.95em;
+    }
+    
+    .user-status {
+        color: #8a8da0;
+        font-size: 0.8em;
+    }
+    
+    .user-status.online {
+        color: #27ae60;
+    }
+    
+    .user-status.ingame {
+        color: #3498db;
+    }
+    
+    .community-events {
+        background: #252547;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .community-events h3 {
+        color: #00adb5;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .events-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .event-item {
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        border-left: 4px solid #00adb5;
+    }
+    
+    .event-date {
+        color: #00adb5;
+        font-weight: bold;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+    
+    .event-title {
+        color: white;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .event-desc {
+        color: #8a8da0;
+        font-size: 0.9em;
+    }
+    
+    .quick-actions {
+        background: #252547;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .quick-actions h3 {
+        color: #00adb5;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .action-btn {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s;
+    }
+    
+    .action-btn:hover {
+        background: #00adb5;
+        transform: translateY(-2px);
+    }
+    
+    .community-main {
+        background: #252547;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .community-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #3a3a6a;
+        overflow-x: auto;
+    }
+    
+    .comm-tab {
+        padding: 12px 25px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s;
+    }
+    
+    .comm-tab:hover {
+        background: #4a4a8a;
+    }
+    
+    .comm-tab.active {
+        background: #00adb5;
+    }
+    
+    .comm-tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .comm-tab-content.active {
+        display: block;
+    }
+    
+    .post-creator {
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .post-input textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: 15px;
+        background: #1a1a2e;
+        border: 1px solid #3a3a6a;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        resize: vertical;
+        margin-bottom: 15px;
+    }
+    
+    .post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .post-btn {
+        padding: 10px 20px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+    
+    .post-btn:hover {
+        background: #4a4a8a;
+    }
+    
+    .post-btn.primary {
+        background: #00adb5;
+    }
+    
+    .post-btn.primary:hover {
+        background: #0097a7;
+    }
+    
+    .feed-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .feed-post {
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .post-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .post-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2em;
+    }
+    
+    .post-author {
+        flex: 1;
+    }
+    
+    .post-author-name {
+        color: white;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .post-time {
+        color: #8a8da0;
+        font-size: 0.9em;
+    }
+    
+    .post-content {
+        color: white;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 8px;
+    }
+    
+    .post-actions-bar {
+        display: flex;
+        gap: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #3a3a6a;
+    }
+    
+    .post-action {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #8a8da0;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .post-action:hover {
+        color: #00adb5;
+    }
+    
+    .groups-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    
+    .groups-header h3 {
+        color: #00adb5;
+        font-size: 1.5em;
+    }
+    
+    .create-group-btn {
+        padding: 12px 25px;
+        background: #00adb5;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+    }
+    
+    .create-group-btn:hover {
+        background: #0097a7;
+        transform: translateY(-2px);
+    }
+    
+    .groups-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .group-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+        transition: all 0.3s;
+    }
+    
+    .group-card:hover {
+        transform: translateY(-5px);
+        border-color: #00adb5;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .group-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    
+    .group-name {
+        color: white;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+    
+    .group-description {
+        color: #8a8da0;
+        font-size: 0.95em;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    
+    .group-stats {
+        display: flex;
+        justify-content: space-between;
+        color: #8a8da0;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    
+    .join-group-btn {
+        width: 100%;
+        padding: 10px;
+        background: #3a3a6a;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .join-group-btn:hover {
+        background: #00adb5;
+    }
+    
+    .leaderboards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+    }
+    
+    .leaderboard-category {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #3a3a6a;
+    }
+    
+    .leaderboard-category h3 {
+        color: #00adb5;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .leaderboard-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .leaderboard-item:hover {
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .leaderboard-rank {
+        width: 35px;
+        height: 35px;
+        background: #00adb5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .rank-1 .leaderboard-rank {
+        background: gold;
+        color: #333;
+    }
+    
+    .rank-2 .leaderboard-rank {
+        background: silver;
+        color: #333;
+    }
+    
+    .rank-3 .leaderboard-rank {
+        background: #cd7f32;
+        color: #333;
+    }
+    
+    .leaderboard-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .leaderboard-info {
+        flex: 1;
+    }
+    
+    .leaderboard-name {
+        color: white;
+        font-weight: bold;
+    }
+    
+    .leaderboard-value {
+        color: #8a8da0;
+        font-size: 0.9em;
+    }
+    
+    .leaderboard-score {
+        color: gold;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .forums-container {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+    }
+    
+    .forum-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .forum-category {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        border-left: 4px solid #00adb5;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .forum-category:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateX(5px);
+    }
+    
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5em;
+    }
+    
+    .category-info {
+        flex: 1;
+    }
+    
+    .category-info h4 {
+        color: white;
+        font-size: 1.2em;
+        margin-bottom: 5px;
+    }
+    
+    .category-info p {
+        color: #8a8da0;
+        font-size: 0.95em;
+    }
+    
+    .category-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        color: #8a8da0;
+        font-size: 0.9em;
+        text-align: right;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (!window.currentUser()) {
+            showToast('Harap login untuk mengakses komunitas');
+            navigateTo('home');
+            return;
+        }
+        
+        // Initialize community
+        initializeCommunity();
+        
+        // Load community data
+        loadOnlineUsers();
+        loadCommunityFeed();
+        loadLeaderboards();
+        loadGroups();
+        
+        // Setup event listeners
+        setupCommunityEvents();
+    });
+    
+    function initializeCommunity() {
+        window.community = {
+            posts: [],
+            onlineUsers: [],
+            groups: [],
+            leaderboards: {}
+        };
+    }
+    
+    async function loadOnlineUsers() {
+        try {
+            const statusRef = window.firebaseDatabase.ref('status');
+            statusRef.on('value', (snapshot) => {
+                const onlineUsersList = document.getElementById('onlineUsersList');
+                onlineUsersList.innerHTML = '';
+                
+                const users = snapshot.val() || {};
+                const onlineUsers = [];
+                
+                Object.values(users).forEach(userStatus => {
+                    if (userStatus.state === 'online' && userStatus.user) {
+                        onlineUsers.push(userStatus.user);
+                    }
+                });
+                
+                // Update total users count
+                document.getElementById('totalUsers').textContent = onlineUsers.length;
+                
+                // Display online users
+                onlineUsers.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    
+                    userItem.innerHTML = `
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">${user.displayName || user.email}</div>
+                            <div class="user-status online">Online</div>
+                        </div>
+                    `;
+                    
+                    onlineUsersList.appendChild(userItem);
+                });
+                
+                // Store for later use
+                community.onlineUsers = onlineUsers;
+            });
+        } catch (error) {
+            console.error('Error loading online users:', error);
+        }
+    }
+    
+    async function loadCommunityFeed() {
+        try {
+            const postsRef = window.firebaseDatabase.ref('community/posts');
+            postsRef.limitToLast(20).on('value', (snapshot) => {
+                const feedContainer = document.getElementById('communityFeed');
+                
+                if (!snapshot.exists()) {
+                    feedContainer.innerHTML = '<div class="empty-state">No posts yet. Be the first to post!</div>';
+                    return;
+                }
+                
+                const posts = snapshot.val();
+                feedContainer.innerHTML = '';
+                
+                // Update messages count
+                const today = new Date().toDateString();
+                let messagesToday = 0;
+                
+                Object.values(posts).forEach(post => {
+                    const postDate = new Date(post.timestamp).toDateString();
+                    if (postDate === today) {
+                        messagesToday++;
+                    }
+                });
+                
+                document.getElementById('messagesToday').textContent = messagesToday;
+                
+                // Display posts (newest first)
+                Object.values(posts).reverse().forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'feed-post';
+                    
+                    const timeAgo = getTimeAgo(post.timestamp);
+                    
+                    postElement.innerHTML = `
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="post-author">
+                                <div class="post-author-name">${post.authorName || 'User'}</div>
+                                <div class="post-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            ${post.content}
+                        </div>
+                        <div class="post-actions-bar">
+                            <div class="post-action">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>${post.likes || 0}</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="fas fa-comment"></i>
+                                <span>Comment</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="fas fa-share"></i>
+                                <span>Share</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    feedContainer.appendChild(postElement);
+                });
+                
+                // Store for later use
+                community.posts = Object.values(posts);
+            });
+        } catch (error) {
+            console.error('Error loading community feed:', error);
+        }
+    }
+    
+    async function loadLeaderboards() {
+        try {
+            // Load top creators
+            const usersRef = window.firebaseDatabase.ref('users');
+            const snapshot = await usersRef.orderByChild('gamesCreated').limitToLast(10).once('value');
+            
+            const creatorsLeaderboard = document.getElementById('creatorsLeaderboard');
+            creatorsLeaderboard.innerHTML = '';
+            
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                const sortedUsers = Object.entries(users)
+                    .map(([uid, user]) => ({ uid, ...user }))
+                    .sort((a, b) => (b.gamesCreated || 0) - (a.gamesCreated || 0));
+                
+                sortedUsers.forEach((user, index) => {
+                    const item = document.createElement('div');
+                    item.className = `leaderboard-item rank-${index + 1}`;
+                    
+                    item.innerHTML = `
+                        <div class="leaderboard-rank">${index + 1}</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${user.displayName || 'User'}</div>
+                            <div class="leaderboard-value">${user.gamesCreated || 0} games created</div>
+                        </div>
+                    `;
+                    
+                    creatorsLeaderboard.appendChild(item);
+                });
+            }
+            
+            // Load top players (by score)
+            const resultsRef = window.firebaseDatabase.ref('gameResults');
+            const resultsSnapshot = await resultsRef.once('value');
+            
+            if (resultsSnapshot.exists()) {
+                const results = resultsSnapshot.val();
+                const playerScores = {};
+                
+                Object.values(results).forEach(result => {
+                    if (!playerScores[result.userId]) {
+                        playerScores[result.userId] = {
+                            score: 0,
+                            username: result.username
+                        };
+                    }
+                    playerScores[result.userId].score += result.score || 0;
+                });
+                
+                const sortedPlayers = Object.entries(playerScores)
+                    .sort((a, b) => b[1].score - a[1].score)
+                    .slice(0, 10);
+                
+                const playersLeaderboard = document.getElementById('playersLeaderboard');
+                playersLeaderboard.innerHTML = '';
+                
+                sortedPlayers.forEach(([userId, data], index) => {
+                    const item = document.createElement('div');
+                    item.className = `leaderboard-item rank-${index + 1}`;
+                    
+                    item.innerHTML = `
+                        <div class="leaderboard-rank">${index + 1}</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${data.username || 'Player'}</div>
+                        </div>
+                        <div class="leaderboard-score">${data.score}</div>
+                    `;
+                    
+                    playersLeaderboard.appendChild(item);
+                });
+            }
+            
+            // Load richest players
+            const usersSnapshot = await usersRef.orderByChild('coins').limitToLast(10).once('value');
+            
+            const coinsLeaderboard = document.getElementById('coinsLeaderboard');
+            coinsLeaderboard.innerHTML = '';
+            
+            if (usersSnapshot.exists()) {
+                const users = usersSnapshot.val();
+                const sortedUsers = Object.entries(users)
+                    .map(([uid, user]) => ({ uid, ...user }))
+                    .sort((a, b) => (b.coins || 0) - (a.coins || 0));
+                
+                sortedUsers.forEach((user, index) => {
+                    const item = document.createElement('div');
+                    item.className = `leaderboard-item rank-${index + 1}`;
+                    
+                    item.innerHTML = `
+                        <div class="leaderboard-rank">${index + 1}</div>
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${user.displayName || 'User'}</div>
+                        </div>
+                        <div class="leaderboard-score">
+                            <i class="fas fa-coins"></i> ${user.coins || 0}
+                        </div>
+                    `;
+                    
+                    coinsLeaderboard.appendChild(item);
+                });
+            }
+            
+            // Update total games created
+            const gamesRef = window.firebaseDatabase.ref('games');
+            const gamesSnapshot = await gamesRef.once('value');
+            if (gamesSnapshot.exists()) {
+                const games = gamesSnapshot.val();
+                const publishedGames = Object.values(games).filter(game => game.published).length;
+                document.getElementById('totalGamesCreated').textContent = publishedGames;
+            }
+            
+        } catch (error) {
+            console.error('Error loading leaderboards:', error);
+        }
+    }
+    
+    async function loadGroups() {
+        // Sample groups data
+        const groups = [
+            {
+                id: 'group1',
+                name: 'Game Dev Beginners',
+                description: 'Learn game development together with other beginners',
+                members: 125,
+                icon: 'fas fa-graduation-cap'
+            },
+            {
+                id: 'group2',
+                name: 'Platformer Masters',
+                description: 'For creators specializing in platformer games',
+                members: 89,
+                icon: 'fas fa-gamepad'
+            },
+            {
+                id: 'group3',
+                name: 'Pixel Art Club',
+                description: 'Share and discuss pixel art techniques',
+                members: 156,
+                icon: 'fas fa-palette'
+            },
+            {
+                id: 'group4',
+                name: 'Scripting Wizards',
+                description: 'Advanced scripting and programming discussions',
+                members: 67,
+                icon: 'fas fa-code'
+            },
+            {
+                id: 'group5',
+                name: 'Multiplayer Games',
+                description: 'Creating and playing multiplayer games',
+                members: 92,
+                icon: 'fas fa-users'
+            },
+            {
+                id: 'group6',
+                name: 'Sound & Music',
+                description: 'Game audio creation and discussion',
+                members: 54,
+                icon: 'fas fa-music'
+            }
+        ];
+        
+        const groupsGrid = document.getElementById('groupsGrid');
+        groupsGrid.innerHTML = '';
+        
+        groups.forEach(group => {
+            const groupCard = document.createElement('div');
+            groupCard.className = 'group-card';
+            
+            groupCard.innerHTML = `
+                <div class="group-icon">
+                    <i class="${group.icon}"></i>
+                </div>
+                <div class="group-name">${group.name}</div>
+                <div class="group-description">${group.description}</div>
+                <div class="group-stats">
+                    <span>${group.members} members</span>
+                    <span>Active</span>
+                </div>
+                <button class="join-group-btn" data-group-id="${group.id}">
+                    Join Group
+                </button>
+            `;
+            
+            groupsGrid.appendChild(groupCard);
+        });
+        
+        community.groups = groups;
+    }
+    
+    function setupCommunityEvents() {
+        // Tab switching
+        document.querySelectorAll('.comm-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.comm-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show selected tab content
+                document.querySelectorAll('.comm-tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + 'Tab').classList.add('active');
+            });
+        });
+        
+        // Post submission
+        document.getElementById('submitPostBtn').addEventListener('click', submitPost);
+        document.getElementById('postContent').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                submitPost();
+            }
+        });
+        
+        // Quick actions
+        document.getElementById('createGameBtn').addEventListener('click', () => navigateTo('studio'));
+        document.getElementById('joinVoiceBtn').addEventListener('click', joinVoiceChat);
+        document.getElementById('createGroupBtn').addEventListener('click', createNewGroup);
+        
+        // Group joining
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.join-group-btn')) {
+                const button = e.target.closest('.join-group-btn');
+                const groupId = button.dataset.groupId;
+                joinGroup(groupId);
+            }
+        });
+    }
+    
+    function getTimeAgo(timestamp) {
+        const now = Date.now();
+        const diff = now - timestamp;
+        
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        if (days < 7) return `${days}d ago`;
+        
+        return new Date(timestamp).toLocaleDateString();
+    }
+    
+    async function submitPost() {
+        const content = document.getElementById('postContent').value.trim();
+        const user = window.currentUser();
+        
+        if (!content) {
+            showToast('Post cannot be empty');
+            return;
+        }
+        
+        if (!user) {
+            showToast('Please login to post');
+            return;
+        }
+        
+        try {
+            const postsRef = window.firebaseDatabase.ref('community/posts');
+            const newPostRef = postsRef.push();
+            
+            await newPostRef.set({
+                authorId: user.uid,
+                authorName: user.displayName || user.email.split('@')[0],
+                content: content,
+                timestamp: Date.now(),
+                likes: 0,
+                comments: 0
+            });
+            
+            // Clear input
+            document.getElementById('postContent').value = '';
+            
+            showToast('Post published successfully!');
+            
+        } catch (error) {
+            console.error('Error submitting post:', error);
+            showToast('Failed to publish post');
+        }
+    }
+    
+    async function joinVoiceChat() {
+        showToast('Voice chat feature coming soon!');
+        // In a real implementation, this would connect to a WebRTC voice chat
+    }
+    
+    async function createNewGroup() {
+        showToast('Group creation feature coming soon!');
+        // In a real implementation, this would open a group creation modal
+    }
+    
+    async function joinGroup(groupId) {
+        const user = window.currentUser();
+        if (!user) return;
+        
+        try {
+            const groupRef = window.firebaseDatabase.ref(`community/groups/${groupId}/members/${user.uid}`);
+            await groupRef.set({
+                joinedAt: Date.now(),
+                username: user.displayName || user.email.split('@')[0]
+            });
+            
+            showToast('Joined group successfully!');
+            
+        } catch (error) {
+            console.error('Error joining group:', error);
+            showToast('Failed to join group');
+        }
+    }
+</script>
