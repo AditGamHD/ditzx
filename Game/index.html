@@ -10,300 +10,380 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
     
-    <!-- Font Awesome untuk icon -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Physics Engine (Matter.js) untuk game -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    
+    <!-- CodeMirror untuk script editor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/lua/lua.min.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* (Keep all previous styles, add new ones below) */
+        
+        /* Game Canvas Styles */
+        #gameCanvas {
+            border: 2px solid #00adb5;
+            border-radius: 10px;
+            background: #000;
+            display: block;
+            margin: 0 auto;
         }
-
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
+        
+        .game-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 20px auto;
         }
-
-        /* Header & Navigation */
-        .header {
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 2px solid #00adb5;
+        
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        
+        .game-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            z-index: 100;
         }
-
-        .logo {
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 173, 181, 0.8);
+            border: 2px solid white;
+            color: white;
+            font-size: 24px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @media (max-width: 768px) {
+            .control-btn {
+                display: flex;
+            }
+        }
+        
+        /* Studio Editor Styles */
+        .studio-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 10px;
+            height: calc(100vh - 180px);
+            background: #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 1200px) {
+            .studio-container {
+                grid-template-columns: 200px 1fr 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .studio-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+        }
+        
+        .studio-toolbar {
+            background: #252547;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .studio-canvas-container {
+            background: #0f0f1f;
+            position: relative;
+            overflow: auto;
+        }
+        
+        #studioCanvas {
+            background: #2d2d44;
+            display: block;
+            cursor: crosshair;
+        }
+        
+        .studio-properties {
+            background: #252547;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .tool-btn {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #3a3a6a;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #00adb5;
+            transition: all 0.2s;
         }
-
-        .logo i {
-            font-size: 28px;
+        
+        .tool-btn:hover {
+            background: #4a4a8a;
         }
-
-        .nav-menu {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0, 173, 181, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .nav-btn.active {
+        
+        .tool-btn.active {
             background: #00adb5;
+        }
+        
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .object-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: #3a3a6a;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: move;
+        }
+        
+        .object-item:hover {
+            background: #4a4a8a;
+        }
+        
+        .property-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #3a3a6a;
+            border: 1px solid #555;
+            border-radius: 4px;
             color: white;
         }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
+        
+        .layer-list {
+            margin-top: 20px;
         }
-
-        /* Main Content */
-        .main-content {
-            margin-top: 80px;
-            padding: 20px;
-            min-height: calc(100vh - 120px);
+        
+        .layer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: #3a3a6a;
+            margin-bottom: 5px;
+            border-radius: 5px;
         }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Footer */
-        .footer {
+        
+        /* Chat System */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
             background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #00adb5;
-            margin-top: auto;
+            border: 2px solid #00adb5;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
         }
-
-        .footer-content {
+        
+        .chat-container.active {
+            display: flex;
+        }
+        
+        .chat-header {
+            background: #00adb5;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
         }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+        
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
         }
-
-        .footer-links a {
-            color: #8a8da0;
-            text-decoration: none;
-            transition: color 0.3s;
+        
+        .chat-input-container {
+            padding: 10px;
+            border-top: 1px solid #333;
         }
-
-        .footer-links a:hover {
-            color: #00adb5;
+        
+        .chat-input {
+            width: 100%;
+            padding: 8px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: white;
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: rgba(26, 26, 46, 0.98);
-                flex-direction: column;
-                padding: 20px;
-                gap: 10px;
-                border-bottom: 2px solid #00adb5;
-            }
-
-            .nav-menu.show {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .nav-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: none;
+        
+        .chat-toggle-btn {
             position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #00adb5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        /* New Game Cards */
+        .game-card-large {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .game-card-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .game-card-large img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .game-card-content {
+            padding: 20px;
+        }
+        
+        .game-stats-bar {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .game-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #8a8da0;
+        }
+        
+        /* Achievement System */
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid gold;
+            border-radius: 20px;
+            color: gold;
+            font-size: 14px;
+        }
+        
+        /* Loading Animation for Studio */
+        .studio-loading {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .loading.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #00adb5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: #00adb5;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1001;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Mobile Action Buttons */
-        .mobile-actions {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+            background: rgba(0,0,0,0.8);
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            z-index: 999;
-        }
-
-        .action-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #00adb5;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-
-        .action-btn:hover {
-            transform: scale(1.1);
-            background: #0097a7;
-        }
-
-        /* Studio Container */
-        #studioContainer {
-            width: 100%;
-            height: calc(100vh - 180px);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+        
+        .progress-bar {
+            width: 300px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
             overflow: hidden;
-            border: 2px solid #00adb5;
+            margin-top: 20px;
         }
-
-        /* Online Users Indicator */
-        .online-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            background: rgba(0, 173, 181, 0.2);
-            border-radius: 20px;
-            font-size: 14px;
+        
+        .progress-fill {
+            height: 100%;
+            background: #00adb5;
+            width: 0%;
+            transition: width 0.3s;
         }
-
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: #4CAF50;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+        
+        /* Script Editor */
+        .script-editor {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            overflow: hidden;
         }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        
+        /* Grid Toggle */
+        .grid-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        /* Snap Toggle */
+        .snap-toggle {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
         }
     </style>
 </head>
@@ -341,6 +421,14 @@
                 <i class="fas fa-cogs"></i>
                 <span>Studio</span>
             </button>
+            <button class="nav-btn" data-page="marketplace">
+                <i class="fas fa-store"></i>
+                <span>Market</span>
+            </button>
+            <button class="nav-btn" data-page="community">
+                <i class="fas fa-users"></i>
+                <span>Komunitas</span>
+            </button>
             <button class="nav-btn" data-page="akun" id="accountBtn">
                 <i class="fas fa-user"></i>
                 <span>Akun</span>
@@ -361,31 +449,42 @@
         <div class="page active" id="homePage"></div>
         <div class="page" id="gamePage"></div>
         <div class="page" id="studioPage">
-            <div style="padding: 20px;">
-                <h2 style="margin-bottom: 20px; color: #00adb5;">
-                    <i class="fas fa-cogs"></i> UvoWorld Studio
-                </h2>
-                <div id="studioContainer">
-                    <!-- Studio akan dimuat di sini -->
-                </div>
-                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="nav-btn" id="newProjectBtn">
-                        <i class="fas fa-plus"></i> Proyek Baru
-                    </button>
-                    <button class="nav-btn" id="saveProjectBtn">
-                        <i class="fas fa-save"></i> Simpan
-                    </button>
-                    <button class="nav-btn" id="testProjectBtn">
-                        <i class="fas fa-play"></i> Test
-                    </button>
-                    <button class="nav-btn" id="publishBtn">
-                        <i class="fas fa-cloud-upload-alt"></i> Publish
-                    </button>
-                </div>
-            </div>
+            <!-- Studio akan dimuat via StudioEditor.html -->
         </div>
         <div class="page" id="akunPage"></div>
+        <div class="page" id="playPage"></div>
+        <div class="page" id="marketplacePage"></div>
+        <div class="page" id="communityPage"></div>
     </main>
+
+    <!-- Chat Toggle Button -->
+    <div class="chat-toggle-btn" id="chatToggleBtn">
+        <i class="fas fa-comment"></i>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <span>Chat Global</span>
+            <button id="closeChatBtn" style="background: none; border: none; color: white; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Pesan chat akan dimuat di sini -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ketik pesan..." maxlength="200">
+        </div>
+    </div>
+
+    <!-- Mobile Game Controls (Hidden by default) -->
+    <div class="game-controls" id="mobileControls" style="display: none;">
+        <div class="control-btn" id="leftBtn"><i class="fas fa-arrow-left"></i></div>
+        <div class="control-btn" id="rightBtn"><i class="fas fa-arrow-right"></i></div>
+        <div class="control-btn" id="jumpBtn"><i class="fas fa-arrow-up"></i></div>
+        <div class="control-btn" id="actionBtn"><i class="fas fa-bolt"></i></div>
+    </div>
 
     <!-- Mobile Action Buttons -->
     <div class="mobile-actions">
@@ -397,6 +496,9 @@
         </button>
         <button class="action-btn" id="mobileStudioBtn" title="Studio">
             <i class="fas fa-cogs"></i>
+        </button>
+        <button class="action-btn" id="mobileMarketBtn" title="Market">
+            <i class="fas fa-store"></i>
         </button>
         <button class="action-btn" id="mobileAccountBtn" title="Akun">
             <i class="fas fa-user"></i>
@@ -423,7 +525,7 @@
     </footer>
 
     <script>
-        // Inisialisasi Firebase
+        // Inisialisasi Firebase dengan konfigurasi yang diberikan
         const firebaseConfig = {
             apiKey: "AIzaSyCAumGENjQDZuC6XKj2LqSNuw_Ejz7yKk0",
             authDomain: "uvoworld-1.firebaseapp.com",
@@ -436,169 +538,220 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
         const storage = firebase.storage();
+        const functions = firebase.functions();
 
         // State aplikasi
         let currentUser = null;
         let currentPage = 'home';
         let onlineUsers = {};
+        let currentGame = null;
+        let chatOpen = false;
 
-        // Elemen DOM
-        const pages = {
-            home: document.getElementById('homePage'),
-            game: document.getElementById('gamePage'),
-            studio: document.getElementById('studioPage'),
-            akun: document.getElementById('akunPage')
+        // Global variables untuk game engine
+        window.gameEngine = {
+            canvas: null,
+            ctx: null,
+            isRunning: false,
+            players: {},
+            currentLevel: null,
+            physicsEngine: null
         };
 
-        const loading = document.getElementById('loading');
-        const toast = document.getElementById('toast');
-        const navMenu = document.getElementById('navMenu');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const onlineIndicator = document.getElementById('onlineIndicator');
-        const onlineCount = document.getElementById('onlineCount');
-        const userStatus = document.getElementById('userStatus');
-        const studioBtn = document.getElementById('studioBtn');
-        const accountBtn = document.getElementById('accountBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
+        // Global variables untuk studio
+        window.studio = {
+            canvas: null,
+            ctx: null,
+            selectedTool: 'select',
+            gridSize: 32,
+            showGrid: true,
+            snapToGrid: true,
+            objects: [],
+            layers: [
+                { id: 'background', name: 'Background', visible: true, locked: false },
+                { id: 'ground', name: 'Ground', visible: true, locked: false },
+                { id: 'obstacles', name: 'Obstacles', visible: true, locked: false },
+                { id: 'collectibles', name: 'Collectibles', visible: true, locked: false },
+                { id: 'players', name: 'Players', visible: true, locked: false },
+                { id: 'effects', name: 'Effects', visible: true, locked: false }
+            ],
+            currentLayer: 'ground',
+            selectedObject: null
+        };
 
-        // Fungsi untuk menampilkan toast
-        function showToast(message, duration = 3000) {
-            toast.textContent = message;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, duration);
-        }
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Cek Firebase connection
+                const connectedRef = database.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    if (snap.val() === true) {
+                        console.log('Firebase connected');
+                    }
+                });
 
-        // Fungsi untuk menampilkan loading
-        function showLoading() {
-            loading.classList.add('active');
-        }
-
-        function hideLoading() {
-            loading.classList.remove('active');
-        }
-
-        // Fungsi untuk mengganti halaman
-        async function navigateTo(page) {
-            if (page === currentPage) return;
-            
-            // Validasi akses
-            if ((page === 'studio' || page === 'akun') && !currentUser) {
-                showToast('Harap login terlebih dahulu!');
-                page = 'home';
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Initialize auth state
+                await initializeAuth();
+                
+                // Load initial page
+                await navigateTo('home');
+                
+                // Initialize chat system
+                initializeChat();
+                
+                // Initialize game engine
+                initializeGameEngine();
+                
+                console.log('UvoWorld initialized successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Error initializing UvoWorld');
             }
-            
-            // Update tombol aktif
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.page === page) {
-                    btn.classList.add('active');
+        });
+
+        function setupEventListeners() {
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('show');
+            });
+
+            // Navigation
+            document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    navigateTo(btn.dataset.page);
+                    if (window.innerWidth <= 768) {
+                        navMenu.classList.remove('show');
+                    }
+                });
+            });
+
+            // Mobile navigation
+            document.getElementById('mobileHomeBtn').addEventListener('click', () => navigateTo('home'));
+            document.getElementById('mobileGameBtn').addEventListener('click', () => navigateTo('game'));
+            document.getElementById('mobileStudioBtn').addEventListener('click', () => navigateTo('studio'));
+            document.getElementById('mobileMarketBtn').addEventListener('click', () => navigateTo('marketplace'));
+            document.getElementById('mobileAccountBtn').addEventListener('click', () => navigateTo('akun'));
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                auth.signOut();
+                showToast('Berhasil logout');
+            });
+
+            // Chat system
+            document.getElementById('chatToggleBtn').addEventListener('click', toggleChat);
+            document.getElementById('closeChatBtn').addEventListener('click', toggleChat);
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                    sendChatMessage(e.target.value);
+                    e.target.value = '';
                 }
             });
-            
-            // Sembunyikan semua halaman
-            Object.values(pages).forEach(p => p.classList.remove('active'));
-            
-            // Tampilkan halaman yang dipilih
-            if (pages[page]) {
-                pages[page].classList.add('active');
-                currentPage = page;
-                
-                // Load konten halaman
-                await loadPageContent(page);
-                
-                // Update status user di footer
-                updateUserStatus();
-            }
+
+            // Game controls for mobile
+            setupMobileControls();
         }
 
-        // Fungsi untuk memuat konten halaman
-        async function loadPageContent(page) {
-            showLoading();
-            try {
-                const response = await fetch(`halaman/${page.charAt(0).toUpperCase() + page.slice(1)}.html`);
-                if (response.ok) {
-                    const content = await response.text();
-                    pages[page].innerHTML = content;
+        function setupMobileControls() {
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            const jumpBtn = document.getElementById('jumpBtn');
+            const actionBtn = document.getElementById('actionBtn');
+
+            // Touch events for mobile controls
+            const addButtonEvents = (button, keyCode) => {
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new KeyboardEvent('keydown', { keyCode }));
+                });
+                button.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new KeyboardEvent('keyup', { keyCode }));
+                });
+                button.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new KeyboardEvent('keyup', { keyCode }));
+                });
+            };
+
+            if (leftBtn) addButtonEvents(leftBtn, 37); // ArrowLeft
+            if (rightBtn) addButtonEvents(rightBtn, 39); // ArrowRight
+            if (jumpBtn) addButtonEvents(jumpBtn, 38); // ArrowUp
+            if (actionBtn) addButtonEvents(actionBtn, 32); // Space
+        }
+
+        async function initializeAuth() {
+            return new Promise((resolve) => {
+                auth.onAuthStateChanged(async (user) => {
+                    currentUser = user;
                     
-                    // Inisialisasi konten halaman
-                    if (page === 'home') initHomePage();
-                    else if (page === 'game') initGamePage();
-                    else if (page === 'akun') initAccountPage();
-                }
-            } catch (error) {
-                console.error('Error loading page:', error);
-                pages[page].innerHTML = '<div style="padding: 40px; text-align: center;"><h3>Error memuat halaman</h3></div>';
-            }
-            hideLoading();
+                    if (user) {
+                        // Update user status
+                        await updateUserStatus(true);
+                        
+                        // Update online status in database
+                        await setOnlineStatus(true);
+                        
+                        // Load user data
+                        await loadUserData();
+                        
+                        showToast(`Welcome back, ${user.displayName || user.email}!`, 2000);
+                    } else {
+                        await updateUserStatus(false);
+                    }
+                    
+                    updateUIForAuthState();
+                    resolve();
+                });
+            });
         }
 
-        // Fungsi untuk mengupdate status user
-        function updateUserStatus() {
-            if (currentUser) {
+        async function updateUserStatus(isOnline) {
+            const userStatus = document.getElementById('userStatus');
+            
+            if (currentUser && isOnline) {
+                const userRef = database.ref(`users/${currentUser.uid}`);
+                const snapshot = await userRef.once('value');
+                const userData = snapshot.val();
+                
                 userStatus.innerHTML = `
-                    <i class="fas fa-user-circle"></i> ${currentUser.displayName || currentUser.email}
+                    <i class="fas fa-user-circle"></i> ${userData?.displayName || currentUser.email}
                     <span style="color: #4CAF50;"> • Online</span>
+                    ${userData?.coins ? `<span style="color: gold; margin-left: 10px;"><i class="fas fa-coins"></i> ${userData.coins}</span>` : ''}
                 `;
-                logoutBtn.style.display = 'flex';
+                
+                document.getElementById('logoutBtn').style.display = 'flex';
             } else {
                 userStatus.innerHTML = 'Belum login';
-                logoutBtn.style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
             }
         }
 
-        // Fungsi untuk mengupdate jumlah user online
-        function updateOnlineUsers() {
-            const count = Object.keys(onlineUsers).length;
-            onlineCount.textContent = `${count} Online`;
-        }
-
-        // Event Listeners
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('show');
-        });
-
-        // Navigasi dari tombol
-        document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                navigateTo(btn.dataset.page);
-                if (window.innerWidth <= 768) {
-                    navMenu.classList.remove('show');
-                }
-            });
-        });
-
-        // Mobile action buttons
-        document.getElementById('mobileHomeBtn').addEventListener('click', () => navigateTo('home'));
-        document.getElementById('mobileGameBtn').addEventListener('click', () => navigateTo('game'));
-        document.getElementById('mobileStudioBtn').addEventListener('click', () => navigateTo('studio'));
-        document.getElementById('mobileAccountBtn').addEventListener('click', () => navigateTo('akun'));
-
-        // Logout
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut();
-            showToast('Berhasil logout');
-        });
-
-        // Firebase Auth State Observer
-        auth.onAuthStateChanged(async (user) => {
-            currentUser = user;
+        async function setOnlineStatus(isOnline) {
+            if (!currentUser) return;
             
-            if (user) {
-                // Update status online di database
-                const userStatusRef = database.ref(`status/${user.uid}`);
+            const userStatusRef = database.ref(`status/${currentUser.uid}`);
+            
+            if (isOnline) {
                 const isOfflineForDatabase = {
                     state: 'offline',
                     last_changed: firebase.database.ServerValue.TIMESTAMP,
                 };
+                
                 const isOnlineForDatabase = {
                     state: 'online',
                     last_changed: firebase.database.ServerValue.TIMESTAMP,
+                    user: {
+                        uid: currentUser.uid,
+                        displayName: currentUser.displayName,
+                        email: currentUser.email
+                    }
                 };
                 
                 database.ref('.info/connected').on('value', (snapshot) => {
@@ -609,198 +762,498 @@
                     });
                 });
                 
-                // Monitor user online
+                // Monitor online users
                 database.ref('status').on('value', (snapshot) => {
                     onlineUsers = snapshot.val() || {};
-                    updateOnlineUsers();
+                    const onlineCount = Object.keys(onlineUsers).filter(uid => onlineUsers[uid].state === 'online').length;
+                    document.getElementById('onlineCount').textContent = `${onlineCount} Online`;
                 });
-                
-                // Update user profile di database jika belum ada
-                const userRef = database.ref(`users/${user.uid}`);
-                userRef.once('value').then((snapshot) => {
-                    if (!snapshot.exists()) {
-                        userRef.set({
-                            email: user.email,
-                            displayName: user.displayName || user.email.split('@')[0],
-                            createdAt: Date.now(),
-                            coins: 1000,
-                            avatar: 'default',
-                            role: 'player'
-                        });
-                    }
-                });
-                
             } else {
-                // Redirect ke home jika tidak login dan di halaman terbatas
-                if (currentPage === 'studio' || currentPage === 'akun') {
-                    navigateTo('home');
-                }
-            }
-            
-            updateUserStatus();
-        });
-
-        // Inisialisasi halaman home pertama kali
-        window.addEventListener('DOMContentLoaded', () => {
-            loadPageContent('home');
-            updateUserStatus();
-        });
-
-        // Fungsi inisialisasi halaman
-        function initHomePage() {
-            // Load featured games
-            loadFeaturedGames();
-            
-            // Event listeners untuk home page
-            const loginBtn = document.getElementById('homeLoginBtn');
-            const registerBtn = document.getElementById('homeRegisterBtn');
-            
-            if (loginBtn) {
-                loginBtn.addEventListener('click', () => navigateTo('akun'));
-            }
-            if (registerBtn) {
-                registerBtn.addEventListener('click', () => {
-                    // Tampilkan modal registrasi
-                    showRegisterModal();
+                userStatusRef.set({
+                    state: 'offline',
+                    last_changed: firebase.database.ServerValue.TIMESTAMP
                 });
             }
         }
 
-        function initGamePage() {
-            // Load game list
-            loadGameList();
-        }
-
-        function initAccountPage() {
-            // Implementasi akan di-load dari file Akun.html
-        }
-
-        // Fungsi untuk load featured games
-        async function loadFeaturedGames() {
-            const gamesRef = database.ref('games');
-            gamesRef.orderByChild('featured').equalTo(true).limitToFirst(6).once('value').then((snapshot) => {
-                const gamesContainer = document.getElementById('featuredGames');
-                if (gamesContainer && snapshot.exists()) {
-                    const games = snapshot.val();
-                    gamesContainer.innerHTML = Object.keys(games).map(key => `
-                        <div class="game-card">
-                            <img src="${games[key].thumbnail || 'https://via.placeholder.com/300x200'}" alt="${games[key].title}">
-                            <h4>${games[key].title}</h4>
-                            <p>${games[key].description || 'Game seru!'}</p>
-                            <button class="play-btn" data-game="${key}">
-                                <i class="fas fa-play"></i> Mainkan
-                            </button>
-                        </div>
-                    `).join('');
-                }
-            });
-        }
-
-        // Fungsi untuk load game list
-        async function loadGameList() {
-            const gamesRef = database.ref('games');
-            gamesRef.limitToFirst(20).once('value').then((snapshot) => {
-                const gamesList = document.getElementById('gamesList');
-                if (gamesList) {
-                    if (snapshot.exists()) {
-                        const games = snapshot.val();
-                        gamesList.innerHTML = Object.keys(games).map(key => `
-                            <div class="game-item">
-                                <img src="${games[key].thumbnail || 'https://via.placeholder.com/100x100'}" alt="${games[key].title}">
-                                <div class="game-info">
-                                    <h4>${games[key].title}</h4>
-                                    <p>${games[key].description || 'No description'}</p>
-                                    <div class="game-stats">
-                                        <span><i class="fas fa-users"></i> ${games[key].players || 0}</span>
-                                        <span><i class="fas fa-star"></i> ${games[key].rating || 'N/A'}</span>
-                                    </div>
-                                </div>
-                                <button class="play-btn" data-game="${key}">
-                                    <i class="fas fa-play"></i> Main
-                                </button>
-                            </div>
-                        `).join('');
-                    } else {
-                        gamesList.innerHTML = '<p style="text-align: center; padding: 40px;">Belum ada game tersedia</p>';
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            const userRef = database.ref(`users/${currentUser.uid}`);
+            const snapshot = await userRef.once('value');
+            
+            if (!snapshot.exists()) {
+                // Create new user record
+                await userRef.set({
+                    email: currentUser.email,
+                    displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                    createdAt: Date.now(),
+                    coins: 1000,
+                    avatar: 'fas fa-user',
+                    role: 'player',
+                    level: 1,
+                    xp: 0,
+                    achievements: [],
+                    inventory: {},
+                    gamesCreated: 0,
+                    gamesPlayed: 0
+                });
+            }
+            
+            // Listen for real-time updates
+            userRef.on('value', (snapshot) => {
+                const userData = snapshot.val();
+                if (userData) {
+                    // Update coins display if exists
+                    const coinsElement = document.getElementById('userCoins');
+                    if (coinsElement) {
+                        coinsElement.textContent = userData.coins || 0;
                     }
                 }
             });
         }
 
-        // Fungsi untuk menampilkan modal registrasi
-        function showRegisterModal() {
-            const modalHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1002; display: flex; justify-content: center; align-items: center;">
-                    <div style="background: #1a1a2e; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; border: 2px solid #00adb5;">
-                        <h3 style="margin-bottom: 20px; color: #00adb5;">
-                            <i class="fas fa-user-plus"></i> Daftar Akun Baru
-                        </h3>
-                        <input type="email" id="regEmail" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
-                        <input type="password" id="regPassword" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
-                        <input type="text" id="regDisplayName" placeholder="Nama Pengguna" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #333; background: #222; color: white;">
-                        <div style="display: flex; gap: 10px;">
-                            <button id="confirmRegister" style="flex: 1; background: #00adb5; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">
-                                Daftar
-                            </button>
-                            <button id="cancelRegister" style="flex: 1; background: #555; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">
-                                Batal
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+        function updateUIForAuthState() {
+            const studioBtn = document.getElementById('studioBtn');
+            const accountBtn = document.getElementById('accountBtn');
             
-            const modal = document.createElement('div');
-            modal.innerHTML = modalHTML;
-            document.body.appendChild(modal);
+            if (currentUser) {
+                studioBtn.style.display = 'flex';
+                accountBtn.style.display = 'flex';
+            } else {
+                studioBtn.style.display = 'none';
+                accountBtn.style.display = 'none';
+            }
+        }
+
+        // Navigation system
+        async function navigateTo(page, params = {}) {
+            if (page === currentPage && !params.force) return;
             
-            modal.querySelector('#cancelRegister').addEventListener('click', () => {
-                document.body.removeChild(modal);
+            // Hide chat on navigation
+            if (chatOpen) {
+                toggleChat();
+            }
+            
+            // Hide mobile controls when not in play mode
+            if (page !== 'play') {
+                document.getElementById('mobileControls').style.display = 'none';
+            }
+            
+            // Validate access
+            if ((page === 'studio' || page === 'akun' || page === 'marketplace') && !currentUser) {
+                showToast('Harap login terlebih dahulu!');
+                page = 'home';
+            }
+            
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === page) {
+                    btn.classList.add('active');
+                }
             });
             
-            modal.querySelector('#confirmRegister').addEventListener('click', async () => {
-                const email = modal.querySelector('#regEmail').value;
-                const password = modal.querySelector('#regPassword').value;
-                const displayName = modal.querySelector('#regDisplayName').value;
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            // Show selected page
+            const pageElement = document.getElementById(page + 'Page');
+            if (pageElement) {
+                pageElement.classList.add('active');
+                currentPage = page;
                 
-                if (!email || !password) {
-                    showToast('Email dan password harus diisi!');
-                    return;
+                // Load page content
+                await loadPageContent(page, params);
+                
+                // Update mobile action buttons
+                updateMobileActions();
+            }
+        }
+
+        async function loadPageContent(page, params = {}) {
+            showLoading();
+            
+            try {
+                let content = '';
+                
+                switch(page) {
+                    case 'home':
+                        content = await fetchPage('Home.html');
+                        break;
+                    case 'game':
+                        content = await fetchPage('Game.html');
+                        break;
+                    case 'studio':
+                        content = await fetchPage('StudioEditor.html');
+                        break;
+                    case 'akun':
+                        content = await fetchPage('Akun.html');
+                        break;
+                    case 'play':
+                        content = await fetchPage('Play.html');
+                        break;
+                    case 'marketplace':
+                        content = await fetchPage('Marketplace.html');
+                        break;
+                    case 'community':
+                        content = await fetchPage('Community.html');
+                        break;
+                    default:
+                        content = '<div style="padding: 40px; text-align: center;"><h3>Halaman tidak ditemukan</h3></div>';
                 }
                 
-                showLoading();
-                try {
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    await userCredential.user.updateProfile({
-                        displayName: displayName || email.split('@')[0]
+                const pageElement = document.getElementById(page + 'Page');
+                pageElement.innerHTML = content;
+                
+                // Initialize page-specific functionality
+                await initializePage(page, params);
+                
+            } catch (error) {
+                console.error('Error loading page:', error);
+                showToast('Gagal memuat halaman');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function fetchPage(pageName) {
+            try {
+                const response = await fetch(`halaman/${pageName}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.text();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return `<div style="padding: 40px; text-align: center;">
+                    <h3>Error memuat halaman</h3>
+                    <p>${error.message}</p>
+                </div>`;
+            }
+        }
+
+        async function initializePage(page, params) {
+            switch(page) {
+                case 'home':
+                    initHomePage();
+                    break;
+                case 'game':
+                    initGamePage();
+                    break;
+                case 'studio':
+                    initStudioPage();
+                    break;
+                case 'akun':
+                    initAccountPage();
+                    break;
+                case 'play':
+                    initPlayPage(params);
+                    break;
+                case 'marketplace':
+                    initMarketplacePage();
+                    break;
+                case 'community':
+                    initCommunityPage();
+                    break;
+            }
+        }
+
+        function updateMobileActions() {
+            // Hide all mobile action buttons
+            document.querySelectorAll('.mobile-actions .action-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            // Show only relevant buttons for current page
+            switch(currentPage) {
+                case 'play':
+                    // Show game controls instead
+                    document.getElementById('mobileControls').style.display = 'flex';
+                    break;
+                default:
+                    document.querySelectorAll('.mobile-actions .action-btn').forEach(btn => {
+                        btn.style.display = 'flex';
                     });
-                    showToast('Registrasi berhasil!');
-                    document.body.removeChild(modal);
-                } catch (error) {
-                    showToast(`Error: ${error.message}`);
-                } finally {
-                    hideLoading();
+            }
+        }
+
+        // Chat System
+        function initializeChat() {
+            if (!currentUser) return;
+            
+            const chatRef = database.ref('chat/global');
+            
+            // Load recent messages
+            chatRef.limitToLast(50).on('value', (snapshot) => {
+                const messages = snapshot.val() || {};
+                const chatMessages = document.getElementById('chatMessages');
+                
+                if (chatMessages) {
+                    chatMessages.innerHTML = '';
+                    
+                    Object.values(messages).forEach(msg => {
+                        if (msg && msg.content && msg.timestamp) {
+                            const messageElement = document.createElement('div');
+                            messageElement.className = 'chat-message';
+                            messageElement.style.marginBottom = '8px';
+                            messageElement.style.padding = '8px';
+                            messageElement.style.background = 'rgba(255,255,255,0.05)';
+                            messageElement.style.borderRadius = '5px';
+                            
+                            const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            messageElement.innerHTML = `
+                                <strong style="color: #00adb5;">${msg.username || 'User'}:</strong>
+                                <span style="color: #fff;">${msg.content}</span>
+                                <small style="color: #8a8da0; float: right;">${time}</small>
+                            `;
+                            
+                            chatMessages.appendChild(messageElement);
+                        }
+                    });
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
             });
         }
 
-        // Initialize simple studio
-        document.getElementById('newProjectBtn')?.addEventListener('click', () => {
-            showToast('Membuat proyek baru...');
-            // Implementasi studio akan dikembangkan lebih lanjut
-        });
+        async function sendChatMessage(content) {
+            if (!currentUser || !content.trim()) return;
+            
+            try {
+                const chatRef = database.ref('chat/global');
+                const newMessageRef = chatRef.push();
+                
+                await newMessageRef.set({
+                    uid: currentUser.uid,
+                    username: currentUser.displayName || currentUser.email.split('@')[0],
+                    content: content.substring(0, 200), // Limit length
+                    timestamp: Date.now()
+                });
+                
+                // Apply basic moderation (filter bad words)
+                await moderateMessage(newMessageRef.key, content);
+                
+            } catch (error) {
+                console.error('Error sending chat:', error);
+                showToast('Gagal mengirim pesan');
+            }
+        }
 
-        document.getElementById('saveProjectBtn')?.addEventListener('click', () => {
-            showToast('Menyimpan proyek...');
-        });
+        async function moderateMessage(messageId, content) {
+            // Simple profanity filter
+            const badWords = ['anjing', 'babi', 'goblok', 'bangsat', 'kontol'];
+            const lowerContent = content.toLowerCase();
+            
+            let hasBadWord = false;
+            badWords.forEach(word => {
+                if (lowerContent.includes(word)) {
+                    hasBadWord = true;
+                }
+            });
+            
+            if (hasBadWord) {
+                try {
+                    const messageRef = database.ref(`chat/global/${messageId}`);
+                    await messageRef.update({
+                        moderated: true,
+                        originalContent: content,
+                        content: '[Pesan dihapus karena mengandung konten tidak pantas]'
+                    });
+                    
+                    // Report to moderation log
+                    const reportRef = database.ref('moderation/logs').push();
+                    await reportRef.set({
+                        type: 'chat',
+                        messageId: messageId,
+                        uid: currentUser.uid,
+                        content: content,
+                        timestamp: Date.now(),
+                        action: 'auto_moderated'
+                    });
+                } catch (error) {
+                    console.error('Moderation error:', error);
+                }
+            }
+        }
 
-        document.getElementById('testProjectBtn')?.addEventListener('click', () => {
-            showToast('Menjalankan test...');
-        });
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            const chatContainer = document.getElementById('chatContainer');
+            const chatToggleBtn = document.getElementById('chatToggleBtn');
+            
+            if (chatOpen) {
+                chatContainer.classList.add('active');
+                chatToggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                chatContainer.classList.remove('active');
+                chatToggleBtn.innerHTML = '<i class="fas fa-comment"></i>';
+            }
+        }
 
-        document.getElementById('publishBtn')?.addEventListener('click', () => {
-            showToast('Mempublish game...');
-        });
+        // Game Engine Initialization
+        function initializeGameEngine() {
+            window.gameEngine = {
+                canvas: null,
+                ctx: null,
+                isRunning: false,
+                players: {},
+                currentLevel: null,
+                physicsEngine: null,
+                gameLoop: null,
+                lastTime: 0,
+                
+                // Physics settings
+                gravity: 0.5,
+                friction: 0.8,
+                airResistance: 0.95,
+                
+                // Game objects
+                platforms: [],
+                obstacles: [],
+                collectibles: [],
+                enemies: [],
+                
+                // Player object
+                player: {
+                    x: 100,
+                    y: 100,
+                    width: 32,
+                    height: 64,
+                    velocityX: 0,
+                    velocityY: 0,
+                    speed: 5,
+                    jumpForce: -12,
+                    isOnGround: false,
+                    isJumping: false,
+                    facing: 'right',
+                    health: 100,
+                    coins: 0,
+                    score: 0
+                },
+                
+                // Input states
+                keys: {
+                    left: false,
+                    right: false,
+                    up: false,
+                    space: false
+                }
+            };
+            
+            // Setup keyboard controls
+            setupKeyboardControls();
+        }
+
+        function setupKeyboardControls() {
+            window.addEventListener('keydown', (e) => {
+                switch(e.keyCode) {
+                    case 37: // Left arrow
+                        gameEngine.keys.left = true;
+                        break;
+                    case 39: // Right arrow
+                        gameEngine.keys.right = true;
+                        break;
+                    case 38: // Up arrow
+                    case 87: // W
+                        gameEngine.keys.up = true;
+                        break;
+                    case 32: // Space
+                        gameEngine.keys.space = true;
+                        break;
+                }
+            });
+            
+            window.addEventListener('keyup', (e) => {
+                switch(e.keyCode) {
+                    case 37: // Left arrow
+                        gameEngine.keys.left = false;
+                        break;
+                    case 39: // Right arrow
+                        gameEngine.keys.right = false;
+                        break;
+                    case 38: // Up arrow
+                    case 87: // W
+                        gameEngine.keys.up = false;
+                        break;
+                    case 32: // Space
+                        gameEngine.keys.space = false;
+                        break;
+                }
+            });
+        }
+
+        // Studio Initialization
+        function initStudio() {
+            window.studio = {
+                canvas: null,
+                ctx: null,
+                selectedTool: 'platform',
+                gridSize: 32,
+                showGrid: true,
+                snapToGrid: true,
+                objects: [],
+                selectedObject: null,
+                isDrawing: false,
+                startX: 0,
+                startY: 0,
+                
+                layers: [
+                    { id: 'background', name: 'Background', visible: true, locked: false },
+                    { id: 'ground', name: 'Ground', visible: true, locked: false },
+                    { id: 'obstacles', name: 'Obstacles', visible: true, locked: false },
+                    { id: 'collectibles', name: 'Collectibles', visible: true, locked: false },
+                    { id: 'players', name: 'Players', visible: true, locked: false },
+                    { id: 'effects', name: 'Effects', visible: true, locked: false }
+                ],
+                currentLayer: 'ground',
+                
+                tools: [
+                    { id: 'select', name: 'Select', icon: 'fas fa-mouse-pointer' },
+                    { id: 'platform', name: 'Platform', icon: 'fas fa-square' },
+                    { id: 'spike', name: 'Spike', icon: 'fas fa-chevron-up' },
+                    { id: 'coin', name: 'Coin', icon: 'fas fa-coins' },
+                    { id: 'player', name: 'Player Start', icon: 'fas fa-user' },
+                    { id: 'flag', name: 'Finish Flag', icon: 'fas fa-flag' },
+                    { id: 'enemy', name: 'Enemy', icon: 'fas fa-ghost' },
+                    { id: 'move', name: 'Move', icon: 'fas fa-arrows-alt' },
+                    { id: 'delete', name: 'Delete', icon: 'fas fa-trash' }
+                ]
+            };
+        }
+
+        // Utility functions
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            toast.textContent = message;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, duration);
+        }
+
+        function showLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.classList.add('active');
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.classList.remove('active');
+        }
+
+        // Export functions to global scope
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.currentUser = () => currentUser;
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDatabase = database;
+        window.firebaseStorage = storage;
+
+        console.log('UvoWorld Core Loaded');
     </script>
 </body>
 </html>
