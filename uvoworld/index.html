@@ -86,23 +86,29 @@
         </div>
     </footer>
 
-    <!-- Modals Container -->
-    <div id="modals-container"></div>
+        <!-- Firebase SDK (compat builds) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <!-- Jika Anda juga ingin Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <!-- Firebase Configuration -->
+    <!-- Firebase Configuration (UVOWORLD - uvoworld-1) -->
     <script>
-        // GANTI DENGAN KONFIGURASI FIREBASE ANDA
         const firebaseConfig = {
-            apiKey: "AIzaSyA8r9wJhT9QJ9QJ9QJ9QJ9QJ9QJ9QJ9QJ9Q",
-            authDomain: "uvoworld.firebaseapp.com",
-            projectId: "uvoworld",
-            storageBucket: "uvoworld.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
+            apiKey: "AIzaSyCAumGENjQDZuC6XKj2LqSNuw_Ejz7yKk0",
+            authDomain: "uvoworld-1.firebaseapp.com",
+            databaseURL: "https://uvoworld-1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "uvoworld-1",
+            storageBucket: "uvoworld-1.firebasestorage.app",
+            messagingSenderId: "885277532590",
+            appId: "1:885277532590:web:a809fb385ef500f744683f",
+            measurementId: "G-5BWB5HXH7R"
         };
     </script>
 
-    <!-- Scripts -->
+    <!-- App scripts -->
     <script src="scripts/firebase.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/app.js" defer></script>
