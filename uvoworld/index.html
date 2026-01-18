@@ -65,35 +65,50 @@
         <div id="modal-container" class="modal-container"></div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
 
     <!-- LZString untuk kompresi data -->
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
 
     <!-- App Script -->
     <script type="module">
-        // Konfigurasi Firebase (placeholder - ganti dengan milikmu)
+        // Firebase configuration (dari project uvoworld-1)
         const firebaseConfig = {
-            apiKey: "AIzaSyYOUR_API_KEY_HERE",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
+            apiKey: "AIzaSyCAumGENjQDZuC6XKj2LqSNuw_Ejz7yKk0",
+            authDomain: "uvoworld-1.firebaseapp.com",
+            databaseURL: "https://uvoworld-1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "uvoworld-1",
+            storageBucket: "uvoworld-1.firebasestorage.app",
+            messagingSenderId: "885277532590",
+            appId: "1:885277532590:web:a809fb385ef500f744683f",
+            measurementId: "G-5BWB5HXH7R"
         };
 
-        // Initialize Firebase
+        // Initialize Firebase (compat)
         firebase.initializeApp(firebaseConfig);
+
+        // Optional: analytics (may require user consent in some regions)
+        let analytics = null;
+        try {
+            if (firebase.analytics) analytics = firebase.analytics();
+        } catch (e) {
+            console.warn('Analytics init failed:', e);
+        }
+
+        // Services
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const rtdb = firebase.database();
         const storage = firebase.storage();
 
         // Ekspor ke global scope untuk modul lain
-        window.firebase = { auth, db, storage };
+        window.firebase = { app: firebase.app(), auth, db, rtdb, storage, analytics };
         window.currentUser = null;
         window.currentPage = null;
         window.currentWorld = null;
@@ -177,24 +192,35 @@
             }
 
             // Sembunyikan loader
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
+            const loader = document.getElementById('loader');
+            const app = document.getElementById('app');
+            if (loader) loader.style.display = 'none';
+            if (app) app.style.display = 'block';
         });
 
         function updateUserUI(user) {
             const userMenu = document.getElementById('user-menu');
+            if (!userMenu) return;
+
             if (user) {
                 userMenu.innerHTML = `
                     <div class="user-avatar">
-                        <img src="${user.photoURL || '/asset/default-avatar.png'}" alt="${user.displayName}">
+                        <img src="${user.photoURL || '/asset/default-avatar.png'}" alt="${user.displayName || ''}">
                     </div>
                     <div class="user-dropdown">
                         <div>${user.displayName || user.email}</div>
-                        <button onclick="firebase.auth().signOut()">Logout</button>
+                        <button id="logout-button">Logout</button>
                     </div>
                 `;
+
+                // Attach logout handler
+                const logoutBtn = document.getElementById('logout-button');
+                if (logoutBtn) logoutBtn.addEventListener('click', () => auth.signOut());
+
             } else {
-                userMenu.innerHTML = '<button onclick="window.location.hash=\'/auth\'">Login</button>';
+                userMenu.innerHTML = '<button id="login-button">Login</button>';
+                const loginBtn = document.getElementById('login-button');
+                if (loginBtn) loginBtn.addEventListener('click', () => { window.location.hash = '/auth'; });
             }
         }
 
