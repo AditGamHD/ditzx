@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UVOWORLD - Game Kota Pixel</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/mobile.css">
+    <link rel="icon" type="image/png" href="assets/icons/default_world.png">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <style>
+        /* Temporary loading styles */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="loader"></div>
+        <h1>UVOWORLD</h1>
+        <p>Memuat dunia...</p>
+    </div>
+
+    <!-- Header Container -->
+    <header id="header-container"></header>
+
+    <!-- Main Content Container -->
+    <main id="main-container">
+        <div class="container">
+            <div id="content">
+                <!-- Content akan dimuat dinamis -->
+                <div class="welcome-section">
+                    <h1>Selamat Datang di UVOWORLD</h1>
+                    <p>Bangun dan kelola kota pixel impianmu!</p>
+                    <div class="auth-buttons">
+                        <button id="login-btn" class="btn btn-primary">Masuk</button>
+                        <button id="register-btn" class="btn btn-secondary">Daftar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>UVOWORLD © 2024 - Game Simulasi Kota Pixel</p>
+        </div>
+    </footer>
+
+    <!-- Modals Container -->
+    <div id="modals-container"></div>
+
+    <!-- Firebase Configuration -->
+    <script>
+        // GANTI DENGAN KONFIGURASI FIREBASE ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8r9wJhT9QJ9QJ9QJ9QJ9QJ9QJ9QJ9QJ9Q",
+            authDomain: "uvoworld.firebaseapp.com",
+            projectId: "uvoworld",
+            storageBucket: "uvoworld.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+    </script>
+
+    <!-- Scripts -->
+    <script src="scripts/firebase.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/app.js" defer></script>
+</body>
+</html>
