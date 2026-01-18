@@ -1,0 +1,63 @@
+<div class="viewer-container">
+    <div class="viewer-header">
+        <div class="viewer-world-info">
+            <img src="/asset/world-thumb.png" alt="World Thumbnail" class="world-thumb">
+            <div class="world-meta">
+                <h1 id="viewer-world-title">Public World Name</h1>
+                <div class="world-author">By <span id="world-author">Author</span></div>
+                <div class="world-stats">
+                    <span class="stat">👥 1.2k views</span>
+                    <span class="stat">⭐ 4.5</span>
+                    <span class="stat">🕒 Updated 2 days ago</span>
+                </div>
+            </div>
+        </div>
+        <div class="viewer-actions">
+            <button class="btn-icon" title="Like">👍</button>
+            <button class="btn-icon" title="Share">📤</button>
+            <button class="btn-icon" title="Follow">🔔</button>
+            <button class="btn-primary" onclick="window.location.hash='/editor'">✏ Edit Copy</button>
+        </div>
+    </div>
+
+    <div class="viewer-canvas-container">
+        <canvas id="viewer-canvas" width="1024" height="600"></canvas>
+        <div class="viewer-controls">
+            <button class="viewer-btn" id="v-zoom-in">+</button>
+            <button class="viewer-btn" id="v-zoom-out">-</button>
+            <button class="viewer-btn" id="v-screenshot">📷</button>
+        </div>
+    </div>
+
+    <div class="viewer-sidepanel">
+        <h3>World Details</h3>
+        <div class="detail-section">
+            <h4>📊 Statistics</h4>
+            <ul class="stats-list">
+                <li>Population: <strong>1,245</strong></li>
+                <li>Buildings: <strong>89</strong></li>
+                <li>Roads: <strong>2.5km</strong></li>
+                <li>Happiness: <strong>87%</strong></li>
+                <li>Treasury: <strong>$45,230</strong></li>
+            </ul>
+        </div>
+
+        <div class="detail-section">
+            <h4>📝 Description</h4>
+            <p id="world-description">This is a public world created by the community. Feel free to explore!</p>
+        </div>
+
+        <div class="detail-section">
+            <h4>💬 Comments</h4>
+            <div class="comments-container">
+                <div class="comment">
+                    <div class="comment-author">User123</div>
+                    <div class="comment-text">Great city design!</div>
+                </div>
+                <!-- More comments -->
+            </div>
+            <textarea placeholder="Add a comment..." class="comment-input"></textarea>
+            <button class="btn-small">Post Comment</button>
+        </div>
+    </div>
+</div>

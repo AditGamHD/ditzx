@@ -1,0 +1,75 @@
+=== UVOWORLD ASSET PROMPTS (ENGLISH) ===
+
+1. HOUSE TILE (32x32):
+"Pixel art 32x32 tiny house, front view, simple cozy roof, 3 windows, wooden texture, transparent background, strict pixel-perfect, no anti-aliasing, limited palette, high contrast silhouette, export PNG 32x32"
+
+2. SHOP TILE (32x32):
+"Pixel art 32x32 shop facade, awning, signboard space, glass door, clear silhouette, transparent bg, export PNG 32x32"
+
+3. FACTORY TILE (32x32):
+"Pixel art 32x32 industrial factory, smokestack, gray concrete, windows, transparent background, pixel-perfect edges, PNG 32x32"
+
+4. ROAD TILE (32x32):
+"Pixel art 32x32 road tile, straight, white dashed center line, asphalt texture, clean pixel edges, transparent background, PNG 32x32"
+
+5. ROAD CURVE (32x32):
+"Pixel art 32x32 road curve tile, 90-degree turn, asphalt with white line, transparent bg, pixel art, PNG 32x32"
+
+6. TREE TILE (32x32):
+"Pixel art 32x32 tree top-down view, round green canopy, brown trunk, transparent background, simple pixel art, PNG 32x32"
+
+7. WATER TILE (32x32):
+"Pixel art 32x32 water tile, animated frames concept, blue waves pattern, transparent bg, PNG 32x32"
+
+8. GRASS TILE (32x32):
+"Pixel art 32x32 grass tile, green texture with small flowers variation, seamless tiling, transparent bg, PNG 32x32"
+
+9. CITIZEN ICON (16x16):
+"Pixel art 16x16 small person icon, neutral pose, colorful shirt, high readability at small size, transparent background, PNG 16x16"
+
+10. CAR ICON (16x16):
+"Pixel art 16x16 car icon top-down view, simple shape, 2-3 colors, transparent background, PNG 16x16"
+
+11. UI ICON SET (64x64):
+"Pixel art UI icon set 64x64: save, settings, play, pause, zoom-in, zoom-out, modern pixel style, consistent stroke weight, transparent background, export PNG 64x64 each"
+
+12. WORLD THUMBNAIL (512x288):
+"Low-res pixel-art thumbnail 512x288 for city world: skyline with road and small park, vibrant palette, clear composition, export PNG 512x288"
+
+=== UVOWORLD ASSET PROMPTS (INDONESIA) ===
+
+1. TILE RUMAH (32x32):
+"Pixel art 32x32 rumah kecil tampak depan, atap merah, 3 jendela, tekstur kayu sederhana, latar transparan, pixel-perfect, tanpa anti-alias, palette warna terbatas, simetris, ekspor PNG 32x32"
+
+2. TILE TOKO (32x32):
+"Pixel art 32x32 fasad toko, kanopi, papan nama, pintu kaca, siluet jelas, latar transparan, PNG 32x32"
+
+3. TILE PABRIK (32x32):
+"Pixel art 32x32 pabrik industri, cerobong asap, beton abu-abu, jendela, latar transparan, tepi pixel-perfect, PNG 32x32"
+
+4. TILE JALAN (32x32):
+"Pixel art 32x32 tile jalan lurus, garis putus-putus putih di tengah, tekstur aspal, tepi pixel bersih, latar transparan, PNG 32x32"
+
+5. TILE POJOK JALAN (32x32):
+"Pixel art 32x32 tile jalan belokan 90 derajat, aspal dengan garis putih, latar transparan, PNG 32x32"
+
+6. TILE POHON (32x32):
+"Pixel art 32x32 pohon tampak atas, kanopi hijau bulat, batang coklat, latar transparan, PNG 32x32"
+
+7. TILE AIR (32x32):
+"Pixel art 32x32 tile air, konsep frame animasi, pola gelombang biru, latar transparan, PNG 32x32"
+
+8. TILE RUMPUT (32x32):
+"Pixel art 32x32 tile rumput, tekstur hijau dengan variasi bunga kecil, pola seamless, latar transparan, PNG 32x32"
+
+9. IKON PENDUDUK (16x16):
+"Pixel art 16x16 ikon orang kecil, pose netral, baju warna-warni, mudah dibaca di ukuran kecil, latar transparan, PNG 16x16"
+
+10. IKON MOBIL (16x16):
+"Pixel art 16x16 ikon mobil tampak atas, bentuk sederhana, 2-3 warna, latar transparan, PNG 16x16"
+
+11. SET IKON UI (64x64):
+"Set ikon UI pixel art 64x64: save, settings, play, pause, zoom-in, zoom-out, gaya pixel modern, ketebalan garis konsisten, latar transparan, ekspor masing-masing PNG 64x64"
+
+12. THUMBNAIL WORLD (512x288):
+"Thumbnail pixel-art low-res 512x288 untuk dunia kota: skyline dengan jalan dan taman kecil, palette cerah, komposisi jelas, ekspor PNG 512x288"

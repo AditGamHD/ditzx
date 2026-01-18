@@ -1,0 +1,144 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Welcome to UVOWORLD</h2>
+            <p>Create and share your worlds</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Login</button>
+            <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+
+        <div class="auth-form" id="login-form">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="your@email.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button class="btn-auth" id="login-btn">Login</button>
+
+            <div class="auth-divider">or continue with</div>
+
+            <button class="btn-auth-google" id="google-login">
+                <img src="/asset/google-icon.png" alt="Google"> Sign in with Google
+            </button>
+
+            <div class="auth-links">
+                <a href="#" id="forgot-password">Forgot password?</a>
+            </div>
+        </div>
+
+        <div class="auth-form" id="register-form" style="display: none;">
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" id="register-name" placeholder="Your display name">
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="register-email" placeholder="your@email.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="register-password" placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="register-password2" placeholder="••••••••">
+            </div>
+            <button class="btn-auth" id="register-btn">Create Account</button>
+
+            <div class="auth-terms">
+                By registering, you agree to our <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-features">
+        <div class="feature">
+            <div class="feature-icon">🌍</div>
+            <h3>Create Worlds</h3>
+            <p>Design your own cities with our powerful editor</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">👥</div>
+            <h3>Share & Collaborate</h3>
+            <p>Work with friends on shared worlds</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🎮</div>
+            <h3>Simulate & Play</h3>
+            <p>Watch your city come to life with simulation</p>
+        </div>
+    </div>
+</div>
+
+<script>
+window.pageScripts = window.pageScripts || {};
+window.pageScripts.auth = function() {
+    console.log('Auth page loaded');
+
+    // Tab switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+
+            // Update active tab
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Show correct form
+            document.getElementById('login-form').style.display = tabName === 'login' ? 'block' : 'none';
+            document.getElementById('register-form').style.display = tabName === 'register' ? 'block' : 'none';
+        });
+    });
+
+    // Login handler
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            await firebase.auth().signInWithEmailAndPassword(email, password);
+            window.location.hash = '/';
+        } catch (error) {
+            alert('Login error: ' + error.message);
+        }
+    });
+
+    // Register handler
+    document.getElementById('register-btn').addEventListener('click', async () => {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const password2 = document.getElementById('register-password2').value;
+
+        if (password !== password2) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        try {
+            const userCred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            await userCred.user.updateProfile({ displayName: name });
+            window.location.hash = '/';
+        } catch (error) {
+            alert('Registration error: ' + error.message);
+        }
+    });
+
+    // Google login
+    document.getElementById('google-login').addEventListener('click', async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            await firebase.auth().signInWithPopup(provider);
+            window.location.hash = '/';
+        } catch (error) {
+            alert('Google login error: ' + error.message);
+        }
+    });
+};
+</script>

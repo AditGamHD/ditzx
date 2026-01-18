@@ -1,0 +1,150 @@
+<div class="editor-container">
+    <div class="editor-topbar">
+        <div class="world-info">
+            <h2 id="world-title">Untitled World</h2>
+            <div class="world-actions">
+                <button id="save-btn" class="btn-primary">💾 Save</button>
+                <button id="play-btn" class="btn-success">▶ Play</button>
+                <button id="settings-btn" class="btn-icon">⚙</button>
+            </div>
+        </div>
+        <div class="editor-stats">
+            <div class="stat"><span>🏠</span> <span id="stat-pop">0</span></div>
+            <div class="stat"><span>💰</span> <span id="stat-money">$0</span></div>
+            <div class="stat"><span>😊</span> <span id="stat-happy">100%</span></div>
+            <div class="stat"><span>📊</span> <span id="stat-time">Day 1</span></div>
+        </div>
+    </div>
+
+    <div class="editor-canvas-container">
+        <canvas id="world-canvas" width="1024" height="768"></canvas>
+        <div class="canvas-overlay" id="canvas-overlay">
+            <!-- Grid overlay, selection box, etc -->
+        </div>
+        <div class="canvas-controls">
+            <button class="canvas-btn" id="zoom-in">+</button>
+            <button class="canvas-btn" id="zoom-out">-</button>
+            <button class="canvas-btn" id="center-btn">⌖</button>
+            <button class="canvas-btn" id="grid-toggle">#</button>
+        </div>
+    </div>
+
+    <div class="editor-statusbar">
+        <div class="coord-display">X: <span id="coord-x">0</span>, Y: <span id="coord-y">0</span></div>
+        <div class="tool-display">Tool: <span id="current-tool">Select</span></div>
+        <div class="tile-display">Tile: <span id="current-tile">Grass</span></div>
+    </div>
+</div>
+
+<script>
+// Script editor akan dimuat terpisah
+window.pageScripts = window.pageScripts || {};
+window.pageScripts.editor = async function() {
+    console.log('Editor page loaded');
+
+    // Inisialisasi canvas
+    const canvas = document.getElementById('world-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // World data placeholder
+    const world = {
+        tiles: [],
+        width: 50,
+        height: 50,
+        tileSize: 32
+    };
+
+    // Generate empty world
+    for (let y = 0; y < world.height; y++) {
+        world.tiles[y] = [];
+        for (let x = 0; x < world.width; x++) {
+            world.tiles[y][x] = { type: 'grass', building: null };
+        }
+    }
+
+    // Render loop
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+
+        for (let y = 0; y < world.height; y++) {
+            for (let x = 0; x < world.width; x++) {
+                const tile = world.tiles[y][x];
+
+                // Draw terrain
+                switch(tile.type) {
+                    case 'grass':
+                        ctx.fillStyle = '#4CAF50';
+                        break;
+                    case 'water':
+                        ctx.fillStyle = '#2196F3';
+                        break;
+                    case 'road':
+                        ctx.fillStyle = '#757575';
+                        break;
+                    default:
+                        ctx.fillStyle = '#8BC34A';
+                }
+
+                ctx.fillRect(
+                    x * world.tileSize, 
+                    y * world.tileSize, 
+                    world.tileSize, 
+                    world.tileSize
+                );
+
+                // Draw grid
+                ctx.strokeRect(
+                    x * world.tileSize, 
+                    y * world.tileSize, 
+                    world.tileSize, 
+                    world.tileSize
+                );
+
+                // Draw building placeholder
+                if (tile.building) {
+                    ctx.fillStyle = '#FF9800';
+                    ctx.fillRect(
+                        x * world.tileSize + 4,
+                        y * world.tileSize + 4,
+                        world.tileSize - 8,
+                        world.tileSize - 8
+                    );
+                }
+            }
+        }
+    }
+
+    // Event listeners
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / world.tileSize);
+        const y = Math.floor((e.clientY - rect.top) / world.tileSize);
+
+        if (x >= 0 && x < world.width && y >= 0 && y < world.height) {
+            // Place road for demo
+            world.tiles[y][x].type = 'road';
+            render();
+
+            // Update coord display
+            document.getElementById('coord-x').textContent = x;
+            document.getElementById('coord-y').textContent = y;
+        }
+    });
+
+    // Initial render
+    render();
+
+    // Button handlers
+    document.getElementById('save-btn').addEventListener('click', () => {
+        alert('Save functionality coming soon!');
+    });
+
+    document.getElementById('play-btn').addEventListener('click', () => {
+        alert('Simulation will start in full version!');
+    });
+};
+</script>

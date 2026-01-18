@@ -1,0 +1,112 @@
+<div class="settings-container">
+    <div class="settings-sidebar">
+        <h3>Settings</h3>
+        <nav class="settings-nav">
+            <a href="#" class="settings-nav-item active" data-section="profile">👤 Profile</a>
+            <a href="#" class="settings-nav-item" data-section="graphics">🎮 Graphics</a>
+            <a href="#" class="settings-nav-item" data-section="controls">🎛 Controls</a>
+            <a href="#" class="settings-nav-item" data-section="account">🔐 Account</a>
+            <a href="#" class="settings-nav-item" data-section="about">ℹ About</a>
+        </nav>
+    </div>
+
+    <div class="settings-content">
+        <!-- Profile Section -->
+        <div class="settings-section active" id="profile-section">
+            <h2>Profile Settings</h2>
+            <div class="profile-avatar">
+                <img src="/asset/default-avatar.png" alt="Avatar" id="avatar-preview">
+                <input type="file" id="avatar-upload" accept="image/*">
+                <button class="btn-small" onclick="document.getElementById('avatar-upload').click()">Change Avatar</button>
+            </div>
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" id="profile-name" value="User">
+            </div>
+            <div class="input-group">
+                <label>Bio</label>
+                <textarea id="profile-bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+            </div>
+            <button class="btn-primary" id="save-profile">Save Profile</button>
+        </div>
+
+        <!-- Graphics Section -->
+        <div class="settings-section" id="graphics-section">
+            <h2>Graphics Settings</h2>
+            <div class="settings-option">
+                <label>Quality Preset</label>
+                <select id="graphics-preset">
+                    <option value="low">Low (Fastest)</option>
+                    <option value="medium" selected>Medium (Balanced)</option>
+                    <option value="high">High (Best Quality)</option>
+                </select>
+            </div>
+            <div class="settings-option">
+                <label>Tile Size</label>
+                <select id="tile-size">
+                    <option value="32">32px (Pixel Art)</option>
+                    <option value="48" selected>48px (Recommended)</option>
+                    <option value="64">64px (High Res)</option>
+                </select>
+            </div>
+            <div class="settings-option">
+                <label>
+                    <input type="checkbox" id="animations-toggle" checked> Enable Animations
+                </label>
+            </div>
+            <div class="settings-option">
+                <label>
+                    <input type="checkbox" id="shadows-toggle" checked> Enable Shadows
+                </label>
+            </div>
+            <button class="btn-primary" id="apply-graphics">Apply Graphics Settings</button>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="settings-section" id="controls-section">
+            <h2>Control Settings</h2>
+            <div class="settings-option">
+                <label>Mobile Control Layout</label>
+                <select id="mobile-layout">
+                    <option value="joystick">Virtual Joystick</option>
+                    <option value="tap" selected>Tap to Move</option>
+                    <option value="gesture">Gesture Controls</option>
+                </select>
+            </div>
+            <div class="settings-option">
+                <label>Editor Grid Snap</label>
+                <select id="grid-snap">
+                    <option value="1">1px (Free)</option>
+                    <option value="8">8px</option>
+                    <option value="16" selected>16px (Default)</option>
+                    <option value="32">32px (Tile Snap)</option>
+                </select>
+            </div>
+            <div class="hotkey-settings">
+                <h4>Keyboard Shortcuts</h4>
+                <!-- Hotkey list -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+window.pageScripts = window.pageScripts || {};
+window.pageScripts.settings = function() {
+    // Navigation
+    document.querySelectorAll('.settings-nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = item.getAttribute('data-section');
+
+            // Update active nav
+            document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            // Show section
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${section}-section`).classList.add('active');
+        });
+    });
+};
+</script>
