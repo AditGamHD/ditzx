@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UVOWORLD - Build Your World</title>
+    <link rel="stylesheet" href="/styles/global.css">
+    <link rel="icon" type="image/x-icon" href="/asset/favicon.png">
+</head>
+<body>
+    <!-- Loader awal -->
+    <div id="loader" class="loader-container">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading UVOWORLD...</div>
+    </div>
+
+    <!-- Container utama -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Header (akan diisi JS) -->
+        <header class="app-header" id="app-header">
+            <div class="header-left">
+                <div class="logo" id="logo-home">UVOWORLD</div>
+                <nav class="main-nav" id="main-nav">
+                    <!-- Navigation akan diisi JS -->
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="search-box" id="search-box">
+                    <input type="text" placeholder="Search worlds..." id="search-input">
+                </div>
+                <div class="user-menu" id="user-menu">
+                    <!-- User menu akan diisi JS -->
+                </div>
+            </div>
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
+        </header>
+
+        <!-- Sidebar kiri (tools) -->
+        <aside class="sidebar-left" id="sidebar-left">
+            <!-- Tools editor akan diisi JS -->
+        </aside>
+
+        <!-- Konten utama -->
+        <main class="main-content" id="main-content">
+            <!-- Halaman akan dimuat di sini -->
+            <div id="page-container"></div>
+        </main>
+
+        <!-- Sidebar kanan (properties) -->
+        <aside class="sidebar-right" id="sidebar-right">
+            <!-- Properties akan diisi JS -->
+        </aside>
+
+        <!-- Bottom bar -->
+        <footer class="bottom-bar" id="bottom-bar">
+            <!-- Quick actions -->
+        </footer>
+
+        <!-- Mobile overlay controls -->
+        <div class="mobile-controls" id="mobile-controls">
+            <!-- Virtual joystick, action buttons -->
+        </div>
+
+        <!-- Modal container -->
+        <div id="modal-container" class="modal-container"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <!-- LZString untuk kompresi data -->
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+
+    <!-- App Script -->
+    <script type="module">
+        // Konfigurasi Firebase (placeholder - ganti dengan milikmu)
+        const firebaseConfig = {
+            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef123456"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Ekspor ke global scope untuk modul lain
+        window.firebase = { auth, db, storage };
+        window.currentUser = null;
+        window.currentPage = null;
+        window.currentWorld = null;
+
+        // Routing sederhana
+        const routes = {
+            '/': 'home',
+            '/editor': 'editor',
+            '/viewer': 'viewer',
+            '/settings': 'settings',
+            '/auth': 'auth',
+            '/worlds': 'worlds'
+        };
+
+        async function loadPage(page) {
+            const container = document.getElementById('page-container');
+            try {
+                const response = await fetch(`/halaman/${page}.html`);
+                const html = await response.text();
+                container.innerHTML = html;
+
+                // Load script khusus halaman jika ada
+                if (window.pageScripts && window.pageScripts[page]) {
+                    await window.pageScripts[page]();
+                }
+            } catch (error) {
+                console.error('Error loading page:', error);
+                container.innerHTML = '<div class="error">Failed to load page</div>';
+            }
+        }
+
+        function handleRouting() {
+            const path = window.location.hash.replace('#', '') || '/';
+            const page = routes[path] || 'home';
+
+            if (window.currentPage !== page) {
+                window.currentPage = page;
+                loadPage(page);
+                updateUIForPage(page);
+            }
+        }
+
+        function updateUIForPage(page) {
+            // Update UI berdasarkan halaman
+            const header = document.getElementById('app-header');
+            const sidebarLeft = document.getElementById('sidebar-left');
+            const sidebarRight = document.getElementById('sidebar-right');
+            const bottomBar = document.getElementById('bottom-bar');
+
+            // Reset semua
+            header.style.display = 'flex';
+            sidebarLeft.style.display = 'none';
+            sidebarRight.style.display = 'none';
+            bottomBar.style.display = 'none';
+
+            switch(page) {
+                case 'editor':
+                    sidebarLeft.style.display = 'flex';
+                    sidebarRight.style.display = 'flex';
+                    bottomBar.style.display = 'flex';
+                    break;
+                case 'viewer':
+                    sidebarRight.style.display = 'flex';
+                    break;
+                case 'home':
+                    sidebarRight.style.display = 'none';
+                    break;
+            }
+        }
+
+        // Auth state listener
+        auth.onAuthStateChanged((user) => {
+            window.currentUser = user;
+            updateUserUI(user);
+
+            // Redirect jika belum login
+            if (!user && window.location.hash !== '#/auth') {
+                window.location.hash = '/auth';
+            } else if (user && window.location.hash === '#/auth') {
+                window.location.hash = '/';
+            }
+
+            // Sembunyikan loader
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        });
+
+        function updateUserUI(user) {
+            const userMenu = document.getElementById('user-menu');
+            if (user) {
+                userMenu.innerHTML = `
+                    <div class="user-avatar">
+                        <img src="${user.photoURL || '/asset/default-avatar.png'}" alt="${user.displayName}">
+                    </div>
+                    <div class="user-dropdown">
+                        <div>${user.displayName || user.email}</div>
+                        <button onclick="firebase.auth().signOut()">Logout</button>
+                    </div>
+                `;
+            } else {
+                userMenu.innerHTML = '<button onclick="window.location.hash=\'/auth\'">Login</button>';
+            }
+        }
+
+        // Inisialisasi
+        window.addEventListener('hashchange', handleRouting);
+        window.addEventListener('load', () => {
+            handleRouting();
+            // Load user profile jika sudah login
+            if (auth.currentUser) {
+                window.currentUser = auth.currentUser;
+                updateUserUI(auth.currentUser);
+            }
+        });
+
+        // Ekspor fungsi penting
+        window.loadPage = loadPage;
+        window.firebaseApp = firebase;
+    </script>
+</body>
+</html>
