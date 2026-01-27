@@ -3,11 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ADIT — Portfolio</title>
+  <title>ADIT — Portfolio | Game Dev & Web Dev</title>
+
+  <!-- Primary SEO -->
+  <meta name="description" content="ADIT — Portfolio Game Developer & Web Developer. Demo proyek game HTML5, Godot, sistem multiplayer, UI/UX mobile-friendly, dan layanan pembuatan game & website. Kontak untuk kerja sama.">
+  <meta name="keywords" content="ADIT, portfolio, game developer, web developer, Godot, HTML5 game, game multiplayer, UI/UX, responsive, SUPERHIT, pengembangan game">
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="ADIT">
+
+  <!-- Canonical (di-set dinamis via JS ke URL saat ini jika belum diisi statis) -->
+  <link rel="canonical" href="">
+
+  <!-- Open Graph (di-set statis + JS akan update og:image bila ada gambar di /fav/) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ADIT — Portfolio | Game Dev & Web Dev">
+  <meta property="og:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="/fav/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@adit">
+  <meta name="twitter:title" content="ADIT — Portfolio | Game Dev & Web Dev">
+  <meta name="twitter:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
+  <meta name="twitter:image" content="/fav/og-image.png">
+
+  <!-- Mobile / PWA icons (sesuaikan: letakkan file di root jika ingin dipakai) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Preconnect & fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="ADITdeveloper.css">
   <script src="ADITdeveloper.js" defer></script>
+
+  <!-- Structured Data (JSON-LD) for Portfolio / Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "ADIT",
+    "url": "",
+    "sameAs": [],
+    "jobTitle": "Game Developer & Web Developer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "ADIT Developer"
+    },
+    "description": "Portfolio ADIT — Game Developer & Web Developer. Menampilkan proyek game HTML5, Godot engine, multiplayer realtime, dan layanan pengembangan web."
+  }
+  </script>
+
+  <style>
+    :root { --muted: #93a3b8; }
+  </style>
 </head>
 <body data-theme="light">
 
@@ -22,7 +76,7 @@
     <header>
       <a href="#" class="brand" id="brand-area">
         <img src="" alt="A" id="logo-img">
-        <span style="font-weight: 800; letter-spacing: -1px;" id="brand-name"></span>
+        <span style="font-weight: 800; letter-spacing: -1px;" id="brand-name">ADIT</span>
       </a>
       <nav>
         <button class="nav-link active" onclick="portfolio.renderPage('home')" id="nav-home">
@@ -43,7 +97,7 @@
     <main id="main-content" class="hero"></main>
 
     <footer style="text-align: center; padding: 40px; color: var(--muted); font-size: 12px;">
-      <p id="footer-text"></p>
+      <p id="footer-text">© ADIT — Game Dev & Web Dev</p>
     </footer>
   </div>
 
@@ -51,6 +105,103 @@
     document.addEventListener('DOMContentLoaded', () => {
       portfolio.initialize();
     });
+
+    // SEO helpers: set canonical and og:url to current page if not set server-side
+    (function setCanonicalAndUrls() {
+      const loc = window.location.href.split('#')[0].split('?')[0];
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical && !canonical.href) canonical.href = loc;
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl && !ogUrl.content) ogUrl.content = loc;
+      const ld = document.querySelector('script[type="application/ld+json"]');
+      if (ld) {
+        try {
+          const data = JSON.parse(ld.textContent);
+          if (data && !data.url) { data.url = loc; ld.textContent = JSON.stringify(data, null, 2); }
+        } catch(e) {}
+      }
+    })();
+
+    // Favicon/OG-image loader:
+    // tries a list of common filenames inside /fav/ then root icons provided in head.
+    (async function loadFavAssets() {
+      const candidates = [
+        '/fav/favicon-32x32.png',
+        '/fav/favicon-16x16.png',
+        '/fav/android-chrome-192x192.png',
+        '/fav/android-chrome-512x512.png',
+        '/fav/apple-touch-icon.png',
+        '/fav/og-image.png',
+        '/fav/logo.png',
+        '/fav/icon.png'
+      ];
+
+      async function exists(url) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          return res.ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      const found = [];
+      for (const p of candidates) {
+        // stop early if found same file names for multiple sizes
+        // check and push first few valid assets
+        // avoid long blocking: check sequentially but break after enough found
+        if (await exists(p)) {
+          found.push(p);
+          if (found.length >= 3) break;
+        }
+      }
+
+      // If found, set favicon links (multiple sizes) and og/twitter image
+      if (found.length) {
+        // remove existing icon links to prefer /fav/ ones
+        const oldIcons = document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]');
+        oldIcons.forEach(n => n.parentNode && n.parentNode.removeChild(n));
+
+        // create sized icon links
+        found.forEach((url) => {
+          const link = document.createElement('link');
+          // if filename contains 'apple' use apple-touch-icon
+          if (url.includes('apple')) {
+            link.rel = 'apple-touch-icon';
+            link.sizes = '180x180';
+          } else if (url.includes('192') || url.includes('512')) {
+            link.rel = 'icon';
+            link.sizes = url.includes('512') ? '512x512' : '192x192';
+            link.type = 'image/png';
+          } else if (url.includes('32') || url.includes('16')) {
+            link.rel = 'icon';
+            link.sizes = url.includes('32') ? '32x32' : '16x16';
+            link.type = 'image/png';
+          } else {
+            link.rel = 'icon';
+            link.type = 'image/png';
+          }
+          link.href = url;
+          document.head.appendChild(link);
+        });
+
+        // pick first found as social image
+        const socialImage = found[0];
+        const og = document.querySelector('meta[property="og:image"]');
+        if (og) og.content = socialImage;
+        const tw = document.querySelector('meta[name="twitter:image"]');
+        if (tw) tw.content = socialImage;
+        // update structured data image if present
+        const ld = document.querySelector('script[type="application/ld+json"]');
+        if (ld) {
+          try {
+            const data = JSON.parse(ld.textContent);
+            data.image = data.image || socialImage;
+            ld.textContent = JSON.stringify(data, null, 2);
+          } catch (e) {}
+        }
+      }
+    })();
   </script>
 </body>
 </html>
