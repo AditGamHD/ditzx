@@ -9,20 +9,17 @@ const portfolio = (() => {
   // Inisialisasi aplikasi
   async function initialize() {
     try {
-      // Load data dari file JSON
       const response = await fetch('ADITdeveloper.json');
+      if (!response.ok) throw new Error('Gagal mengambil JSON');
       DATA = await response.json();
       
-      // Setup DOM elements
       setupElements();
       
-      // Inisialisasi situs
       document.body.setAttribute('data-theme', DATA.situs.tema || 'light');
       elements.brandName.innerText = DATA.penulis.nama;
-      elements.logoImg.src = DATA.penulis.foto || 'https://ui-avatars.com/api/?name=Adit&background=333&color=fff';
+      elements.logoImg.src = DATA.penulis.foto;
       elements.footerText.innerText = `© ${new Date().getFullYear()} ${DATA.penulis.nama} — ${DATA.situs.tagline}`;
       
-      // Render halaman awal
       renderPage('home');
       
       console.log('Portfolio ADIT initialized successfully!');
@@ -56,29 +53,19 @@ const portfolio = (() => {
   function renderPage(page) {
     if (!elements.mainContent) return;
     
-    // Update navigasi aktif
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     const navBtn = document.getElementById(`nav-${page}`);
     if (navBtn) navBtn.classList.add('active');
 
-    // Reset dan tambah animasi
     elements.mainContent.classList.remove('animate-fade-in-up');
     void elements.mainContent.offsetWidth; // Trigger reflow
     elements.mainContent.classList.add('animate-fade-in-up');
 
-    // Render konten berdasarkan halaman
     switch(page) {
-      case 'home':
-        renderHome();
-        break;
-      case 'projects':
-        renderProjects();
-        break;
-      case 'contact':
-        renderContact();
-        break;
-      default:
-        renderHome();
+      case 'home': renderHome(); break;
+      case 'projects': renderProjects(); break;
+      case 'contact': renderContact(); break;
+      default: renderHome();
     }
   }
 
@@ -97,9 +84,7 @@ const portfolio = (() => {
           .filter(([_, value]) => value.terlihat)
           .map(([key, value]) => `
             <a href="${value.tautan}" target="_blank" class="social-link" title="${key}">
-              <svg class="icon" viewBox="0 0 24 24">
-                ${getSocialIcon(key)}
-              </svg>
+              <svg class="icon" viewBox="0 0 24 24">${getSocialIcon(key)}</svg>
               ${value.username}
             </a>
           `).join('')}
@@ -128,15 +113,11 @@ const portfolio = (() => {
       </div>
     `;
     
-    // Animasikan timeline items
-    setTimeout(() => {
-      animateElementsSequentially('.timeline-item', 150);
-    }, 700);
+    setTimeout(() => { animateElementsSequentially('.timeline-item', 150); }, 700);
   }
 
   // Render halaman projects
   function renderProjects() {
-    // Filter proyek yang terlihat
     const visibleProjects = (DATA.proyek || []).filter(p => p.terlihat);
     const maxProjects = DATA.situs.maksProyekPerHalaman || 9;
     const projectsToShow = visibleProjects.slice(0, maxProjects);
@@ -184,24 +165,19 @@ const portfolio = (() => {
       ` : ''}
     `;
     
-    // Animasikan card projects
-    setTimeout(() => {
-      animateElementsSequentially('.card', 100);
-    }, 300);
+    setTimeout(() => { animateElementsSequentially('.card', 100); }, 300);
   }
 
   // Render halaman contact
   function renderContact() {
-    const enableConfetti = DATA.fitur?.aktifkanKonfetiKontak || false;
-    
     elements.mainContent.innerHTML = `
       <h1 class="animate-fade-in-up" style="animation-delay: 0.1s">Mari Berdiskusi.</h1>
       <p class="animate-fade-in-up" style="animation-delay: 0.2s">Punya ide gila? Mari kita wujudkan dalam bentuk kode.</p>
       
       <form class="contact-form animate-scale-in" onsubmit="portfolio.handleContactSubmit(event)">
-        <input type="text" placeholder="Nama Anda" required>
-        <input type="email" placeholder="Email Anda" required>
-        <textarea placeholder="Apa yang ingin Anda bangun?" rows="5" required></textarea>
+        <input type="text" id="name" placeholder="Nama Anda" required>
+        <input type="email" id="email" placeholder="Email Anda" required>
+        <textarea id="message" placeholder="Apa yang ingin Anda bangun?" rows="5" required></textarea>
         <button type="submit" class="btn">
           <span id="submit-text">Kirim Sekarang</span>
           <span id="submit-loading" style="display:none;">Mengirim...</span>
@@ -214,15 +190,12 @@ const portfolio = (() => {
       </div>
     `;
     
-    // Tambah konfetti jika diaktifkan
-    if (enableConfetti) {
-      setTimeout(() => {
-        createConfetti();
-      }, 500);
+    if (DATA.fitur?.aktifkanKonfetiKontak) {
+      setTimeout(() => { createConfetti(); }, 500);
     }
   }
 
-  // Handle submit kontak
+  // Handle submit kontak (DISCORD WEBHOOK SYSTEM)
   async function handleContactSubmit(event) {
     event.preventDefault();
     
@@ -230,30 +203,76 @@ const portfolio = (() => {
     const submitBtn = form.querySelector('.btn');
     const submitText = document.getElementById('submit-text');
     const submitLoading = document.getElementById('submit-loading');
+
+    // Ambil data
+    const nama = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const pesan = document.getElementById('message').value.trim();
+
+    if (!nama || !email || !pesan) {
+        showNotif('Mohon lengkapi semua kolom.', 'error');
+        return;
+    }
     
-    // Show loading state
+    // UI Loading
     if (submitText) submitText.style.display = 'none';
     if (submitLoading) submitLoading.style.display = 'inline';
     submitBtn.disabled = true;
     
-    // Simulasi pengiriman (ganti dengan API call sebenarnya)
-    setTimeout(() => {
-      // Reset form
-      form.reset();
-      
-      // Show success message
-      showNotif('Pesan berhasil dikirim! Saya akan membalas segera.', 'success');
-      
-      // Reset button state
-      if (submitText) submitText.style.display = 'inline';
-      if (submitLoading) submitLoading.style.display = 'none';
-      submitBtn.disabled = false;
-      
-      // Trigger confetti if enabled
-      if (DATA.fitur?.aktifkanKonfetiKontak) {
-        createConfetti();
-      }
-    }, 1500);
+    const webhookURL = DATA.kontak?.discordWebhook;
+
+    if (!webhookURL) {
+        showNotif('Error: Webhook URL tidak ditemukan.', 'error');
+        resetBtn();
+        return;
+    }
+
+    // Payload Embed Discord
+    const payload = {
+        username: "ADIT Portfolio",
+        avatar_url: DATA.penulis.foto,
+        embeds: [
+            {
+                title: "📬 Pesan Baru dari Website",
+                color: 6333946, // Warna Accent
+                fields: [
+                    { name: "👤 Pengirim", value: nama, inline: true },
+                    { name: "📧 Email", value: email, inline: true },
+                    { name: "📝 Pesan", value: pesan }
+                ],
+                footer: { text: "Dikirim via Portfolio" },
+                timestamp: new Date().toISOString()
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok || response.status === 204) {
+            form.reset();
+            showNotif('Pesan berhasil terkirim!', 'success');
+            if (DATA.fitur?.aktifkanKonfetiKontak) createConfetti();
+        } else {
+            throw new Error('Gagal mengirim.');
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        showNotif('Gagal koneksi ke server pesan.', 'error');
+    } finally {
+        resetBtn();
+    }
+
+    function resetBtn() {
+        if (submitText) submitText.style.display = 'inline';
+        if (submitLoading) submitLoading.style.display = 'none';
+        submitBtn.disabled = false;
+    }
   }
 
   // Toggle tema
@@ -265,7 +284,7 @@ const portfolio = (() => {
     showNotif(`Mode ${next === 'dark' ? 'Gelap' : 'Terang'} Aktif`);
   }
 
-  // Show notification
+  // Show notification (NO EMOJI IN WEB, ICONS ONLY)
   function showNotif(message, type = "success") {
     const container = document.getElementById('notification-center');
     const notif = document.createElement('div');
@@ -294,7 +313,6 @@ const portfolio = (() => {
       twitter: `<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>`,
       youtube: `<path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>`
     };
-    
     return icons[platform] || `<circle cx="12" cy="12" r="10"></circle>`;
   }
 
@@ -302,65 +320,35 @@ const portfolio = (() => {
   function createConfetti() {
     const confettiCount = 50;
     const container = document.querySelector('.container');
-    
     for (let i = 0; i < confettiCount; i++) {
       const confetti = document.createElement('div');
       confetti.style.position = 'absolute';
       confetti.style.width = '10px';
       confetti.style.height = '10px';
-      confetti.style.background = getRandomColor();
+      confetti.style.background = ['#60a5fa', '#4ade80', '#f87171', '#fbbf24', '#c084fc', '#22d3ee'][Math.floor(Math.random() * 6)];
       confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
       confetti.style.top = '50%';
       confetti.style.left = `${Math.random() * 100}%`;
       confetti.style.opacity = '0';
       confetti.style.zIndex = '9998';
       confetti.style.pointerEvents = 'none';
-      
       container.appendChild(confetti);
-      
-      // Animate confetti
       const animation = confetti.animate([
-        { 
-          opacity: 0, 
-          transform: 'translate(0, 0) rotate(0deg)' 
-        },
-        { 
-          opacity: 1, 
-          transform: `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) rotate(${Math.random() * 360}deg)` 
-        },
-        { 
-          opacity: 0, 
-          transform: `translate(${Math.random() * 300 - 150}px, 500px) rotate(${Math.random() * 720}deg)` 
-        }
-      ], {
-        duration: 2000 + Math.random() * 1000,
-        easing: 'cubic-bezier(0.1, 0.8, 0.9, 0.2)'
-      });
-      
-      // Remove after animation
+        { opacity: 0, transform: 'translate(0, 0) rotate(0deg)' },
+        { opacity: 1, transform: `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) rotate(${Math.random() * 360}deg)` },
+        { opacity: 0, transform: `translate(${Math.random() * 300 - 150}px, 500px) rotate(${Math.random() * 720}deg)` }
+      ], { duration: 2000 + Math.random() * 1000, easing: 'cubic-bezier(0.1, 0.8, 0.9, 0.2)' });
       animation.onfinish = () => confetti.remove();
     }
   }
 
-  // Helper function untuk warna random
-  function getRandomColor() {
-    const colors = ['#60a5fa', '#4ade80', '#f87171', '#fbbf24', '#c084fc', '#22d3ee'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  // Load more projects (untuk pagination)
+  // Load more projects
   function loadMoreProjects() {
-    // Implementasi load more projects
-    showNotif('Fitur "Muat Lebih Banyak" dalam pengembangan', 'error');
+    showNotif('Semua projek sudah ditampilkan.', 'error');
   }
 
   // Public API
   return {
-    initialize,
-    renderPage,
-    toggleTheme,
-    handleContactSubmit,
-    loadMoreProjects,
-    showNotif
+    initialize, renderPage, toggleTheme, handleContactSubmit, loadMoreProjects, showNotif
   };
 })();
