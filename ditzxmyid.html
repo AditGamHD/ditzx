@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADIT Monitor System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>
+    :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; }
+    .light-theme { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; }
+    
+    body { background-color: var(--bg); color: var(--text); transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+    .glass-card { background-color: var(--card); border: 1px solid rgba(255,255,255,0.05); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 24px); }
+
+    /* Fixed styles for account checkmark */
+    .avatar-wrap { position: relative; display:inline-block }
+    .avatar-check {
+        position: absolute; right: -6px; bottom: -6px; width: 34px; height: 34px;
+        display:flex; align-items:center; justify-content:center; border-radius:999px;
+        background:linear-gradient(180deg,#3b82f6,#2563eb); color:white; box-shadow:0 6px 18px rgba(37,99,235,0.25);
+        border:3px solid white; font-size:16px;
+    }
+
+    /* Table small responsive */
+    .small-table th, .small-table td{ font-size:12px; padding:8px }
+</style>
+
+<script>
+    // Make manifest global so other scripts can use it
+    window.appManifest = {
+        "name": "ADIT Security Monitor",
+        "short_name": "ADIT-M",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#0f172a",
+        "theme_color": "#3b82f6",
+        "icons": [{"src": "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ", "sizes": "512x512", "type": "image/png"}]
+    };
+    // inject manifest tag
+    (function(){
+        const mUrl = URL.createObjectURL(new Blob([JSON.stringify(window.appManifest)], {type:'application/json'}));
+        const link = document.createElement('link'); link.rel = 'manifest'; link.href = mUrl; document.head.appendChild(link);
+    })();
+
+    // Service Worker registration (safer cross-browser)
+    (function(){
+        const swCode = `self.addEventListener('push', e => {
+            const data = e.data ? e.data.json() : { title: 'ADIT', body: 'Pesan masuk' };
+            self.registration.showNotification(data.title, { body: data.body, icon: '${window.appManifest.icons[0].src}' });
+        });`;
+        try{
+            if ('serviceWorker' in navigator) {
+                const swUrl = URL.createObjectURL(new Blob([swCode], {type:'application/javascript'}));
+                navigator.serviceWorker.register(swUrl).catch(()=>{/* ignore registration failures in dev env */});
+            }
+        }catch(e){/* ignore */}
+    })();
+</script>
+
+</head>
+<body class="h-screen overflow-hidden flex flex-col"><header class="h-16 flex items-center justify-between px-6 glass-card border-b shadow-md z-50">
+    <div class="flex items-center gap-3">
+        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ" class="w-8 h-8 rounded shadow-blue-500/50 shadow-sm">
+        <h1 class="font-black tracking-tighter text-blue-500">ADIT<span class="opacity-70">SEC</span></h1>
+    </div>
+    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center">
+        <i id="theme-icon" class="fa-solid fa-moon"></i>
+    </button>
+</header>
+
+<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+    
+    <div id="tab-home" class="tab-panel active">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs font-bold uppercase tracking-widest opacity-50">Data Stream Terkini</h2>
+            <span class="px-2 py-0.5 rounded bg-green-500/20 text-green-500 text-[10px] animate-pulse">LIVE</span>
+        </div>
+
+        <!-- Today's statistics -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                <div class="text-lg font-bold text-blue-500" id="stat-today-count">0</div>
+                <div class="text-[10px] uppercase opacity-50">Data Hari Ini</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
+                <div class="text-lg font-bold text-indigo-400" id="stat-unique-ips">0</div>
+                <div class="text-[10px] uppercase opacity-50">IP Unik</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-green-500/10 border border-green-500/20">
+                <div class="text-lg font-bold text-green-400" id="stat-last-time">-</div>
+                <div class="text-[10px] uppercase opacity-50">Terakhir Dikirim</div>
+            </div>
+        </div>
+
+        <!-- Data table (also mirrored to middle tab) -->
+        <div class="glass-card rounded-2xl p-3 mb-4 overflow-auto">
+            <table class="w-full small-table" id="logs-table">
+                <thead>
+                    <tr class="text-xs uppercase opacity-50">
+                        <th>Waktu</th>
+                        <th>Pengirim</th>
+                        <th>Email</th>
+                        <th>IP</th>
+                        <th>Lokasi</th>
+                        <th>Pesan</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="stream-container" class="space-y-4"></div>
+    </div>
+
+    <div id="tab-history" class="tab-panel">
+        <div class="sticky top-0 pb-4 z-10">
+            <input type="text" id="log-search" onkeyup="filterLogs()" placeholder="Cari IP atau Pengirim..." class="w-full glass-card p-3 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500">
+        </div>
+        <div class="grid grid-cols-1 gap-3" id="history-list"></div>
+    </div>
+
+    <div id="tab-account" class="tab-panel">
+        <div class="glass-card rounded-3xl p-8 text-center mb-6">
+            <div class="relative w-24 h-24 mx-auto mb-4 avatar-wrap">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ" class="rounded-full border-4 border-blue-500 p-1">
+                <div class="avatar-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+            <h2 class="text-xl font-bold">ADITdeveloper</h2>
+            <p class="text-xs opacity-50 mb-6">Security Researcher & System Architect</p>
+            
+            <div class="grid grid-cols-2 gap-3 text-center mb-6">
+                <div class="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                    <div class="text-lg font-bold text-blue-500" id="total-logs">0</div>
+                    <div class="text-[10px] uppercase opacity-50">Total Data</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+                    <div class="text-lg font-bold text-purple-500">Stable</div>
+                    <div class="text-[10px] uppercase opacity-50">Status</div>
+                </div>
+            </div>
+
+            <button id="installBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition flex items-center justify-center gap-3">
+                <i class="fa-solid fa-mobile-screen-button"></i> TAMBAH KE HP
+            </button>
+        </div>
+    </div>
+</main>
+
+<div id="detail-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative">
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-xl opacity-50">&times;</button>
+        <div id="modal-content" class="space-y-4"></div>
+    </div>
+</div>
+
+<nav class="fixed bottom-0 w-full glass-card border-t safe-area-bottom z-50">
+    <div class="flex justify-around items-center h-16">
+        <button onclick="switchTab('home', this)" class="nav-btn text-blue-500 flex flex-col items-center gap-1">
+            <i class="fa-solid fa-bolt-lightning text-xl"></i>
+            <span class="text-[10px] font-bold">LIVE</span>
+        </button>
+        <button onclick="switchTab('history', this)" class="nav-btn opacity-40 flex flex-col items-center gap-1">
+            <i class="fa-solid fa-database text-xl"></i>
+            <span class="text-[10px] font-bold">DATA</span>
+        </button>
+        <button onclick="switchTab('account', this)" class="nav-btn opacity-40 flex flex-col items-center gap-1">
+            <i class="fa-solid fa-user-shield text-xl"></i>
+            <span class="text-[10px] font-bold">AKUN</span>
+        </button>
+    </div>
+</nav>
+
+<script>
+    // Data Simulation
+    let logs = [
+        { id: 1, sender: "root", email: "rebve@kk.vvv", loc: "Surabaya, Indonesia", ip: "182.8.123.127", msg: "rver", time: "27/1/2026, 22:22:08" },
+        { id: 2, sender: "nbr", email: "adit.gam775@gmail.com", loc: "Surabaya, Indonesia", ip: "182.8.123.127", msg: "yynth", time: "27/1/2026, 22:22:44" }
+    ];
+
+    // Install prompt handling (global and ready before click)
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e; // save for later
+    });
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('opacity-40', 'text-current'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('text-blue-500'));
+        btn.classList.remove('opacity-40');
+        btn.classList.add('text-blue-500');
+
+        // Mirror table into history tab so both show same table
+        if (tabId === 'history') {
+            // nothing extra required here; history-list is already populated in renderLogs
+        }
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        document.getElementById('theme-icon').className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    function renderLogs() {
+        const stream = document.getElementById('stream-container');
+        const history = document.getElementById('history-list');
+        const tableBody = document.querySelector('#logs-table tbody');
+        stream.innerHTML = history.innerHTML = tableBody.innerHTML = "";
+
+        // Sort newest first
+        logs.sort((a,b) => b.id - a.id).forEach(log => {
+            const card = `
+            <div class="glass-card rounded-2xl p-4 cursor-pointer hover:ring-1 ring-blue-500/50 transition" onclick="showDetail(${log.id})">
+                <div class="flex items-center gap-3 mb-3 border-b border-white/5 pb-2">
+                    <i class="fa-solid fa-shield-halved text-blue-500"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Pesan Web Masuk</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-[11px] mb-3">
+                    <div><i class="fa-solid fa-user text-blue-400 mr-2"></i><b>${log.sender}</b></div>
+                    <div><i class="fa-solid fa-location-dot text-green-400 mr-2"></i>${log.loc}</div>
+                    <div class="opacity-60 truncate">${log.email}</div>
+                    <div class="opacity-60">IP: ${log.ip}</div>
+                </div>
+                <div class="bg-black/20 rounded-lg p-2 font-mono text-xs mb-2 border border-white/5">
+                    <span class="opacity-40 block text-[9px] mb-1">ISI PESAN:</span>
+                    ${log.msg}
+                </div>
+                <div class="text-[9px] opacity-40 text-right font-mono italic">Dikirim: ${log.time}</div>
+            </div>`;
+            stream.innerHTML += card;
+            history.innerHTML += card;
+
+            // table row
+            const row = `<tr class="border-b border-white/5"><td>${log.time}</td><td>${log.sender}</td><td>${log.email}</td><td>${log.ip}</td><td>${log.loc}</td><td class="truncate">${log.msg}</td></tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        // Update top-level counters
+        document.getElementById('total-logs').innerText = logs.length;
+        updateTodayStats();
+    }
+
+    function parseLogDate(str) {
+        // expecting format d/m/yyyy, hh:mm:ss or d/m/yyyy, hh:mm:ss (some inputs may use different separators)
+        try{
+            const parts = str.split(',')[0].trim().split('/');
+            const timePart = (str.split(',')[1]||'').trim();
+            const day = parseInt(parts[0],10), month = parseInt(parts[1],10)-1, year = parseInt(parts[2],10);
+            const t = timePart.split(':').map(x=>parseInt(x.replace(/\D/g,''),10)||0);
+            return new Date(year, month, day, t[0]||0, t[1]||0, t[2]||0);
+        }catch(e){ return new Date(); }
+    }
+
+    function updateTodayStats(){
+        const today = new Date();
+        const isSameDay = (d1,d2)=> d1.getFullYear()===d2.getFullYear() && d1.getMonth()===d2.getMonth() && d1.getDate()===d2.getDate();
+        const todayLogs = logs.filter(l=> isSameDay(parseLogDate(l.time), today));
+        document.getElementById('stat-today-count').innerText = todayLogs.length;
+        const uniqueIPs = [...new Set(todayLogs.map(x=>x.ip))].length;
+        document.getElementById('stat-unique-ips').innerText = uniqueIPs;
+        document.getElementById('stat-last-time').innerText = (todayLogs[0] ? todayLogs[0].time : '-');
+        // ensure both table and history reflect current search state
+    }
+
+    function showDetail(id) {
+        const log = logs.find(l => l.id === id);
+        const content = `
+            <div class="text-center mb-4">
+                <i class="fa-solid fa-circle-info text-blue-500 text-4xl mb-2"></i>
+                <h3 class="font-bold">Detail Payload</h3>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="flex justify-between p-2 rounded bg-white/5"><span>ID Data</span><span class="font-mono text-blue-400">#${log.id}</span></div>
+                <div class="flex justify-between p-2 rounded bg-white/5"><span>Pengirim</span><b>${log.sender}</b></div>
+                <div class="flex justify-between p-2 rounded bg-white/5"><span>Alamat IP</span><b>${log.ip}</b></div>
+                <div class="flex justify-between p-2 rounded bg-white/5"><span>Lokasi</span><span>${log.loc}</span></div>
+                <div class="p-2 rounded bg-white/5">
+                    <span class="block mb-1 opacity-50 text-[10px]">PESAN LENGKAP:</span>
+                    <p class="font-mono break-all">${log.msg}</p>
+                </div>
+            </div>`;
+        document.getElementById('modal-content').innerHTML = content;
+        document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('detail-modal').classList.add('hidden'); }
+
+    function filterLogs(){
+        const q = document.getElementById('log-search').value.toLowerCase();
+        // filter both table and cards
+        document.querySelectorAll('#stream-container .glass-card, #history-list .glass-card').forEach(card=>{
+            const txt = card.innerText.toLowerCase();
+            card.style.display = txt.indexOf(q) > -1 ? '' : 'none';
+        });
+        document.querySelectorAll('#logs-table tbody tr').forEach(tr=>{
+            const txt = tr.innerText.toLowerCase(); tr.style.display = txt.indexOf(q)>-1 ? '' : 'none';
+        });
+    }
+
+    // Simple notification simulation
+    function simulateIncoming() {
+        if (Notification.permission === "granted") {
+            new Notification("ADIT Security: Pesan Baru", {
+                body: "Data masuk dari IP: 182.8.123.127",
+                icon: window.appManifest.icons[0].src
+            });
+        }
+    }
+
+    // Install button functionality (one click): prompt saved `deferredPrompt` if available
+    document.addEventListener('DOMContentLoaded', ()=>{
+        Notification.requestPermission();
+        renderLogs();
+
+        const btn = document.getElementById('installBtn');
+        btn.addEventListener('click', async ()=>{
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const choice = await deferredPrompt.userChoice;
+                // clear saved prompt
+                deferredPrompt = null;
+            } else {
+                // Provide concise instructions if browser doesn't support beforeinstallprompt
+                alert("Browser Anda tidak mendukung prompt otomatis. Untuk menambahkan ke layar utama: buka menu browser -> Tambah ke Layar Utama (Add to Home screen).");
+            }
+        });
+    });
+
+    // expose helper for testing
+    window.__adit_sim = { addLog: (log)=>{ log.id = logs.length+1; logs.push(log); renderLogs(); } };
+</script>
+
+</body>
+</html>
