@@ -56,6 +56,7 @@
                 linear-gradient(to bottom, var(--grid-dark) 1px, transparent 1px);
         }
 
+        /* Loader */
         #loader {
             position: fixed;
             inset: 0;
@@ -76,6 +77,7 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -97,7 +99,6 @@
         }
 
         .nav-left { display: flex; align-items: center; gap: 12px; }
-        .nav-profile { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-light); }
         .app-name { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; }
         
         .theme-btn {
@@ -112,6 +113,7 @@
         body.dark-mode .theme-btn { color: var(--text-dark); }
         .theme-btn:active { transform: scale(0.9); }
 
+        /* Container */
         .container {
             max-width: 600px;
             margin: 80px auto 40px;
@@ -119,6 +121,7 @@
             flex: 1;
         }
 
+        /* Post Card */
         .card {
             background: var(--card-light);
             border-radius: 16px;
@@ -180,6 +183,7 @@
         }
         body.dark-mode .post-content { color: var(--text-dark); }
 
+        /* Interaction Bar */
         .interaction-bar {
             display: flex;
             justify-content: space-between;
@@ -235,6 +239,7 @@
         }
         .copy-block-btn:active { background: var(--primary); color: white; border-style: solid; }
 
+        /* Floating Menu */
         #floating-menu {
             position: fixed;
             background: rgba(31, 41, 55, 0.95);
@@ -269,6 +274,7 @@
         }
         .float-btn:active { background: rgba(255,255,255,0.2); }
 
+        /* Toast */
         #toast {
             position: fixed;
             bottom: 30px;
@@ -290,6 +296,7 @@
         }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         
+        /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
@@ -299,12 +306,28 @@
         }
         body.dark-mode .footer { color: var(--subtext-dark); }
 
+        /* Animations */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         .pop-anim { animation: pop 0.3s ease; }
 
+        /* SVGs */
         .icon { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* Comments panel */
+        .comments-panel {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: transparent;
+        }
+        .comments-empty { color: var(--subtext-light); padding: 12px 0; }
+        .comment-input-wrap { display: flex; gap: 8px; margin-top: 8px; }
+        .comment-input { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-light); background: transparent; color: inherit; }
+        .comment-send { padding: 10px 14px; border-radius: 8px; border: none; cursor: not-allowed; opacity: 0.6; }
+        body.dark-mode .comment-input { border: 1px solid var(--border-dark); }
+
     </style>
 </head>
 <body>
@@ -315,7 +338,6 @@
 
     <nav class="navbar">
         <div class="nav-left">
-            <img src="https://icons.veryicon.com/png/o/miscellaneous/youyinzhibo/guest.png" alt="Guest" class="nav-profile">
             <span class="app-name">DitzX</span>
         </div>
         <button class="theme-btn" id="theme-toggle" aria-label="Toggle Theme">
@@ -333,7 +355,7 @@
                         ADITgamHD 
                         <img src="https://github.com/AditGamHD/ditzx/blob/main/check.png?raw=true" alt="Verified" class="verified-badge">
                     </h3>
-                    <span class="post-time">Baru saja</span>
+                    <span class="post-time" id="post-time" data-post-date="2026-01-28T15:00:00">28/01/2026 15:00</span>
                 </div>
             </div>
 
@@ -351,7 +373,7 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
                     <span>Suka</span>
                 </button>
                 
-                <button class="action-btn disabled-btn">
+                <button class="action-btn" id="btn-comment">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                     <span>Komen</span>
                 </button>
@@ -360,6 +382,14 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
                     <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                     <span>Bagikan</span>
                 </button>
+            </div>
+
+            <div id="comments-panel" class="comments-panel" style="display:none;">
+                <div class="comments-empty">Belum ada komentar</div>
+                <div class="comment-input-wrap">
+                    <input id="comment-input" class="comment-input" placeholder="Tulis komentar..." readonly>
+                    <button id="comment-send" class="comment-send" disabled>Kirim</button>
+                </div>
             </div>
         </article>
     </main>
@@ -389,14 +419,19 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
         const sunIcon = document.getElementById('icon-sun');
         const moonIcon = document.getElementById('icon-moon');
         const likeBtn = document.getElementById('btn-like');
+        const commentBtn = document.getElementById('btn-comment');
         const shareBtn = document.getElementById('btn-share');
         const copyMainBtn = document.getElementById('btn-copy-main');
         const postText = document.getElementById('post-text');
+        const postTimeEl = document.getElementById('post-time');
         const floatingMenu = document.getElementById('floating-menu');
         const floatCopy = document.getElementById('float-copy');
         const floatShare = document.getElementById('float-share');
         const toast = document.getElementById('toast');
         const toastMsg = document.getElementById('toast-msg');
+        const commentsPanel = document.getElementById('comments-panel');
+        const commentInput = document.getElementById('comment-input');
+        const commentSend = document.getElementById('comment-send');
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -408,7 +443,6 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
         });
 
         let isDark = localStorage.getItem('theme') === 'dark';
-        
         function updateTheme() {
             if (isDark) {
                 document.body.classList.add('dark-mode');
@@ -420,7 +454,7 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
                 moonIcon.style.display = 'none';
             }
         }
-        updateTheme(); // Init
+        updateTheme();
 
         themeBtn.addEventListener('click', () => {
             isDark = !isDark;
@@ -479,9 +513,8 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
 
         function showMenu(x, y) {
             floatingMenu.style.left = `${x}px`;
-            floatingMenu.style.top = `${y - 60}px`; // Shift up slightly
+            floatingMenu.style.top = `${y - 60}px`;
             floatingMenu.classList.add('active');
-            
             const rect = floatingMenu.getBoundingClientRect();
             if (rect.right > window.innerWidth) floatingMenu.style.left = `${window.innerWidth - rect.width - 10}px`;
             if (rect.left < 0) floatingMenu.style.left = '10px';
@@ -497,7 +530,7 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
                 isLongPress = true;
                 const touch = e.touches[0];
                 showMenu(touch.clientX, touch.clientY);
-            }, 800); // 800ms long press
+            }, 800);
         }, { passive: false });
 
         postText.addEventListener('touchend', () => {
@@ -505,7 +538,7 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
         });
 
         postText.addEventListener('touchmove', () => {
-            clearTimeout(pressTimer); 
+            clearTimeout(pressTimer);
         });
 
         postText.addEventListener('contextmenu', (e) => {
@@ -528,6 +561,47 @@ Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosi
                 toast.classList.remove('show');
             }, 2000);
         }
+
+        // Relative time for the post (updates every 30s)
+        function formatRelativeTime(date) {
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000); // seconds
+            if (diff < 10) return 'baru saja';
+            if (diff < 60) return diff + ' detik yang lalu';
+            const minutes = Math.floor(diff / 60);
+            if (minutes < 60) return minutes + ' menit yang lalu';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + ' jam yang lalu';
+            const days = Math.floor(hours / 24);
+            if (days < 7) return days + ' hari yang lalu';
+            // Fallback to full date
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+            const hh = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+        }
+
+        function updatePostTime() {
+            const iso = postTimeEl.getAttribute('data-post-date');
+            if (!iso) return;
+            const postDate = new Date(iso);
+            postTimeEl.textContent = formatRelativeTime(postDate);
+        }
+
+        // initial and periodic update
+        updatePostTime();
+        setInterval(updatePostTime, 30000);
+
+        // Comments panel toggle (display-only)
+        commentBtn.addEventListener('click', () => {
+            if (commentsPanel.style.display === 'none') {
+                commentsPanel.style.display = 'block';
+            } else {
+                commentsPanel.style.display = 'none';
+            }
+        });
 
     </script>
 </body>
