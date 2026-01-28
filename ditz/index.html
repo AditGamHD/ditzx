@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DitzX Feed</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --bg-light: #f3f4f6;
+            --card-light: #ffffff;
+            --text-light: #1f2937;
+            --subtext-light: #6b7280;
+            --border-light: #e5e7eb;
+            --grid-light: rgba(0, 0, 0, 0.05);
+
+            --bg-dark: #111827;
+            --card-dark: #1f2937;
+            --text-dark: #f9fafb;
+            --subtext-dark: #9ca3af;
+            --border-dark: #374151;
+            --grid-dark: rgba(255, 255, 255, 0.05);
+
+            --like-color: #ef4444;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: var(--transition);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                linear-gradient(to right, var(--grid-light) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-light) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            background-image: 
+                linear-gradient(to right, var(--grid-dark) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-dark) 1px, transparent 1px);
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-light);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        body.dark-mode #loader { background: var(--bg-dark); }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--primary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        body.dark-mode .navbar {
+            background: rgba(31, 41, 55, 0.8);
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .nav-profile { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-light); }
+        .app-name { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        body.dark-mode .theme-btn { color: var(--text-dark); }
+        .theme-btn:active { transform: scale(0.9); }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto 40px;
+            padding: 0 16px;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--border-light);
+        }
+        body.dark-mode .card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .poster-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .poster-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .verified-badge {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        .post-time {
+            font-size: 0.75rem;
+            color: var(--subtext-light);
+        }
+        body.dark-mode .post-time { color: var(--subtext-dark); }
+
+        .post-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            white-space: pre-line;
+            text-align: justify;
+            user-select: text; 
+        }
+        body.dark-mode .post-content { color: var(--text-dark); }
+
+        .interaction-bar {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-light);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+        body.dark-mode .interaction-bar { border-top: 1px solid var(--border-dark); }
+
+        .action-btn {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--subtext-light);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        body.dark-mode .action-btn { color: var(--subtext-dark); }
+        .action-btn:hover { background: rgba(0,0,0,0.05); }
+        body.dark-mode .action-btn:hover { background: rgba(255,255,255,0.05); }
+        .action-btn:active { transform: scale(0.95); }
+
+        .action-btn.liked { color: var(--like-color); }
+        .action-btn.liked svg { fill: var(--like-color); stroke: var(--like-color); }
+        
+        .disabled-btn { opacity: 0.5; cursor: not-allowed; }
+
+        .copy-block-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--bg-light);
+            border: 1px dashed var(--subtext-light);
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        body.dark-mode .copy-block-btn {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--subtext-dark);
+        }
+        .copy-block-btn:active { background: var(--primary); color: white; border-style: solid; }
+
+        #floating-menu {
+            position: fixed;
+            background: rgba(31, 41, 55, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        #floating-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+        .float-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .float-btn:active { background: rgba(255,255,255,0.2); }
+
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--subtext-light);
+            margin-top: auto;
+        }
+        body.dark-mode .footer { color: var(--subtext-dark); }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .pop-anim { animation: pop 0.3s ease; }
+
+        .icon { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/youyinzhibo/guest.png" alt="Guest" class="nav-profile">
+            <span class="app-name">DitzX</span>
+        </div>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle Theme">
+            <svg class="icon moon" id="icon-moon" viewBox="0 0 24 24" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="icon sun" id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+    </nav>
+
+    <main class="container">
+        <article class="card">
+            <div class="card-header">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5n-S2sv-1krkHrUX5DNct3QMVtcygDw21RJ_a0fl1I2Mej_uEXdioolbSNySHQabrT5wz4p0KXO_6KOl9HjU6kbb_8Lx-V1XB55k9aQp12r8XHRjWyK60BnxrrCp_coZwMDFku-Gn1Furffa7OnS0JCzB4sD_ptDa8pf4plonoEnzKnGUQCn2H7ktdwdm/s1600/channels4_profile.jpg" alt="Profile" class="poster-img">
+                <div class="poster-info">
+                    <h3>
+                        ADITgamHD 
+                        <img src="https://github.com/AditGamHD/ditzx/blob/main/check.png?raw=true" alt="Verified" class="verified-badge">
+                    </h3>
+                    <span class="post-time">Baru saja</span>
+                </div>
+            </div>
+
+            <div class="post-content" id="post-text">Kasih sayang kepada tanah air dalam pandangan Islam adalah bentuk pengabdian yang berpaut pada iman dan tanggung jawab. Cinta tanah air bukan semata rasa nasionalisme yang kering, melainkan manifestasi syukur kepada Allah atas nikmat tempat tinggal, budaya, bahasa, dan komunitas yang dianugerahkan. Islam mengajarkan umatnya untuk menjaga amanah, memelihara kebaikan, dan merawat hak sesama. Oleh karena itu mencintai tanah air adalah aktualisasi akhlak mulia: menegakkan keadilan, melindungi yang lemah, serta menjaga martabat umat. Rasa cinta tersebut berakar pada prinsip tauhid yang menempatkan Allah sebagai pemilik segala sesuatu. Kesetiaan kepada negara dan masyarakat tidak boleh bertentangan dengan perintah Ilahi; tetapi sejauh negara mendorong kebaikan dan menegakkan hukum yang adil maka membela dan merawatnya menjadi perbuatan mulia. Nabi Muhammad memberi teladan dalam memelihara harmoni sosial, membina persaudaraan, dan menjaga hak-hak warga. Seorang Muslim yang mencintai tanah air akan ikut serta membangun infrastruktur moral dan material, mengajak pada maslahat, dan mencegah kemungkaran dengan cara yang bijak dan damai. Cinta tanah air dalam Islam juga terkait dengan tanggung jawab individual dan kolektif. Melalui pendidikan yang berorientasi pada akhlak, kerja keras, kejujuran, dan kepatuhan pada aturan yang adil, kecintaan itu diwujudkan secara nyata. Menghormati simbol, budaya, serta sejarah bangsa adalah bentuk penghargaan terhadap perjuangan generasi terdahulu yang telah berkorban. Namun penghormatan bukan berarti membiarkan kesalahan; Islam mendorong nasihat dan perbaikan sebagai bagian dari amar ma’ruf nahi munkar sehingga kritik yang membangun adalah bagian dari cinta yang tulus. Prinsip persaudaraan universal mengajarkan bahwa rasa cinta tidak boleh melahirkan eksklusivitas yang memecah-belah. Cinta yang sehat mengakui keberagaman, melindungi hak minoritas, dan menempatkan kemaslahatan bersama di atas kepentingan sempit. Musyawarah, kerja sama, dan toleransi menjadi jalan penyelesaian masalah publik sesuai tuntunan syariat yang menekankan keseimbangan dan kemanfaatan. Selain itu mencintai tanah air berarti menjaga lingkungan hidup sebagai amanah Ilahi. Perusakan alam, eksploitasi berlebihan, serta korupsi yang merusak fasilitas publik bertentangan dengan cinta sejati. Memperbaiki layanan publik, meningkatkan kesejahteraan rakyat, dan membangun kehidupan berkeadilan adalah manifestasi pengamalan iman. Dengan demikian cinta tanah air dalam pandangan Islam adalah perpaduan antara pengabdian kepada Tuhan dan komitmen sosial. Ia menuntut sikap aktif, kritis, penuh kasih, serta konsisten dalam tindakan yang menegakkan kebaikan dan memelihara amanah demi masa depan bangsa. Cinta yang terwujud dalam pelayanan publik, pengabdian tanpa pamrih, menjaga persatuan, serta pendidikan etika dan agama akan menjadikan negara lebih kuat secara moral dan material sehingga generasi mendatang dapat hidup sejahtera, adil, dan harmonis sambil selalu bersyukur kepada pencipta serta melanjutkan kebaikan bersama.
+Mencintai tanah air dalam Islam berarti menggabungkan ibadah dan pengabdian sosial. Cinta itu tampak pada kesediaan berkorban demi kemaslahatan umum, menghormati perbedaan, serta mencegah keburukan. Rasulullah memberi teladan melalui sikap adil dan kepedulian terhadap tetangga; nilai itu menjadi pijakan bagi warga negara yang beriman. Cinta kepada tanah air menuntut kerja nyata: mendidik generasi dengan akhlak, memberantas korupsi, meningkatkan pelayanan publik, dan melindungi lingkungan sebagai amanah Ilahi. Kritik yang membangun adalah bentuk kasih yang bertanggung jawab; memberi nasihat harus dilakukan dengan hikmah dan etika. Persatuan bukan berarti menghapus identitas lokal — Islam menghargai budaya selama tidak bertentangan dengan syariat. Dengan menghormati simbol, sejarah, dan pahlawan, masyarakat menunjukkan syukur atas jasa para pendahulu. Selain itu, cinta tanah air mendorong solidaritas sosial: membantu fakir miskin, memastikan hak minoritas, dan bekerja sama lintas agama untuk kemaslahatan bersama. Kepemimpinan yang berpijak pada prinsip Islam akan menempatkan hukum yang adil, melindungi hak, dan menolak penyalahgunaan kekuasaan. Pendidikan kewarganegaraan berlandaskan nilai agama memperkuat karakter sehingga warga tidak mudah terhasut oleh kepentingan sesaat atau ajaran yang memecah belah. Islam juga menuntut keseimbangan antara cinta untuk negeri dan kesetiaan kepada Allah; ketika negara menegakkan kemungkaran, seorang mukmin berkewajiban mengajak pada perbaikan sesuai syariat. Cinta tanah air yang matang membentuk generasi yang beretika, kreatif, dan berdaya saing global tanpa melupakan akar keimanan. Akhirnya, memelihara tanah air adalah ibadah kolektif: setiap kontribusi kecil yang dilandasi niat tulus akan bernilai di hadapan Allah dan menghasilkan bangsa yang adil, makmur, serta bermartabat bagi semua warga. Kepedulian sehari-hari seperti taat pada hukum, menjaga kebersihan, dan berpartisipasi dalam pembangunan ekonomi lokal adalah wujud cinta. Doa untuk keselamatan negara dan pengampunan bagi kesalahan kolektif juga bagian dari ikhtiar spiritual yang menguatkan semangat kebangsaan berbasis iman. Mari bekerjasama dengan rendah hati, tulus, dan konsisten demi mewujudkan negeri yang adil, damai, dan sejahtera untuk semua. Aamiin, semoga bersama.</div>
+
+            <button class="copy-block-btn" id="btn-copy-main">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Salin Teks
+            </button>
+
+            <div class="interaction-bar">
+                <button class="action-btn" id="btn-like">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Suka</span>
+                </button>
+                
+                <button class="action-btn disabled-btn">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    <span>Komen</span>
+                </button>
+
+                <button class="action-btn" id="btn-share">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Bagikan</span>
+                </button>
+            </div>
+        </article>
+    </main>
+
+    <footer class="footer">
+        © 2026 - ADITdeveloper
+    </footer>
+
+    <div id="floating-menu">
+        <button class="float-btn" id="float-copy">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Salin
+        </button>
+        <button class="float-btn" id="float-share">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            Bagikan
+        </button>
+    </div>
+
+    <div id="toast">
+        <svg class="icon" style="color: #4ade80;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span id="toast-msg">Berhasil</span>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('icon-sun');
+        const moonIcon = document.getElementById('icon-moon');
+        const likeBtn = document.getElementById('btn-like');
+        const shareBtn = document.getElementById('btn-share');
+        const copyMainBtn = document.getElementById('btn-copy-main');
+        const postText = document.getElementById('post-text');
+        const floatingMenu = document.getElementById('floating-menu');
+        const floatCopy = document.getElementById('float-copy');
+        const floatShare = document.getElementById('float-share');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 800);
+        });
+
+        let isDark = localStorage.getItem('theme') === 'dark';
+        
+        function updateTheme() {
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                document.body.classList.remove('dark-mode');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+        updateTheme(); // Init
+
+        themeBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateTheme();
+        });
+
+        likeBtn.addEventListener('click', function() {
+            this.classList.toggle('liked');
+            this.querySelector('svg').classList.add('pop-anim');
+            setTimeout(() => this.querySelector('svg').classList.remove('pop-anim'), 300);
+        });
+
+        async function shareContent() {
+            const shareData = {
+                title: 'DitzX Post',
+                text: postText.innerText.substring(0, 100) + '...',
+                url: window.location.href
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    await navigator.clipboard.writeText(window.location.href);
+                    showToast('Link tersalin!');
+                }
+            } catch (err) {
+                console.log('Share canceled');
+            }
+        }
+
+        shareBtn.addEventListener('click', shareContent);
+        floatShare.addEventListener('click', () => {
+            hideMenu();
+            shareContent();
+        });
+
+        function copyText() {
+            const textToCopy = postText.innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Teks tersalin!');
+            }).catch(() => {
+                showToast('Gagal menyalin');
+            });
+        }
+
+        copyMainBtn.addEventListener('click', copyText);
+        floatCopy.addEventListener('click', () => {
+            hideMenu();
+            copyText();
+        });
+
+        let pressTimer;
+        let isLongPress = false;
+
+        function showMenu(x, y) {
+            floatingMenu.style.left = `${x}px`;
+            floatingMenu.style.top = `${y - 60}px`; // Shift up slightly
+            floatingMenu.classList.add('active');
+            
+            const rect = floatingMenu.getBoundingClientRect();
+            if (rect.right > window.innerWidth) floatingMenu.style.left = `${window.innerWidth - rect.width - 10}px`;
+            if (rect.left < 0) floatingMenu.style.left = '10px';
+        }
+
+        function hideMenu() {
+            floatingMenu.classList.remove('active');
+        }
+
+        postText.addEventListener('touchstart', (e) => {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                const touch = e.touches[0];
+                showMenu(touch.clientX, touch.clientY);
+            }, 800); // 800ms long press
+        }, { passive: false });
+
+        postText.addEventListener('touchend', () => {
+            clearTimeout(pressTimer);
+        });
+
+        postText.addEventListener('touchmove', () => {
+            clearTimeout(pressTimer); 
+        });
+
+        postText.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showMenu(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!floatingMenu.contains(e.target) && !postText.contains(e.target)) {
+                hideMenu();
+            }
+        });
+
+        let toastTimeout;
+        function showToast(msg) {
+            toastMsg.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+    </script>
+</body>
+</html>
