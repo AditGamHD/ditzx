@@ -1,340 +1,407 @@
-<!DOCTYPE html><html lang="id">
+<!doctype html>
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADIT Monitor System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>
-    :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; }
-    .light-theme { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; }
-    
-    body { background-color: var(--bg); color: var(--text); transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
-    .glass-card { background-color: var(--card); border: 1px solid rgba(255,255,255,0.05); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 24px); }
-
-    /* Fixed styles for account checkmark */
-    .avatar-wrap { position: relative; display:inline-block }
-    .avatar-check {
-        position: absolute; right: -6px; bottom: -6px; width: 34px; height: 34px;
-        display:flex; align-items:center; justify-content:center; border-radius:999px;
-        background:linear-gradient(180deg,#3b82f6,#2563eb); color:white; box-shadow:0 6px 18px rgba(37,99,235,0.25);
-        border:3px solid white; font-size:16px;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ADIT — Portal Terpadu</title>
+  <meta name="description" content="Portal ADIT — Home, Login, Akun, Realtime log, Notifikasi, PWA">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#06b6d4">
+  <style>
+    :root{
+      --bg:#ffffff; --card:#f7f9fb; --text:#0f172a; --muted:#6b7280; --accent:#06b6d4; --success:#16a34a; --error:#ef4444;
     }
-
-    /* Table small responsive */
-    .small-table th, .small-table td{ font-size:12px; padding:8px }
-</style>
-
-<script>
-    // Make manifest global so other scripts can use it
-    window.appManifest = {
-        "name": "ADIT Security Monitor",
-        "short_name": "ADIT-M",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#0f172a",
-        "theme_color": "#3b82f6",
-        "icons": [{"src": "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ", "sizes": "512x512", "type": "image/png"}]
-    };
-    // inject manifest tag
-    (function(){
-        const mUrl = URL.createObjectURL(new Blob([JSON.stringify(window.appManifest)], {type:'application/json'}));
-        const link = document.createElement('link'); link.rel = 'manifest'; link.href = mUrl; document.head.appendChild(link);
-    })();
-
-    // Service Worker registration (safer cross-browser)
-    (function(){
-        const swCode = `self.addEventListener('push', e => {
-            const data = e.data ? e.data.json() : { title: 'ADIT', body: 'Pesan masuk' };
-            self.registration.showNotification(data.title, { body: data.body, icon: '${window.appManifest.icons[0].src}' });
-        });`;
-        try{
-            if ('serviceWorker' in navigator) {
-                const swUrl = URL.createObjectURL(new Blob([swCode], {type:'application/javascript'}));
-                navigator.serviceWorker.register(swUrl).catch(()=>{/* ignore registration failures in dev env */});
-            }
-        }catch(e){/* ignore */}
-    })();
-</script>
-
+    [data-theme="dark"]{
+      --bg:#071126; --card:#0b1522; --text:#e6eef6; --muted:#9aa7b6; --accent:#06b6d4;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .app{max-width:1100px;margin:18px auto;padding:16px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand img{width:46px;height:46px;border-radius:8px;object-fit:cover}
+    nav{display:flex;gap:8px}
+    .tab{padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--muted);background:transparent;border:0}
+    .tab.active{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white}
+    .controls{display:flex;gap:8px;align-items:center}
+    button.btn{background:var(--card);border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);transition:transform .18s,box-shadow .18s}
+    .card:hover{transform:translateY(-6px)}
+    .muted{color:var(--muted)}
+    .big{font-size:22px;font-weight:800}
+    .small{font-size:13px;color:var(--muted)}
+    .skill-pills{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{background:rgba(0,0,0,0.04);padding:6px 8px;border-radius:999px;font-size:13px}
+    .project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+    .card-actions{display:flex;gap:8px;margin-top:12px}
+    .card-btn{padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);text-decoration:none;color:inherit;font-size:13px}
+    .contact-form input,.contact-form textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,.06);margin-top:8px;background:transparent;color:var(--text)}
+    .nav-actions{display:flex;gap:8px;align-items:center}
+    #main-content{margin-top:14px}
+    .notif-badge{background:var(--error);color:white;padding:4px 8px;border-radius:999px;font-size:12px}
+    footer{text-align:center;margin:18px 0;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
+    .hidden{display:none}
+    .animate-fade-in-up{opacity:0;transform:translateY(8px);animation:fadeUp .45s forwards}
+    @keyframes fadeUp{to{opacity:1;transform:none}}
+    .install-btn{position:fixed;right:18px;bottom:18px;padding:12px 14px;background:var(--accent);color:white;border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,0.15);z-index:1000}
+    #notification-center{position:fixed;right:18px;top:80px;display:flex;flex-direction:column;gap:8px;z-index:999}
+    .ios-notif{background:var(--card);padding:10px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06);display:flex;gap:8px;align-items:center;opacity:0;transform:translateY(-6px);transition:all .25s}
+    .ios-notif.active{opacity:1;transform:none}
+    .view-toggle{display:flex;gap:6px}
+    .chip{padding:6px 8px;background:rgba(0,0,0,0.04);border-radius:999px;cursor:pointer}
+    .actions{display:flex;gap:8px}
+    @media(max-width:640px){header{flex-direction:column;align-items:flex-start} .brand img{width:40px;height:40px}}
+  </style>
 </head>
-<body class="h-screen overflow-hidden flex flex-col"><header class="h-16 flex items-center justify-between px-6 glass-card border-b shadow-md z-50">
-    <div class="flex items-center gap-3">
-        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ" class="w-8 h-8 rounded shadow-blue-500/50 shadow-sm">
-        <h1 class="font-black tracking-tighter text-blue-500">ADIT<span class="opacity-70">SEC</span></h1>
-    </div>
-    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center">
-        <i id="theme-icon" class="fa-solid fa-moon"></i>
-    </button>
-</header>
-
-<main class="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
-    
-    <div id="tab-home" class="tab-panel active">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xs font-bold uppercase tracking-widest opacity-50">Data Stream Terkini</h2>
-            <span class="px-2 py-0.5 rounded bg-green-500/20 text-green-500 text-[10px] animate-pulse">LIVE</span>
+<body data-theme="light">
+  <div id="notification-center"></div>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <img id="logo-img" src="" alt="logo">
+        <div>
+          <div id="brand-name" style="font-weight:800">ADIT</div>
+          <div class="small muted" id="brand-sub">Portal</div>
         </div>
-
-        <!-- Today's statistics -->
-        <div class="grid grid-cols-3 gap-3 mb-4">
-            <div class="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
-                <div class="text-lg font-bold text-blue-500" id="stat-today-count">0</div>
-                <div class="text-[10px] uppercase opacity-50">Data Hari Ini</div>
-            </div>
-            <div class="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-                <div class="text-lg font-bold text-indigo-400" id="stat-unique-ips">0</div>
-                <div class="text-[10px] uppercase opacity-50">IP Unik</div>
-            </div>
-            <div class="p-3 rounded-2xl bg-green-500/10 border border-green-500/20">
-                <div class="text-lg font-bold text-green-400" id="stat-last-time">-</div>
-                <div class="text-[10px] uppercase opacity-50">Terakhir Dikirim</div>
-            </div>
+      </div>
+      <div class="nav-actions">
+        <nav>
+          <button class="tab active nav-link" id="nav-home" onclick="Portal.renderPage('home')">Home</button>
+          <button class="tab nav-link" id="nav-login" onclick="Portal.renderPage('login')">Log Masuk</button>
+          <button class="tab nav-link" id="nav-account" onclick="Portal.renderPage('account')">Akun</button>
+        </nav>
+        <div class="controls">
+          <div id="notif-count" class="notif-badge hidden">0</div>
+          <button class="btn" id="theme-toggle">Tema</button>
         </div>
+      </div>
+    </header>
 
-        <!-- Data table (also mirrored to middle tab) -->
-        <div class="glass-card rounded-2xl p-3 mb-4 overflow-auto">
-            <table class="w-full small-table" id="logs-table">
-                <thead>
-                    <tr class="text-xs uppercase opacity-50">
-                        <th>Waktu</th>
-                        <th>Pengirim</th>
-                        <th>Email</th>
-                        <th>IP</th>
-                        <th>Lokasi</th>
-                        <th>Pesan</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+    <main id="main-content" class="animate-fade-in-up"></main>
 
-        <div id="stream-container" class="space-y-4"></div>
-    </div>
+    <div style="height:80px"></div>
+    <footer id="footer-text">© 2026 ADIT</footer>
+  </div>
 
-    <div id="tab-history" class="tab-panel">
-        <div class="sticky top-0 pb-4 z-10">
-            <input type="text" id="log-search" onkeyup="filterLogs()" placeholder="Cari IP atau Pengirim..." class="w-full glass-card p-3 rounded-xl text-sm outline-none focus:ring-2 ring-blue-500">
-        </div>
-        <div class="grid grid-cols-1 gap-3" id="history-list"></div>
-    </div>
+  <button id="installBtn" class="install-btn hidden">Pasang Aplikasi</button>
 
-    <div id="tab-account" class="tab-panel">
-        <div class="glass-card rounded-3xl p-8 text-center mb-6">
-            <div class="relative w-24 h-24 mx-auto mb-4 avatar-wrap">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ" class="rounded-full border-4 border-blue-500 p-1">
-                <div class="avatar-check"><i class="fa-solid fa-check"></i></div>
+  <script>
+    /* === DISCORD WEBHOOK (INSERTED) ===
+       Anda meminta webhook dimasukkan langsung — berikut webhook yang Anda berikan.
+       Peringatan: menaruh webhook di client dapat terekspos. Pertimbangkan proxy server. */
+    window.__DISCORD_WEBHOOK__ = "https://discord.com/api/webhooks/1463782421269839986/nOg64FQ-ytyULelnSd0FjBL2Eda13mX2VwKclRdEHI9iQGufYZckFCOTmn7xiPJV7ro_";
+
+    window.__FIREBASE_CONFIG__ = window.__FIREBASE_CONFIG__ || null;
+    window.__FCM_VAPID_KEY__ = window.__FCM_VAPID_KEY__ || null;
+
+    const FALLBACK_DB = {
+      penulis: {
+        nama: "ADITdeveloper",
+        foto: "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ",
+        bioSingkat: "Saya adalah ADIT — pengembang Game dan website",
+        keahlian: ["Roblox Studio", "Max2D", "HTML", "CSS", "JavaScript", "Godot", "Unity"]
+      },
+      situs: { tema: "light", maksProyekPerHalaman: 9 },
+      sosial: {
+        github: { terlihat:true, tautan:"https://github.com/ADITdeveloper", username:"ADITdeveloper" },
+        instagram: { terlihat:true, tautan:"https://www.instagram.com/ditxgam/", username:"@ditxgam" }
+      },
+      linimasa: [
+        { tahun: 2025, peran: "Web & Game dev", deskripsi: "Mengintegrasikan teknologi web modern dengan mekanik game interaktif." },
+        { tahun: 2024, peran: "Game dev", deskripsi: "Mengembangkan logika permainan kompleks menggunakan Unity dan Godot." }
+      ],
+      proyek: [
+        { id: "Uvoshop", judul: "UVOSHOP", tahun: 2025, kategori: "Website", terlihat:true, unggulan:true, deskripsi:"Website Topup Game dan Pulsa terlengkap termurah dan terpercaya", teknologi:["Cpanel","My Sql Database","HTML5"], gambar:[], tombol:{linkUtama:"https://uvoshop.my.id",teksUtama:"Kunjungi Web",linkSekunder:"",teksSekunder:""} }
+      ],
+      kontakLangsung: { email:"aditgam775@gmail.com", whatsapp:{ nomor:"6285648211278", label:"+62 856-4821-1279" }, tiktok:{ username:"@aditdeveloper", link:"https://tiktok.com/@aditdeveloper" } },
+      fitur: { aktifkanKonfetiKontak: true },
+      kontak: { discordWebhook: window.__DISCORD_WEBHOOK__ }
+    };
+
+    /* ================= Portal module ================= */
+    const Portal = (function(){
+      let DATA = {};
+      let elements = {};
+      let state = { page:'home', user:null, messages:[], transactions:[], unreadCount:0, view:'list', installPromptEvent:null, firebaseEnabled:false, db:null };
+
+      async function initialize(){
+        try { const r = await fetch('ADITdeveloper.json'); DATA = r.ok ? await r.json() : FALLBACK_DB; } catch(e){ DATA = FALLBACK_DB; }
+        setupElements(); document.body.setAttribute('data-theme', DATA.situs?.tema || 'light'); elements.brandName.innerText = DATA.penulis.nama; elements.logoImg.src = DATA.penulis.foto; elements.footerText.innerText = `© ${new Date().getFullYear()} ${DATA.penulis.nama}`;
+        attachUI(); tryInitFirebase(); renderPage('home');
+      }
+      function setupElements(){ elements = { brandName: document.getElementById('brand-name'), logoImg: document.getElementById('logo-img'), footerText: document.getElementById('footer-text'), mainContent: document.getElementById('main-content') }; }
+      function attachUI(){
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); state.installPromptEvent = e; document.getElementById('installBtn').classList.remove('hidden'); });
+        document.getElementById('installBtn').addEventListener('click', installApp);
+        if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+        const savedTheme = localStorage.getItem('site-theme'); if(savedTheme) document.body.setAttribute('data-theme', savedTheme);
+      }
+
+      async function tryInitFirebase(){
+        const cfg = window.__FIREBASE_CONFIG__ || DATA.firebase || null;
+        if(!cfg){ startLocalDemo(); return; }
+        try {
+          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js');
+          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
+          firebase.initializeApp(cfg);
+          state.db = firebase.database(); state.firebaseEnabled = true;
+          attachRealtime(); initMessaging();
+        } catch(e){ console.warn('Firebase init failed', e); startLocalDemo(); }
+      }
+      function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+      function attachRealtime(){
+        if(!state.db) return;
+        const txRef = state.db.ref('transactions');
+        const msgRef = state.db.ref('messages');
+        txRef.limitToLast(200).on('child_added', snap=>{ const v = snap.val(); v._id = snap.key; addTransaction(v,true); });
+        msgRef.limitToLast(200).on('child_added', snap=>{ const v = snap.val(); v._id = snap.key; addMessage(v,true); });
+      }
+
+      async function initMessaging(){
+        try {
+          const messaging = firebase.messaging();
+          const perm = await Notification.requestPermission();
+          if(perm !== 'granted') return;
+          const vapidKey = window.__FCM_VAPID_KEY__ || null;
+          const token = await messaging.getToken({ vapidKey });
+          showNotif('Push siap, token diperoleh (cek console).', 'success');
+          console.log('FCM token:', token);
+          messaging.onMessage(payload=>{ const title = payload.notification?.title || 'Notifikasi'; const body = payload.notification?.body || ''; showSystemNotification(title, body); });
+        } catch(e){ console.warn('Messaging init failed', e); }
+      }
+
+      function showSystemNotification(title, body){
+        if(Notification.permission === 'granted'){
+          navigator.serviceWorker.getRegistration().then(reg=>{
+            if(reg) reg.showNotification(title, { body, icon: DATA.penulis?.foto || '' });
+            else new Notification(title, { body, icon: DATA.penulis?.foto || '' });
+          });
+        }
+      }
+
+      function startLocalDemo(){
+        for(let i=0;i<6;i++) addTransaction({ user:`demo${i}`, amount:(Math.random()*200).toFixed(2), note:`Demo transaksi ${i}`, time: Date.now() - (i*3600*1000) }, false);
+        setInterval(()=>{ const m={ from:'visitor'+Math.floor(Math.random()*999), text:'Halo, saya tertarik '+Math.floor(Math.random()*999), time:Date.now() }; addMessage(m,false); showSystemNotification('Pesan baru', `${m.from}: ${m.text}`); }, 20000);
+      }
+
+      function renderPage(page){
+        state.page = page;
+        document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+        const nav = document.getElementById('nav-'+page); if(nav) nav.classList.add('active');
+        const main = elements.mainContent; main.classList.remove('animate-fade-in-up'); void main.offsetWidth; main.classList.add('animate-fade-in-up');
+        if(page==='home') renderHome(); else if(page==='login') renderLogin(); else if(page==='account') renderAccount(); else renderHome();
+      }
+
+      function renderHome(){
+        const last30 = statsCountDays(30); const last7 = statsCountDays(7); const last3 = statsCountDays(3); const last1 = statsCountDays(1);
+        elements.mainContent.innerHTML = `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="small muted">Selamat Datang</div>
+                <div class="big">${DATA.penulis.nama}</div>
+                <div class="small muted">${DATA.penulis.bioSingkat}</div>
+              </div>
+              <div style="text-align:right">
+                <div class="small muted">Mode</div>
+                <div style="font-weight:800">${state.firebaseEnabled ? 'Realtime (Firebase aktif)' : 'Demo Mode'}</div>
+              </div>
             </div>
-            <h2 class="text-xl font-bold">ADITdeveloper</h2>
-            <p class="text-xs opacity-50 mb-6">Security Researcher & System Architect</p>
-            
-            <div class="grid grid-cols-2 gap-3 text-center mb-6">
-                <div class="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
-                    <div class="text-lg font-bold text-blue-500" id="total-logs">0</div>
-                    <div class="text-[10px] uppercase opacity-50">Total Data</div>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <div class="card" style="min-width:160px">
+                <div class="small muted">Transaksi (30 hari)</div>
+                <div style="font-weight:800;font-size:20px">${last30}</div>
+                <div class="small muted">7d:${last7} • 3d:${last3} • 1d:${last1}</div>
+              </div>
+              <div class="card" style="min-width:160px">
+                <div class="small muted">Pesan Masuk</div>
+                <div style="font-weight:800;font-size:20px">${state.messages.length}</div>
+                <div class="small muted">Unread: ${state.unreadCount}</div>
+              </div>
+              <div class="card" style="flex:1">
+                <div class="small muted">Aksi Cepat</div>
+                <div style="margin-top:8px;display:flex;gap:8px">
+                  <button class="btn" onclick="Portal.clearAllDemo()">Reset Demo</button>
+                  <button class="btn" onclick="Portal.exportTransactions()">Export CSV</button>
                 </div>
-                <div class="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20">
-                    <div class="text-lg font-bold text-purple-500">Stable</div>
-                    <div class="text-[10px] uppercase opacity-50">Status</div>
-                </div>
+              </div>
             </div>
+          </div>
+          <div class="grid" style="margin-top:12px">
+            <div class="card" style="grid-column:span 2">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div class="small muted">Log Transaksi Terakhir</div>
+                  <div style="font-weight:700">Transaksi</div>
+                </div>
+                <div class="view-toggle">
+                  <div class="chip" onclick="Portal.setView('list')">List</div>
+                  <div class="chip" onclick="Portal.setView('grid')">Grid</div>
+                </div>
+              </div>
+              <div style="margin-top:10px" id="transactions-container">${renderTransactionsTable()}</div>
+            </div>
+            <div class="card">
+              <div class="small muted">Pesan Terbaru</div>
+              <div style="margin-top:8px">
+                ${state.messages.slice().reverse().slice(0,6).map(m=>`
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px">
+                    <div>
+                      <div style="font-weight:700">${m.from||m.user||'Anon'}</div>
+                      <div class="small muted">${(m.text||m.note||'').slice(0,80)}</div>
+                    </div>
+                    <div style="text-align:right">
+                      <div class="small muted">${timeAgo(m.time||m.timestamp||Date.now())}</div>
+                      <div class="actions"><button class="btn" onclick="Portal.openMessageDetail('${encodeURIComponent(JSON.stringify(m))}')">Lihat</button></div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
 
-            <button id="installBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold transition flex items-center justify-center gap-3">
-                <i class="fa-solid fa-mobile-screen-button"></i> TAMBAH KE HP
-            </button>
-        </div>
-    </div>
-</main>
+      function renderTransactionsTable(){
+        const arr = state.transactions.slice().reverse();
+        if(state.view==='grid'){
+          return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">${arr.slice(0,20).map(t=>`<div class="card"><div style="font-weight:700">${t.user||t.from||'Anon'}</div><div class="small muted">${(t.note||t.title||'')}</div><div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800">Rp ${t.amount||'0'}</div><div><button class="btn" onclick="Portal.openTransactionDetail('${t._id||t.id||''}')">Detail</button></div></div></div>`).join('')}</div>`;
+        } else {
+          return `<table><thead><tr><th>Waktu</th><th>Pengguna</th><th>Nominal</th><th>Catatan</th><th></th></tr></thead><tbody>${arr.slice(0,120).map(t=>`<tr><td>${new Date(t.time||t.timestamp||Date.now()).toLocaleString('id-ID')}</td><td>${t.user||t.from||'Anon'}</td><td>Rp ${t.amount||'0'}</td><td>${t.note||''}</td><td><div class="actions"><button class="btn" onclick="Portal.openTransactionDetail('${t._id||t.id||''}')">Detail</button></div></td></tr>`).join('')}</tbody></table>`;
+        }
+      }
 
-<div id="detail-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
-    <div class="glass-card w-full max-w-sm rounded-3xl p-6 relative">
-        <button onclick="closeModal()" class="absolute top-4 right-4 text-xl opacity-50">&times;</button>
-        <div id="modal-content" class="space-y-4"></div>
-    </div>
-</div>
+      function renderLogin(){ elements.mainContent.innerHTML=`<div class="card" style="max-width:520px;margin:auto"><div class="small muted">Masuk</div><h2 style="margin:8px 0">Log Masuk</h2><form id="loginForm"><input id="loginEmail" type="email" placeholder="Email" required><input id="loginPassword" type="password" placeholder="Kata sandi" required><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" type="submit">Masuk</button><button class="btn" type="button" onclick="Portal.mockLogin()">Masuk Demo</button></div></form><div class="small muted" style="margin-top:12px">Gunakan demo untuk uji coba.</div></div>`; document.getElementById('loginForm').addEventListener('submit', e=>{ e.preventDefault(); showNotif('Autentikasi demo. Integrasi server diperlukan.', 'success'); Portal.mockLogin(); }); }
 
-<nav class="fixed bottom-0 w-full glass-card border-t safe-area-bottom z-50">
-    <div class="flex justify-around items-center h-16">
-        <button onclick="switchTab('home', this)" class="nav-btn text-blue-500 flex flex-col items-center gap-1">
-            <i class="fa-solid fa-bolt-lightning text-xl"></i>
-            <span class="text-[10px] font-bold">LIVE</span>
-        </button>
-        <button onclick="switchTab('history', this)" class="nav-btn opacity-40 flex flex-col items-center gap-1">
-            <i class="fa-solid fa-database text-xl"></i>
-            <span class="text-[10px] font-bold">DATA</span>
-        </button>
-        <button onclick="switchTab('account', this)" class="nav-btn opacity-40 flex flex-col items-center gap-1">
-            <i class="fa-solid fa-user-shield text-xl"></i>
-            <span class="text-[10px] font-bold">AKUN</span>
-        </button>
-    </div>
-</nav>
+      function renderAccount(){
+        const user = state.user || { name:'Tamu' };
+        elements.mainContent.innerHTML = `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="small muted">Akun</div><div style="font-weight:800">${user.name}</div><div class="small muted">${user.email||''}</div></div><div style="display:flex;gap:8px;align-items:center"><button class="btn" onclick="Portal.toggleTheme()">Ganti Tema</button><button class="btn" id="installNow">Instal</button></div></div><div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap"><div class="card" style="min-width:200px"><div class="small muted">Notifikasi</div><div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="Portal.requestNotifPermission()">Izinkan Notif</button><button class="btn" onclick="Portal.resetNotifs()">Reset</button></div></div><div class="card" style="flex:1;min-width:280px"><div class="small muted">Tampilan</div><div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="Portal.setView('list')">List</button><button class="btn" onclick="Portal.setView('grid')">Grid</button></div></div><div class="card" style="min-width:220px"><div class="small muted">Aksi</div><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px"><button class="btn" onclick="Portal.exportTransactions()">Export CSV</button><button class="btn" onclick="Portal.clearAllDemo()">Hapus Demo</button></div></div></div><div style="margin-top:12px"><h3>Riwayat Transaksi</h3><div id="account-trans" class="card" style="margin-top:8px">${renderTransactionsTable()}</div></div></div>`;
+        document.getElementById('installNow').addEventListener('click', installApp);
+      }
 
-<script>
-    // Data Simulation
-    let logs = [
-        { id: 1, sender: "root", email: "rebve@kk.vvv", loc: "Surabaya, Indonesia", ip: "182.8.123.127", msg: "rver", time: "27/1/2026, 22:22:08" },
-        { id: 2, sender: "nbr", email: "adit.gam775@gmail.com", loc: "Surabaya, Indonesia", ip: "182.8.123.127", msg: "yynth", time: "27/1/2026, 22:22:44" }
-    ];
+      function setView(v){ state.view = v; renderPage(state.page); }
+      function toggleTheme(){ const b=document.body; const next = b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme', next); localStorage.setItem('site-theme', next); }
+      function installApp(){ if(state.installPromptEvent){ state.installPromptEvent.prompt(); state.installPromptEvent.userChoice.then(choice=>{ if(choice.outcome==='accepted') showNotif('Aplikasi terpasang', 'success'); else showNotif('Instal dibatalkan', 'error'); state.installPromptEvent=null; document.getElementById('installBtn').classList.add('hidden'); }); } else showNotif('Install tersedia pada browser/OS yang mendukung.', 'error'); }
+      function requestNotifPermission(){ Notification.requestPermission().then(p=>{ if(p==='granted') showNotif('Notifikasi diizinkan', 'success'); else showNotif('Notifikasi ditolak', 'error'); }); }
 
-    // Install prompt handling (global and ready before click)
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
+      function addMessage(m, fromDb){ m.time = m.time || m.timestamp || Date.now(); state.messages.push(m); state.unreadCount++; updateNotifBadge(); showNotif(`Pesan baru dari ${m.from||m.user||'Anon'}`, 'success'); renderPage(state.page); }
+      function addTransaction(t, fromDb){ t.time = t.time || t.timestamp || Date.now(); t._id = t._id || t.id || ('l-'+Math.random().toString(36).slice(2,9)); state.transactions.push(t); renderPage(state.page); }
+      function updateNotifBadge(){ const el = document.getElementById('notif-count'); if(state.unreadCount>0){ el.innerText = state.unreadCount; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
+
+      function openTransactionDetail(id){
+        const t = state.transactions.find(x=>x._id===id) || { _id:id, user:'Anon', amount:'0', note:'-' };
+        openModal('Detail Transaksi', `<div class="small muted">Pengguna</div><div style="font-weight:700">${t.user}</div><div class="small muted" style="margin-top:8px">Jumlah</div><div style="font-weight:800">Rp ${t.amount}</div><div class="small muted" style="margin-top:8px">Catatan</div><div>${t.note}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="Portal.copyText('${escapeJs(t.note||'')}')">Salin catatan</button><button class="btn" onclick="Portal.downloadPng('${escapeJs('Transaksi - '+(t.user||'Anon'))}')">Download PNG</button></div>`);
+      }
+
+      function openMessageDetail(encoded){
+        try {
+          const m = JSON.parse(decodeURIComponent(encoded));
+          openModal('Detail Pesan', `<div class="small muted">Dari</div><div style="font-weight:700">${m.from||m.user||'Anon'}</div><div class="small muted" style="margin-top:8px">Pesan</div><div>${m.text||m.note||''}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="Portal.copyText('${escapeJs(m.text||'')}')">Salin</button><button class="btn" onclick="Portal.downloadPng('${escapeJs(m.text||'')}')">Download PNG</button></div>`);
+        } catch(e){ console.warn(e); }
+      }
+
+      function openModal(title, html){ const wrap=document.createElement('div'); wrap.style.position='fixed'; wrap.style.left=0; wrap.style.top=0; wrap.style.width='100%'; wrap.style.height='100%'; wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.justifyContent='center'; wrap.style.background='rgba(0,0,0,0.4)'; wrap.style.zIndex=9999; const box=document.createElement('div'); box.className='card'; box.style.maxWidth='520px'; box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><div class="small muted">${title}</div></div><div><button class="btn" id="closeModal">Tutup</button></div></div><div style="margin-top:10px">${html}</div>`; wrap.appendChild(box); document.body.appendChild(wrap); document.getElementById('closeModal').addEventListener('click', ()=>wrap.remove()); }
+
+      function copyText(txt){ navigator.clipboard.writeText(txt).then(()=>showNotif('Teks disalin', 'success')).catch(()=>showNotif('Gagal salin', 'error')); }
+      function downloadPng(text){ const c=document.createElement('canvas'); c.width=900; c.height=480; const ctx=c.getContext('2d'); ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--card').trim()||'#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text').trim()||'#000'; ctx.font='22px Inter, Arial'; wrapText(ctx,text,40,80,820,32); c.toBlob(blob=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='detail.png'; a.click(); URL.revokeObjectURL(a.href); }); }
+      function wrapText(ctx,text,x,y,maxW,lineH){ const words=text.split(' '); let line=''; for(let n=0;n<words.length;n++){ const test=line+words[n]+' '; const m=ctx.measureText(test); if(m.width>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+' '; y+=lineH; } else line=test; } ctx.fillText(line,x,y); }
+
+      function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n'); }
+      function clearAllDemo(){ state.messages=[]; state.transactions=[]; state.unreadCount=0; updateNotifBadge(); renderPage(state.page); showNotif('Data demo direset', 'success'); }
+      function exportTransactions(){ const csv=toCSV(state.transactions); const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='transactions.csv'; a.click(); }
+      function toCSV(arr){ if(!arr.length) return ''; const keys=Object.keys(arr[0]||{}); const rows=[keys.join(',')].concat(arr.map(r=>keys.map(k=>`"${((r[k]||'')+'').replace(/"/g,'""')}"`).join(','))); return rows.join('\n'); }
+      function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60) return `${s}s lalu`; if(s<3600) return `${Math.floor(s/60)}m lalu`; if(s<86400) return `${Math.floor(s/3600)}j lalu`; return `${Math.floor(s/86400)}h lalu`; }
+      function statsCountDays(days){ const since=Date.now()-days*24*3600*1000; return state.transactions.filter(t=> (t.time||t.timestamp||Date.now())>=since ).length; }
+
+      function showNotif(message,type="success"){ const container=document.getElementById('notification-center'); if(!container) return; if(container.children.length>=4){ const oldest=container.firstElementChild; oldest.style.opacity='0'; setTimeout(()=>oldest.remove(),300); } const notif=document.createElement('div'); notif.className='ios-notif'; const icon = type==='success' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'; notif.innerHTML = icon + `<span style="margin-left:8px">${message}</span>`; container.appendChild(notif); requestAnimationFrame(()=>notif.classList.add('active')); setTimeout(()=>{ notif.classList.remove('active'); setTimeout(()=>notif.remove(),400); },4200); }
+
+      /* Contact submit (sends to Discord webhook inserted above) */
+      async function handleContactSubmit(e){
         e.preventDefault();
-        deferredPrompt = e; // save for later
-    });
+        const f = e.target;
+        const btn = f.querySelector('button[type="submit"]'); if(btn) btn.disabled = true;
+        const name = (f.querySelector('#name')||{}).value || '';
+        const email = (f.querySelector('#email')||{}).value || '';
+        const message = (f.querySelector('#message')||{}).value || '';
+        if(!name || !email || !message){ showNotif('Data tidak lengkap', 'error'); if(btn) btn.disabled=false; return; }
+        const last = localStorage.getItem('lastMsgTime'); const now=Date.now(); if(last && (now - last < 30000)){ const wait=Math.ceil((30000 - (now-last))/1000); showNotif(`Tunggu ${wait}s sebelum mengirim lagi`, 'error'); if(btn) btn.disabled=false; return; }
+        let ipInfo={ ip:'Hidden', city:'Unknown', country_name:'Unknown' };
+        try{ const ipRes = await fetch('https://ipapi.co/json/'); if(ipRes.ok) ipInfo = await ipRes.json(); }catch(e){}
+        const payload = {
+          username: "ADIT Security Bot",
+          avatar_url: DATA.penulis?.foto || "",
+          embeds: [{
+            title: "Pesan Website Masuk",
+            color: 5263440,
+            fields: [
+              { name: "Pengirim", value: `${name} (${email})`, inline: true },
+              { name: "Lokasi", value: `${ipInfo.city}, ${ipInfo.country_name} | IP: ||${ipInfo.ip}||`, inline: true },
+              { name: "Isi Pesan", value: "```" + message + "```" }
+            ],
+            footer: { text: `Dikirim: ${new Date().toLocaleString('id-ID')}` }
+          }]
+        };
+        const webhook = DATA.kontak?.discordWebhook || window.__DISCORD_WEBHOOK__ || "";
+        try {
+          if(!webhook) throw new Error('Webhook Discord belum dikonfigurasi');
+          const res = await fetch(webhook, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+          if(!res.ok && res.status !== 204) throw new Error('Server menolak pesan');
+          localStorage.setItem('lastMsgTime', Date.now()); f.reset(); showNotif('Pesan terkirim', 'success'); if(DATA.fitur?.aktifkanKonfetiKontak) createConfetti();
+        } catch(err){ console.error(err); showNotif('Gagal mengirim: '+err.message, 'error'); } finally { if(btn) btn.disabled=false; }
+      }
 
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('tab-' + tabId).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('opacity-40', 'text-current'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('text-blue-500'));
-        btn.classList.remove('opacity-40');
-        btn.classList.add('text-blue-500');
+      function createConfetti(){ const container=document.createElement('div'); container.style.position='fixed'; container.style.left=0; container.style.top=0; container.style.width='100%'; container.style.height='100%'; container.style.pointerEvents='none'; container.style.zIndex=9999; document.body.appendChild(container); for(let i=0;i<30;i++){ const el=document.createElement('div'); el.style.cssText=`position:absolute;width:10px;height:10px;border-radius:2px;background:var(--accent);left:${50+Math.random()*30-15}%;top:50%;transform-origin:center;`; container.appendChild(el); el.animate([{transform:'translateY(0) rotate(0deg)',opacity:1},{transform:`translate(${(Math.random()*300-150)}px,${(Math.random()*400-200)}px) rotate(${Math.random()*360}deg)`,opacity:0}], {duration:1000+Math.random()*800}).onfinish=()=>el.remove(); } setTimeout(()=>container.remove(),1400); }
 
-        // Mirror table into history tab so both show same table
-        if (tabId === 'history') {
-            // nothing extra required here; history-list is already populated in renderLogs
-        }
-    }
+      /* Expose minimal API used by UI */
+      return {
+        initialize,
+        renderPage,
+        setView: v=>{ state.view=v; renderPage(state.page); },
+        toggleTheme: ()=>{ const b=document.body; const next=b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme',next); localStorage.setItem('site-theme', next); },
+        requestNotifPermission: ()=>{ Notification.requestPermission().then(p=>{ if(p==='granted') showNotif('Notifikasi diizinkan','success'); else showNotif('Notifikasi ditolak','error'); }); },
+        addMessage: (m,db)=>addMessage(m,db),
+        addTransaction: (t,db)=>addTransaction(t,db),
+        openTransactionDetail: id=>openTransactionDetail(id),
+        openMessageDetail: encoded=>openMessageDetail(encoded),
+        copyText: txt=>copyText(txt),
+        downloadPng: txt=>downloadPng(txt),
+        mockLogin: ()=>{ state.user={name:'Demo User', email:'demo@local'}; showNotif('Masuk sebagai Demo User','success'); renderPage('account'); },
+        clearAllDemo, exportTransactions, resetNotifs: ()=>{ state.unreadCount=0; updateNotifBadge(); showNotif('Notifikasi diset ulang','success'); },
+        handleContactSubmit
+      };
+    })();
 
-    function toggleTheme() {
-        document.body.classList.toggle('light-theme');
-        const isLight = document.body.classList.contains('light-theme');
-        document.getElementById('theme-icon').className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    }
-
-    function renderLogs() {
-        const stream = document.getElementById('stream-container');
-        const history = document.getElementById('history-list');
-        const tableBody = document.querySelector('#logs-table tbody');
-        stream.innerHTML = history.innerHTML = tableBody.innerHTML = "";
-
-        // Sort newest first
-        logs.sort((a,b) => b.id - a.id).forEach(log => {
-            const card = `
-            <div class="glass-card rounded-2xl p-4 cursor-pointer hover:ring-1 ring-blue-500/50 transition" onclick="showDetail(${log.id})">
-                <div class="flex items-center gap-3 mb-3 border-b border-white/5 pb-2">
-                    <i class="fa-solid fa-shield-halved text-blue-500"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest">Pesan Web Masuk</span>
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-[11px] mb-3">
-                    <div><i class="fa-solid fa-user text-blue-400 mr-2"></i><b>${log.sender}</b></div>
-                    <div><i class="fa-solid fa-location-dot text-green-400 mr-2"></i>${log.loc}</div>
-                    <div class="opacity-60 truncate">${log.email}</div>
-                    <div class="opacity-60">IP: ${log.ip}</div>
-                </div>
-                <div class="bg-black/20 rounded-lg p-2 font-mono text-xs mb-2 border border-white/5">
-                    <span class="opacity-40 block text-[9px] mb-1">ISI PESAN:</span>
-                    ${log.msg}
-                </div>
-                <div class="text-[9px] opacity-40 text-right font-mono italic">Dikirim: ${log.time}</div>
-            </div>`;
-            stream.innerHTML += card;
-            history.innerHTML += card;
-
-            // table row
-            const row = `<tr class="border-b border-white/5"><td>${log.time}</td><td>${log.sender}</td><td>${log.email}</td><td>${log.ip}</td><td>${log.loc}</td><td class="truncate">${log.msg}</td></tr>`;
-            tableBody.innerHTML += row;
+    /* Ensure PWA files and register in-memory sw if needed */
+    (function ensurePwaFiles(){
+      fetch('manifest.json').catch(()=>{});
+      if('serviceWorker' in navigator){
+        fetch('sw.js').then(r=>{ if(!r.ok) throw 0; }).catch(()=>{
+          const swCode = `
+self.addEventListener('install', e=>{ self.skipWaiting(); });
+self.addEventListener('activate', e=>{ self.clients.claim(); });
+self.addEventListener('fetch', e=>{});
+self.addEventListener('push', e=>{ const d = e.data?.json() || {}; e.waitUntil(self.registration.showNotification(d.title||'Notifikasi', { body:d.body||'', icon:d.icon||'' })); });
+self.addEventListener('notificationclick', e=>{ e.notification.close(); e.waitUntil(self.clients.matchAll().then(c=>c[0].focus())); });
+          `;
+          const blob = new Blob([swCode], { type:'application/javascript' });
+          const url = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(url).catch(()=>{});
         });
+      }
+    })();
 
-        // Update top-level counters
-        document.getElementById('total-logs').innerText = logs.length;
-        updateTodayStats();
-    }
+    /* Global showNotif used by some legacy parts (keamanan UX) */
+    function showNotif(message, type="success"){ const container=document.getElementById('notification-center'); if(!container) return; if(container.children.length>=4){ const oldest=container.firstElementChild; oldest.style.opacity='0'; setTimeout(()=>oldest.remove(),300); } const notif=document.createElement('div'); notif.className='ios-notif'; const icon = type==='success' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'; notif.innerHTML = icon + `<span style="margin-left:8px">${message}</span>`; container.appendChild(notif); requestAnimationFrame(()=>notif.classList.add('active')); setTimeout(()=>{ notif.classList.remove('active'); setTimeout(()=>notif.remove(),400); },4200); }
 
-    function parseLogDate(str) {
-        // expecting format d/m/yyyy, hh:mm:ss or d/m/yyyy, hh:mm:ss (some inputs may use different separators)
-        try{
-            const parts = str.split(',')[0].trim().split('/');
-            const timePart = (str.split(',')[1]||'').trim();
-            const day = parseInt(parts[0],10), month = parseInt(parts[1],10)-1, year = parseInt(parts[2],10);
-            const t = timePart.split(':').map(x=>parseInt(x.replace(/\D/g,''),10)||0);
-            return new Date(year, month, day, t[0]||0, t[1]||0, t[2]||0);
-        }catch(e){ return new Date(); }
-    }
+    /* Boot */
+    (async function boot(){ Portal.initialize(); window.addEventListener('submit', function(e){ if(e.target && e.target.matches('.contact-form')){ e.preventDefault(); Portal.handleContactSubmit(e); } }, true); })();
 
-    function updateTodayStats(){
-        const today = new Date();
-        const isSameDay = (d1,d2)=> d1.getFullYear()===d2.getFullYear() && d1.getMonth()===d2.getMonth() && d1.getDate()===d2.getDate();
-        const todayLogs = logs.filter(l=> isSameDay(parseLogDate(l.time), today));
-        document.getElementById('stat-today-count').innerText = todayLogs.length;
-        const uniqueIPs = [...new Set(todayLogs.map(x=>x.ip))].length;
-        document.getElementById('stat-unique-ips').innerText = uniqueIPs;
-        document.getElementById('stat-last-time').innerText = (todayLogs[0] ? todayLogs[0].time : '-');
-        // ensure both table and history reflect current search state
-    }
-
-    function showDetail(id) {
-        const log = logs.find(l => l.id === id);
-        const content = `
-            <div class="text-center mb-4">
-                <i class="fa-solid fa-circle-info text-blue-500 text-4xl mb-2"></i>
-                <h3 class="font-bold">Detail Payload</h3>
-            </div>
-            <div class="space-y-2 text-xs">
-                <div class="flex justify-between p-2 rounded bg-white/5"><span>ID Data</span><span class="font-mono text-blue-400">#${log.id}</span></div>
-                <div class="flex justify-between p-2 rounded bg-white/5"><span>Pengirim</span><b>${log.sender}</b></div>
-                <div class="flex justify-between p-2 rounded bg-white/5"><span>Alamat IP</span><b>${log.ip}</b></div>
-                <div class="flex justify-between p-2 rounded bg-white/5"><span>Lokasi</span><span>${log.loc}</span></div>
-                <div class="p-2 rounded bg-white/5">
-                    <span class="block mb-1 opacity-50 text-[10px]">PESAN LENGKAP:</span>
-                    <p class="font-mono break-all">${log.msg}</p>
-                </div>
-            </div>`;
-        document.getElementById('modal-content').innerHTML = content;
-        document.getElementById('detail-modal').classList.remove('hidden');
-    }
-
-    function closeModal() { document.getElementById('detail-modal').classList.add('hidden'); }
-
-    function filterLogs(){
-        const q = document.getElementById('log-search').value.toLowerCase();
-        // filter both table and cards
-        document.querySelectorAll('#stream-container .glass-card, #history-list .glass-card').forEach(card=>{
-            const txt = card.innerText.toLowerCase();
-            card.style.display = txt.indexOf(q) > -1 ? '' : 'none';
-        });
-        document.querySelectorAll('#logs-table tbody tr').forEach(tr=>{
-            const txt = tr.innerText.toLowerCase(); tr.style.display = txt.indexOf(q)>-1 ? '' : 'none';
-        });
-    }
-
-    // Simple notification simulation
-    function simulateIncoming() {
-        if (Notification.permission === "granted") {
-            new Notification("ADIT Security: Pesan Baru", {
-                body: "Data masuk dari IP: 182.8.123.127",
-                icon: window.appManifest.icons[0].src
-            });
-        }
-    }
-
-    // Install button functionality (one click): prompt saved `deferredPrompt` if available
-    document.addEventListener('DOMContentLoaded', ()=>{
-        Notification.requestPermission();
-        renderLogs();
-
-        const btn = document.getElementById('installBtn');
-        btn.addEventListener('click', async ()=>{
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const choice = await deferredPrompt.userChoice;
-                // clear saved prompt
-                deferredPrompt = null;
-            } else {
-                // Provide concise instructions if browser doesn't support beforeinstallprompt
-                alert("Browser Anda tidak mendukung prompt otomatis. Untuk menambahkan ke layar utama: buka menu browser -> Tambah ke Layar Utama (Add to Home screen).");
-            }
-        });
-    });
-
-    // expose helper for testing
-    window.__adit_sim = { addLog: (log)=>{ log.id = logs.length+1; logs.push(log); renderLogs(); } };
-</script>
-
+  </script>
 </body>
 </html>
