@@ -4,42 +4,45 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ADIT — Portfolio | Game Dev & Web Dev</title>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Primary SEO -->
   <meta name="description" content="ADIT — Portfolio Game Developer & Web Developer. Demo proyek game HTML5, Godot, sistem multiplayer, UI/UX mobile-friendly, dan layanan pembuatan game & website. Kontak untuk kerja sama.">
   <meta name="keywords" content="ADIT, portfolio, game developer, web developer, Godot, HTML5 game, game multiplayer, UI/UX, responsive, SUPERHIT, pengembangan game">
   <meta name="robots" content="index,follow">
   <meta name="author" content="ADIT">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Canonical (di-set dinamis via JS ke URL saat ini jika belum diisi statis) -->
   <link rel="canonical" href="">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Open Graph (di-set statis + JS akan update og:image bila ada gambar di /fav/) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="ADIT — Portfolio | Game Dev & Web Dev">
   <meta property="og:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
   <meta property="og:url" content="">
   <meta property="og:image" content="/fav/og-image.png">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@adit">
   <meta name="twitter:title" content="ADIT — Portfolio | Game Dev & Web Dev">
   <meta name="twitter:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
   <meta name="twitter:image" content="/fav/og-image.png">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Mobile / PWA icons (sesuaikan: letakkan file di root jika ingin dipakai) -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#0f172a">
 
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Preconnect & fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="ADITdeveloper.css">
   <script src="ADITdeveloper.js" defer></script>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+  <!-- Structured Data (JSON-LD) for Portfolio / Person -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,7 +58,7 @@
     "description": "Portfolio ADIT — Game Developer & Web Developer. Menampilkan proyek game HTML5, Godot engine, multiplayer realtime, dan layanan pengembangan web."
   }
   </script>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <style>
     :root { --muted: #93a3b8; }
   </style>
@@ -68,7 +71,7 @@
   </div>
 
   <div id="notification-center"></div>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <div class="container">
     <header>
       <a href="#" class="brand" id="brand-area">
@@ -90,9 +93,9 @@
         </button>
       </nav>
     </header>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
     <main id="main-content" class="hero"></main>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
     <footer style="text-align: center; padding: 40px; color: var(--muted); font-size: 12px;">
       <p id="footer-text">© ADIT — Game Dev & Web Dev</p>
     </footer>
@@ -103,9 +106,8 @@
       portfolio.initialize();
     });
 
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI    (function setCanonicalAndUrls() {
+    // SEO helpers: set canonical and og:url to current page if not set server-side
+    (function setCanonicalAndUrls() {
       const loc = window.location.href.split('#')[0].split('?')[0];
       const canonical = document.querySelector('link[rel="canonical"]');
       if (canonical && !canonical.href) canonical.href = loc;
@@ -120,9 +122,8 @@
       }
     })();
 
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
+    // Favicon/OG-image loader:
+    // tries a list of common filenames inside /fav/ then root icons provided in head.
     (async function loadFavAssets() {
       const candidates = [
         '/fav/favicon-32x32.png',
@@ -146,22 +147,25 @@
 
       const found = [];
       for (const p of candidates) {
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
+        // stop early if found same file names for multiple sizes
+        // check and push first few valid assets
+        // avoid long blocking: check sequentially but break after enough found
         if (await exists(p)) {
           found.push(p);
           if (found.length >= 3) break;
         }
       }
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
+
+      // If found, set favicon links (multiple sizes) and og/twitter image
       if (found.length) {
+        // remove existing icon links to prefer /fav/ ones
         const oldIcons = document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]');
         oldIcons.forEach(n => n.parentNode && n.parentNode.removeChild(n));
+
+        // create sized icon links
         found.forEach((url) => {
           const link = document.createElement('link');
+          // if filename contains 'apple' use apple-touch-icon
           if (url.includes('apple')) {
             link.rel = 'apple-touch-icon';
             link.sizes = '180x180';
@@ -180,11 +184,14 @@
           link.href = url;
           document.head.appendChild(link);
         });
+
+        // pick first found as social image
         const socialImage = found[0];
         const og = document.querySelector('meta[property="og:image"]');
         if (og) og.content = socialImage;
         const tw = document.querySelector('meta[name="twitter:image"]');
         if (tw) tw.content = socialImage;
+        // update structured data image if present
         const ld = document.querySelector('script[type="application/ld+json"]');
         if (ld) {
           try {
@@ -198,13 +205,3 @@
   </script>
 </body>
 </html>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-    <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-      <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-        <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-          <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-            <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-              <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                    <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
