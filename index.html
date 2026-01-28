@@ -4,42 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ADIT — Portfolio | Game Dev & Web Dev</title>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <meta name="description" content="ADIT — Portfolio Game Developer & Web Developer. Demo proyek game HTML5, Godot, sistem multiplayer, UI/UX mobile-friendly, dan layanan pembuatan game & website. Kontak untuk kerja sama.">
   <meta name="keywords" content="ADIT, portfolio, game developer, web developer, Godot, HTML5 game, game multiplayer, UI/UX, responsive, SUPERHIT, pengembangan game">
   <meta name="robots" content="index,follow">
   <meta name="author" content="ADIT">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <link rel="canonical" href="">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="ADIT — Portfolio | Game Dev & Web Dev">
   <meta property="og:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
   <meta property="og:url" content="">
   <meta property="og:image" content="/fav/og-image.png">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@adit">
   <meta name="twitter:title" content="ADIT — Portfolio | Game Dev & Web Dev">
   <meta name="twitter:description" content="ADIT — Portfolio Game Developer & Web Developer. Lihat proyek game, demo HTML5, dan layanan pengembangan web/game.">
   <meta name="twitter:image" content="/fav/og-image.png">
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#0f172a">
 
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="ADITdeveloper.css">
   <script src="ADITdeveloper.js" defer></script>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,74 +49,74 @@
     "description": "Portfolio ADIT — Game Developer & Web Developer. Menampilkan proyek game HTML5, Godot engine, multiplayer realtime, dan layanan pengembangan web."
   }
   </script>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <style>
     :root { --muted: #93a3b8; }
+    body { font-family: "Plus Jakarta Sans", system-ui, Arial, sans-serif; margin:0; }
+    .container { max-width:1000px; margin:0 auto; padding:16px; }
   </style>
 </head>
 <body data-theme="light">
-
   <div class="bg-elements">
     <div class="grid-move"></div>
     <div class="noise"></div>
   </div>
 
   <div id="notification-center"></div>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
   <div class="container">
     <header>
       <a href="#" class="brand" id="brand-area">
-        <img src="" alt="A" id="logo-img">
+        <img src="" alt="A" id="logo-img" style="width:36px;height:36px;object-fit:contain">
         <span style="font-weight: 800; letter-spacing: -1px;" id="brand-name">ADIT</span>
       </a>
       <nav>
-        <button class="nav-link active" onclick="portfolio.renderPage('home')" id="nav-home">
+        <button class="nav-link active" data-page="home" id="nav-home" title="Home">
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
         </button>
-        <button class="nav-link" onclick="portfolio.renderPage('projects')" id="nav-projects">
+        <button class="nav-link" data-page="projects" id="nav-projects" title="Projects">
           <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
         </button>
-        <button class="nav-link" onclick="portfolio.renderPage('contact')" id="nav-contact">
+        <button class="nav-link" data-page="contact" id="nav-contact" title="Contact">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
         </button>
-        <button class="nav-link" onclick="portfolio.toggleTheme()">
+        <button class="nav-link" id="toggle-theme" title="Toggle theme">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
         </button>
       </nav>
     </header>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-    <main id="main-content" class="hero"></main>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
+
+    <main id="main-content" class="hero" style="min-height:360px;">
+      <div id="fallback-message" style="padding:20px;color:var(--muted);">
+        Memuat... Jika konten tidak muncul, periksa console (Ctrl+Shift+J) untuk melihat error. Pastikan file <code>ADITdeveloper.js</code> ada dan tidak error.
+      </div>
+    </main>
+
     <footer style="text-align: center; padding: 40px; color: var(--muted); font-size: 12px;">
-      <p id="footer-text">© ADIT — Game Dev & Web Dev</p>
+      <p id="footer-text">ADITdeveloper - Copiright 2026</p>
     </footer>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      portfolio.initialize();
-    });
-
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI    (function setCanonicalAndUrls() {
-      const loc = window.location.href.split('#')[0].split('?')[0];
-      const canonical = document.querySelector('link[rel="canonical"]');
-      if (canonical && !canonical.href) canonical.href = loc;
-      const ogUrl = document.querySelector('meta[property="og:url"]');
-      if (ogUrl && !ogUrl.content) ogUrl.content = loc;
-      const ld = document.querySelector('script[type="application/ld+json"]');
-      if (ld) {
-        try {
-          const data = JSON.parse(ld.textContent);
-          if (data && !data.url) { data.url = loc; ld.textContent = JSON.stringify(data, null, 2); }
-        } catch(e) {}
+    (function setCanonicalAndUrls() {
+      try {
+        const loc = window.location.href.split('#')[0].split('?')[0];
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.setAttribute('href', loc);
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute('content', loc);
+        const ld = document.querySelector('script[type="application/ld+json"]');
+        if (ld) {
+          try {
+            const data = JSON.parse(ld.textContent);
+            if (data && !data.url) { data.url = loc; ld.textContent = JSON.stringify(data, null, 2); }
+          } catch(e) { /* ignore JSON parse errors */ }
+        }
+      } catch(e) {
+        console.warn('setCanonicalAndUrls error', e);
       }
     })();
 
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
     (async function loadFavAssets() {
       const candidates = [
         '/fav/favicon-32x32.png',
@@ -137,8 +131,12 @@
 
       async function exists(url) {
         try {
-          const res = await fetch(url, { method: 'HEAD' });
-          return res.ok;
+          // HEAD sometimes blocked; try HEAD then fallback to GET
+          let res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+          if (!res.ok) {
+            res = await fetch(url, { method: 'GET', cache: 'no-store' });
+          }
+          return res && res.ok;
         } catch (e) {
           return false;
         }
@@ -146,17 +144,12 @@
 
       const found = [];
       for (const p of candidates) {
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
         if (await exists(p)) {
           found.push(p);
           if (found.length >= 3) break;
         }
       }
-        // FORTOFOLIO BY ADITDEVELOPER
-        // WEB BY ADITDEVELOPER
-        // JANGAN MENGAMBIL SCRIPT INI
+
       if (found.length) {
         const oldIcons = document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]');
         oldIcons.forEach(n => n.parentNode && n.parentNode.removeChild(n));
@@ -182,9 +175,9 @@
         });
         const socialImage = found[0];
         const og = document.querySelector('meta[property="og:image"]');
-        if (og) og.content = socialImage;
+        if (og) og.setAttribute('content', socialImage);
         const tw = document.querySelector('meta[name="twitter:image"]');
-        if (tw) tw.content = socialImage;
+        if (tw) tw.setAttribute('content', socialImage);
         const ld = document.querySelector('script[type="application/ld+json"]');
         if (ld) {
           try {
@@ -195,16 +188,49 @@
         }
       }
     })();
+
+    // safe init: tunggu DOM ready, cek portfolio, berikan fallback bila perlu
+    document.addEventListener('DOMContentLoaded', () => {
+      // attach nav handlers (safe)
+      document.querySelectorAll('button[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const page = btn.getAttribute('data-page');
+          if (window.portfolio && typeof window.portfolio.renderPage === 'function') {
+            try {
+              window.portfolio.renderPage(page);
+            } catch (e) {
+              console.error('portfolio.renderPage error:', e);
+              document.getElementById('main-content').innerText = 'Terjadi error saat membuka halaman.';
+            }
+          } else {
+            console.warn('portfolio.renderPage not available. File ADITdeveloper.js mungkin gagal dimuat atau error.');
+            document.getElementById('main-content').innerHTML = '<div style="padding:20px;color:var(--muted)">Konten belum tersedia. Periksa console untuk detail. Pastikan <code>ADITdeveloper.js</code> ada dan tidak error.</div>';
+          }
+        });
+      });
+
+      // theme toggle
+      const toggle = document.getElementById('toggle-theme');
+      toggle.addEventListener('click', () => {
+        const el = document.documentElement;
+        const current = document.body.getAttribute('data-theme') || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', next);
+      });
+
+      // try initialize portfolio if available
+      if (window.portfolio && typeof window.portfolio.initialize === 'function') {
+        try {
+          window.portfolio.initialize();
+        } catch (e) {
+          console.error('portfolio.initialize error:', e);
+          document.getElementById('fallback-message').innerText = 'Gagal inisialisasi portfolio — cek console.';
+        }
+      } else {
+        // keep fallback hint in UI
+        console.info('portfolio object not found. If you expect dynamic content, ensure ADITdeveloper.js loads correctly.');
+      }
+    });
   </script>
 </body>
 </html>
-  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-    <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-      <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-        <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-          <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-            <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-              <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                  <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
-                    <!-- ADITdeveloper - Web by ADITdeveloper - Jangan diambil - Copyright 2026 -->
