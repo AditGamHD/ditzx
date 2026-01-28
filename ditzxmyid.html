@@ -1,407 +1,325 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ADIT — Portal Terpadu</title>
-  <meta name="description" content="Portal ADIT — Home, Login, Akun, Realtime log, Notifikasi, PWA">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#06b6d4">
-  <style>
-    :root{
-      --bg:#ffffff; --card:#f7f9fb; --text:#0f172a; --muted:#6b7280; --accent:#06b6d4; --success:#16a34a; --error:#ef4444;
-    }
-    [data-theme="dark"]{
-      --bg:#071126; --card:#0b1522; --text:#e6eef6; --muted:#9aa7b6; --accent:#06b6d4;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    .app{max-width:1100px;margin:18px auto;padding:16px}
-    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:12px;align-items:center}
-    .brand img{width:46px;height:46px;border-radius:8px;object-fit:cover}
-    nav{display:flex;gap:8px}
-    .tab{padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--muted);background:transparent;border:0}
-    .tab.active{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white}
-    .controls{display:flex;gap:8px;align-items:center}
-    button.btn{background:var(--card);border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
-    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);transition:transform .18s,box-shadow .18s}
-    .card:hover{transform:translateY(-6px)}
-    .muted{color:var(--muted)}
-    .big{font-size:22px;font-weight:800}
-    .small{font-size:13px;color:var(--muted)}
-    .skill-pills{display:flex;gap:8px;flex-wrap:wrap}
-    .pill{background:rgba(0,0,0,0.04);padding:6px 8px;border-radius:999px;font-size:13px}
-    .project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-    .card-actions{display:flex;gap:8px;margin-top:12px}
-    .card-btn{padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);text-decoration:none;color:inherit;font-size:13px}
-    .contact-form input,.contact-form textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,.06);margin-top:8px;background:transparent;color:var(--text)}
-    .nav-actions{display:flex;gap:8px;align-items:center}
-    #main-content{margin-top:14px}
-    .notif-badge{background:var(--error);color:white;padding:4px 8px;border-radius:999px;font-size:12px}
-    footer{text-align:center;margin:18px 0;color:var(--muted)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
-    .hidden{display:none}
-    .animate-fade-in-up{opacity:0;transform:translateY(8px);animation:fadeUp .45s forwards}
-    @keyframes fadeUp{to{opacity:1;transform:none}}
-    .install-btn{position:fixed;right:18px;bottom:18px;padding:12px 14px;background:var(--accent);color:white;border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,0.15);z-index:1000}
-    #notification-center{position:fixed;right:18px;top:80px;display:flex;flex-direction:column;gap:8px;z-index:999}
-    .ios-notif{background:var(--card);padding:10px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06);display:flex;gap:8px;align-items:center;opacity:0;transform:translateY(-6px);transition:all .25s}
-    .ios-notif.active{opacity:1;transform:none}
-    .view-toggle{display:flex;gap:6px}
-    .chip{padding:6px 8px;background:rgba(0,0,0,0.04);border-radius:999px;cursor:pointer}
-    .actions{display:flex;gap:8px}
-    @media(max-width:640px){header{flex-direction:column;align-items:flex-start} .brand img{width:40px;height:40px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ADITdeveloper — Discord Viewer</title>
+<meta name="theme-color" content="#0b74de">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230b74de'/%3E%3Ctext x='50%25' y='55%25' font-size='12' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3EAD%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#0f1720;--card:#0b1220;--muted:#9aa7bf;--accent:#0b74de;--white:#eef6ff}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#06111a 0%,#071729 100%);color:var(--white);-webkit-font-smoothing:antialiased}
+.app{display:flex;flex-direction:column;height:100vh;padding:12px}
+.header{display:flex;align-items:center;gap:10px;padding:6px 8px}
+.header .title{font-weight:700;font-size:16px}
+.container{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:10px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+.messages{flex:1;overflow:auto;padding:6px;display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.avatar{width:44px;height:44px;border-radius:10px;flex:0 0 44px;background:linear-gradient(135deg,var(--accent),#146fbf);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+.msg-body{flex:1}
+.msg-header{display:flex;gap:8px;align-items:center}
+.msg-author{font-weight:700}
+.msg-time{font-size:12px;color:var(--muted)}
+.msg-content{margin-top:6px;color:#e6f0ff;white-space:pre-wrap;word-break:break-word}
+.bottom-tabs{height:66px;display:flex;gap:8px;padding:8px}
+.tab{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:13px;color:var(--muted)}
+.tab.active{background:linear-gradient(180deg,var(--accent),#0a5fbf);color:var(--white)}
+.controls{display:flex;gap:8px;align-items:center}
+.input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white)}
+.small{font-size:13px;color:var(--muted)}
+.settings-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.btn{padding:10px 12px;border-radius:10px;background:var(--accent);border:none;color:white;font-weight:700}
+.row{display:flex;gap:8px;align-items:center}
+.logo-small{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#0b74de,#146fbf);display:flex;align-items:center;justify-content:center;font-weight:700}
+.footer-note{font-size:12px;color:var(--muted);text-align:center;padding:6px}
+@media(min-width:720px){.app{max-width:720px;margin:0 auto}}
+</style>
 </head>
-<body data-theme="light">
-  <div id="notification-center"></div>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <img id="logo-img" src="" alt="logo">
-        <div>
-          <div id="brand-name" style="font-weight:800">ADIT</div>
-          <div class="small muted" id="brand-sub">Portal</div>
-        </div>
-      </div>
-      <div class="nav-actions">
-        <nav>
-          <button class="tab active nav-link" id="nav-home" onclick="Portal.renderPage('home')">Home</button>
-          <button class="tab nav-link" id="nav-login" onclick="Portal.renderPage('login')">Log Masuk</button>
-          <button class="tab nav-link" id="nav-account" onclick="Portal.renderPage('account')">Akun</button>
-        </nav>
-        <div class="controls">
-          <div id="notif-count" class="notif-badge hidden">0</div>
-          <button class="btn" id="theme-toggle">Tema</button>
-        </div>
-      </div>
-    </header>
-
-    <main id="main-content" class="animate-fade-in-up"></main>
-
-    <div style="height:80px"></div>
-    <footer id="footer-text">© 2026 ADIT</footer>
+<body>
+<div class="app" id="app">
+  <div class="header">
+    <div class="logo-small">AD</div>
+    <div>
+      <div class="title">ADITdeveloper — Discord Viewer</div>
+      <div class="small" id="status">Status: not connected</div>
+    </div>
+    <div style="margin-left:auto" class="controls">
+      <button class="btn" id="refreshBtn" title="Refresh sekarang">Refresh</button>
+    </div>
   </div>
 
-  <button id="installBtn" class="install-btn hidden">Pasang Aplikasi</button>
+  <div class="container">
+    <div id="messagesTab" class="card" style="display:block;min-height:0;flex:1;overflow:hidden">
+      <div class="messages" id="messagesList" aria-live="polite"></div>
+      <div class="footer-note">Pastikan Anda menyetel Relay URL di Pengaturan. Relay wajib berjalan untuk menampilkan pesan Discord.</div>
+    </div>
 
-  <script>
-    /* === DISCORD WEBHOOK (INSERTED) ===
-       Anda meminta webhook dimasukkan langsung — berikut webhook yang Anda berikan.
-       Peringatan: menaruh webhook di client dapat terekspos. Pertimbangkan proxy server. */
-    window.__DISCORD_WEBHOOK__ = "https://discord.com/api/webhooks/1463782421269839986/nOg64FQ-ytyULelnSd0FjBL2Eda13mX2VwKclRdEHI9iQGufYZckFCOTmn7xiPJV7ro_";
-
-    window.__FIREBASE_CONFIG__ = window.__FIREBASE_CONFIG__ || null;
-    window.__FCM_VAPID_KEY__ = window.__FCM_VAPID_KEY__ || null;
-
-    const FALLBACK_DB = {
-      penulis: {
-        nama: "ADITdeveloper",
-        foto: "https://blogger.googleusercontent.com/img/a/AVvXsEgG8BfVottdnZxviuOApnvnWjjMo4IMZW4JeTT3BExor7GZmhm_a7ZY8iqDmvBdM1cKZ1eghcw5OUfsJL2voavIuV0UeemI-fQ5AmS3JRtQlZrEqBSFCypvdUoorN9FIncxHc7OLaqcZ8j4gAaK_qFVSFz4JS40JBLCK1e2ri--b26df3GMMGhP_pgMMhpQ",
-        bioSingkat: "Saya adalah ADIT — pengembang Game dan website",
-        keahlian: ["Roblox Studio", "Max2D", "HTML", "CSS", "JavaScript", "Godot", "Unity"]
-      },
-      situs: { tema: "light", maksProyekPerHalaman: 9 },
-      sosial: {
-        github: { terlihat:true, tautan:"https://github.com/ADITdeveloper", username:"ADITdeveloper" },
-        instagram: { terlihat:true, tautan:"https://www.instagram.com/ditxgam/", username:"@ditxgam" }
-      },
-      linimasa: [
-        { tahun: 2025, peran: "Web & Game dev", deskripsi: "Mengintegrasikan teknologi web modern dengan mekanik game interaktif." },
-        { tahun: 2024, peran: "Game dev", deskripsi: "Mengembangkan logika permainan kompleks menggunakan Unity dan Godot." }
-      ],
-      proyek: [
-        { id: "Uvoshop", judul: "UVOSHOP", tahun: 2025, kategori: "Website", terlihat:true, unggulan:true, deskripsi:"Website Topup Game dan Pulsa terlengkap termurah dan terpercaya", teknologi:["Cpanel","My Sql Database","HTML5"], gambar:[], tombol:{linkUtama:"https://uvoshop.my.id",teksUtama:"Kunjungi Web",linkSekunder:"",teksSekunder:""} }
-      ],
-      kontakLangsung: { email:"aditgam775@gmail.com", whatsapp:{ nomor:"6285648211278", label:"+62 856-4821-1279" }, tiktok:{ username:"@aditdeveloper", link:"https://tiktok.com/@aditdeveloper" } },
-      fitur: { aktifkanKonfetiKontak: true },
-      kontak: { discordWebhook: window.__DISCORD_WEBHOOK__ }
-    };
-
-    /* ================= Portal module ================= */
-    const Portal = (function(){
-      let DATA = {};
-      let elements = {};
-      let state = { page:'home', user:null, messages:[], transactions:[], unreadCount:0, view:'list', installPromptEvent:null, firebaseEnabled:false, db:null };
-
-      async function initialize(){
-        try { const r = await fetch('ADITdeveloper.json'); DATA = r.ok ? await r.json() : FALLBACK_DB; } catch(e){ DATA = FALLBACK_DB; }
-        setupElements(); document.body.setAttribute('data-theme', DATA.situs?.tema || 'light'); elements.brandName.innerText = DATA.penulis.nama; elements.logoImg.src = DATA.penulis.foto; elements.footerText.innerText = `© ${new Date().getFullYear()} ${DATA.penulis.nama}`;
-        attachUI(); tryInitFirebase(); renderPage('home');
-      }
-      function setupElements(){ elements = { brandName: document.getElementById('brand-name'), logoImg: document.getElementById('logo-img'), footerText: document.getElementById('footer-text'), mainContent: document.getElementById('main-content') }; }
-      function attachUI(){
-        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-        window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); state.installPromptEvent = e; document.getElementById('installBtn').classList.remove('hidden'); });
-        document.getElementById('installBtn').addEventListener('click', installApp);
-        if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-        const savedTheme = localStorage.getItem('site-theme'); if(savedTheme) document.body.setAttribute('data-theme', savedTheme);
-      }
-
-      async function tryInitFirebase(){
-        const cfg = window.__FIREBASE_CONFIG__ || DATA.firebase || null;
-        if(!cfg){ startLocalDemo(); return; }
-        try {
-          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
-          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js');
-          await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
-          firebase.initializeApp(cfg);
-          state.db = firebase.database(); state.firebaseEnabled = true;
-          attachRealtime(); initMessaging();
-        } catch(e){ console.warn('Firebase init failed', e); startLocalDemo(); }
-      }
-      function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
-
-      function attachRealtime(){
-        if(!state.db) return;
-        const txRef = state.db.ref('transactions');
-        const msgRef = state.db.ref('messages');
-        txRef.limitToLast(200).on('child_added', snap=>{ const v = snap.val(); v._id = snap.key; addTransaction(v,true); });
-        msgRef.limitToLast(200).on('child_added', snap=>{ const v = snap.val(); v._id = snap.key; addMessage(v,true); });
-      }
-
-      async function initMessaging(){
-        try {
-          const messaging = firebase.messaging();
-          const perm = await Notification.requestPermission();
-          if(perm !== 'granted') return;
-          const vapidKey = window.__FCM_VAPID_KEY__ || null;
-          const token = await messaging.getToken({ vapidKey });
-          showNotif('Push siap, token diperoleh (cek console).', 'success');
-          console.log('FCM token:', token);
-          messaging.onMessage(payload=>{ const title = payload.notification?.title || 'Notifikasi'; const body = payload.notification?.body || ''; showSystemNotification(title, body); });
-        } catch(e){ console.warn('Messaging init failed', e); }
-      }
-
-      function showSystemNotification(title, body){
-        if(Notification.permission === 'granted'){
-          navigator.serviceWorker.getRegistration().then(reg=>{
-            if(reg) reg.showNotification(title, { body, icon: DATA.penulis?.foto || '' });
-            else new Notification(title, { body, icon: DATA.penulis?.foto || '' });
-          });
-        }
-      }
-
-      function startLocalDemo(){
-        for(let i=0;i<6;i++) addTransaction({ user:`demo${i}`, amount:(Math.random()*200).toFixed(2), note:`Demo transaksi ${i}`, time: Date.now() - (i*3600*1000) }, false);
-        setInterval(()=>{ const m={ from:'visitor'+Math.floor(Math.random()*999), text:'Halo, saya tertarik '+Math.floor(Math.random()*999), time:Date.now() }; addMessage(m,false); showSystemNotification('Pesan baru', `${m.from}: ${m.text}`); }, 20000);
-      }
-
-      function renderPage(page){
-        state.page = page;
-        document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
-        const nav = document.getElementById('nav-'+page); if(nav) nav.classList.add('active');
-        const main = elements.mainContent; main.classList.remove('animate-fade-in-up'); void main.offsetWidth; main.classList.add('animate-fade-in-up');
-        if(page==='home') renderHome(); else if(page==='login') renderLogin(); else if(page==='account') renderAccount(); else renderHome();
-      }
-
-      function renderHome(){
-        const last30 = statsCountDays(30); const last7 = statsCountDays(7); const last3 = statsCountDays(3); const last1 = statsCountDays(1);
-        elements.mainContent.innerHTML = `
-          <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div class="small muted">Selamat Datang</div>
-                <div class="big">${DATA.penulis.nama}</div>
-                <div class="small muted">${DATA.penulis.bioSingkat}</div>
-              </div>
-              <div style="text-align:right">
-                <div class="small muted">Mode</div>
-                <div style="font-weight:800">${state.firebaseEnabled ? 'Realtime (Firebase aktif)' : 'Demo Mode'}</div>
-              </div>
-            </div>
-            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-              <div class="card" style="min-width:160px">
-                <div class="small muted">Transaksi (30 hari)</div>
-                <div style="font-weight:800;font-size:20px">${last30}</div>
-                <div class="small muted">7d:${last7} • 3d:${last3} • 1d:${last1}</div>
-              </div>
-              <div class="card" style="min-width:160px">
-                <div class="small muted">Pesan Masuk</div>
-                <div style="font-weight:800;font-size:20px">${state.messages.length}</div>
-                <div class="small muted">Unread: ${state.unreadCount}</div>
-              </div>
-              <div class="card" style="flex:1">
-                <div class="small muted">Aksi Cepat</div>
-                <div style="margin-top:8px;display:flex;gap:8px">
-                  <button class="btn" onclick="Portal.clearAllDemo()">Reset Demo</button>
-                  <button class="btn" onclick="Portal.exportTransactions()">Export CSV</button>
-                </div>
-              </div>
-            </div>
+    <div id="settingsTab" class="card" style="display:none">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <div class="logo-small">AD</div>
+        <div>
+          <div style="font-weight:700">Pengaturan Relay</div>
+          <div class="small">Masukkan URL server relay. Contoh: https://relay.example.com</div>
+        </div>
+      </div>
+      <div class="settings-grid">
+        <input id="relayUrl" class="input" placeholder="Relay URL (http(s)://domain)"/>
+        <input id="channelId" class="input" placeholder="Channel ID (opsional)"/>
+        <label class="small">Poll Interval (detik)</label>
+        <input id="pollInterval" class="input" type="number" min="2" value="5"/>
+        <div class="row">
+          <button id="saveSettings" class="btn">Simpan</button>
+          <button id="clearCache" class="btn" style="background:#334155">Reset Local</button>
+        </div>
+        <div>
+          <div class="small">Webhook Test (opsional)</div>
+          <input id="testWebhook" class="input" placeholder="Webhook URL untuk kirim test"/>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button id="sendTest" class="btn" style="background:#10b981">Kirim Test</button>
           </div>
-          <div class="grid" style="margin-top:12px">
-            <div class="card" style="grid-column:span 2">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <div>
-                  <div class="small muted">Log Transaksi Terakhir</div>
-                  <div style="font-weight:700">Transaksi</div>
-                </div>
-                <div class="view-toggle">
-                  <div class="chip" onclick="Portal.setView('list')">List</div>
-                  <div class="chip" onclick="Portal.setView('grid')">Grid</div>
-                </div>
-              </div>
-              <div style="margin-top:10px" id="transactions-container">${renderTransactionsTable()}</div>
-            </div>
-            <div class="card">
-              <div class="small muted">Pesan Terbaru</div>
-              <div style="margin-top:8px">
-                ${state.messages.slice().reverse().slice(0,6).map(m=>`
-                  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px">
-                    <div>
-                      <div style="font-weight:700">${m.from||m.user||'Anon'}</div>
-                      <div class="small muted">${(m.text||m.note||'').slice(0,80)}</div>
-                    </div>
-                    <div style="text-align:right">
-                      <div class="small muted">${timeAgo(m.time||m.timestamp||Date.now())}</div>
-                      <div class="actions"><button class="btn" onclick="Portal.openMessageDetail('${encodeURIComponent(JSON.stringify(m))}')">Lihat</button></div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-        `;
-      }
+        </div>
+      </div>
+    </div>
 
-      function renderTransactionsTable(){
-        const arr = state.transactions.slice().reverse();
-        if(state.view==='grid'){
-          return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">${arr.slice(0,20).map(t=>`<div class="card"><div style="font-weight:700">${t.user||t.from||'Anon'}</div><div class="small muted">${(t.note||t.title||'')}</div><div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800">Rp ${t.amount||'0'}</div><div><button class="btn" onclick="Portal.openTransactionDetail('${t._id||t.id||''}')">Detail</button></div></div></div>`).join('')}</div>`;
-        } else {
-          return `<table><thead><tr><th>Waktu</th><th>Pengguna</th><th>Nominal</th><th>Catatan</th><th></th></tr></thead><tbody>${arr.slice(0,120).map(t=>`<tr><td>${new Date(t.time||t.timestamp||Date.now()).toLocaleString('id-ID')}</td><td>${t.user||t.from||'Anon'}</td><td>Rp ${t.amount||'0'}</td><td>${t.note||''}</td><td><div class="actions"><button class="btn" onclick="Portal.openTransactionDetail('${t._id||t.id||''}')">Detail</button></div></td></tr>`).join('')}</tbody></table>`;
+    <div id="aboutTab" class="card" style="display:none">
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="logo-small">AD</div>
+        <div>
+          <div style="font-weight:700">Tentang</div>
+          <div class="small">PWA viewer pesan Discord. Gunakan relay/bot untuk membaca pesan. Bisa dibungkus jadi APK via PWABuilder.</div>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="small">Fitur</div>
+        <ul class="small" style="padding-left:18px;color:var(--muted)">
+          <li>Menampilkan pesan terbaru dari relay server</li>
+          <li>Notifikasi Android saat pesan baru (perlu izin)</li>
+          <li>3 tab bawah: Pesan / Pengaturan / Tentang</li>
+          <li>Semua pengaturan tersimpan di localStorage</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-tabs">
+    <div id="tabMessages" class="tab active" role="button" aria-label="Messages">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 15a2 2 0 0 1-2 2H8l-5 3V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      Pesan
+    </div>
+    <div id="tabSettings" class="tab" role="button" aria-label="Settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M19.4 15a7 7 0 0 0 0-6l2.1-1.6-2-3.4-2.5.6a7 7 0 0 0-4-1.6L12 1h-2l-.6 2.1a7 7 0 0 0-4 1.6L2.9 4.3 1 7.7 3.1 9.3a7 7 0 0 0 0 6L1 16.9 2.9 20.3l2.5-.6a7 7 0 0 0 4 1.6L10 23h2l.6-2.1a7 7 0 0 0 4-1.6l2.5.6 1.9-3.4-2.1-1.6z" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      Pengaturan
+    </div>
+    <div id="tabAbout" class="tab" role="button" aria-label="About">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/><path d="M11 10h2v6h-2zM12 7h.01" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      Tentang
+    </div>
+  </div>
+</div>
+
+<script>
+(async function(){
+  const DEFAULT_POLL = 5;
+  const statusEl = document.getElementById('status');
+  const messagesList = document.getElementById('messagesList');
+  const relayInput = document.getElementById('relayUrl');
+  const channelInput = document.getElementById('channelId');
+  const pollInput = document.getElementById('pollInterval');
+  const saveBtn = document.getElementById('saveSettings');
+  const clearBtn = document.getElementById('clearCache');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const sendTestBtn = document.getElementById('sendTest');
+  const testWebhookInput = document.getElementById('testWebhook');
+
+  let relay = localStorage.getItem('relay_url') || '';
+  let channelId = localStorage.getItem('relay_channel') || '';
+  let pollInterval = parseInt(localStorage.getItem('poll_interval') || DEFAULT_POLL,10);
+  let lastMessageId = localStorage.getItem('last_msg_id') || null;
+  let messages = [];
+
+  relayInput.value = relay;
+  channelInput.value = channelId;
+  pollInput.value = pollInterval;
+  testWebhookInput.value = '';
+
+  function setStatus(text){
+    statusEl.textContent = 'Status: ' + text;
+  }
+
+  function switchTab(tab){
+    document.getElementById('messagesTab').style.display = tab==='messages'?'block':'none';
+    document.getElementById('settingsTab').style.display = tab==='settings'?'block':'none';
+    document.getElementById('aboutTab').style.display = tab==='about'?'block':'none';
+    document.getElementById('tabMessages').classList.toggle('active', tab==='messages');
+    document.getElementById('tabSettings').classList.toggle('active', tab==='settings');
+    document.getElementById('tabAbout').classList.toggle('active', tab==='about');
+  }
+
+  document.getElementById('tabMessages').addEventListener('click', ()=>switchTab('messages'));
+  document.getElementById('tabSettings').addEventListener('click', ()=>switchTab('settings'));
+  document.getElementById('tabAbout').addEventListener('click', ()=>switchTab('about'));
+
+  saveBtn.addEventListener('click', ()=> {
+    relay = relayInput.value.trim();
+    channelId = channelInput.value.trim();
+    pollInterval = Math.max(2, parseInt(pollInput.value || DEFAULT_POLL,10));
+    localStorage.setItem('relay_url', relay);
+    localStorage.setItem('relay_channel', channelId);
+    localStorage.setItem('poll_interval', pollInterval);
+    setStatus('saved settings');
+    startPolling();
+  });
+
+  clearBtn.addEventListener('click', ()=> {
+    localStorage.clear();
+    relayInput.value=''; channelInput.value=''; pollInput.value=DEFAULT_POLL;
+    setStatus('local storage reset');
+    location.reload();
+  });
+
+  refreshBtn.addEventListener('click', ()=> fetchOnce());
+
+  sendTestBtn.addEventListener('click', async ()=> {
+    const w = testWebhookInput.value.trim();
+    if(!w) return alert('Isi webhook untuk test');
+    try{
+      const res = await fetch(w, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:'Test pesan dari ADITdeveloper PWA'})});
+      if(res.ok) alert('Test terkirim (ke webhook).');
+      else alert('Gagal kirim test: ' + res.status);
+    }catch(e){ alert('Error: ' + e.message) }
+  });
+
+  function renderMessages(){
+    messagesList.innerHTML = '';
+    for(let m of messages.slice().reverse()){
+      const el = document.createElement('div'); el.className='msg card';
+      el.innerHTML = '<div class="avatar">'+escapeText((m.author && (m.author.name||m.author.username)||'U').charAt(0))+'</div>' +
+      '<div class="msg-body"><div class="msg-header"><div class="msg-author">'+escapeText(m.author && (m.author.name||m.author.username) || 'Unknown')+'</div><div class="msg-time">'+formatTime(m.createdAt || m.timestamp || Date.now())+'</div></div><div class="msg-content">'+escapeText(m.content || (m.embeds && m.embeds[0] && m.embeds[0].title) || '[no text]')+'</div></div>';
+      messagesList.appendChild(el);
+    }
+  }
+
+  function escapeText(t){ if(!t && t!==0) return ''; return String(t).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  function formatTime(v){
+    const d = new Date(v);
+    return d.toLocaleString('id-ID', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short'});
+  }
+
+  async function fetchOnce(){
+    const urlBase = (localStorage.getItem('relay_url') || relay).replace(/\/$/,'');
+    if(!urlBase){ setStatus('relay kosong - buka Pengaturan'); return; }
+    let url = urlBase + '/messages';
+    const ch = (localStorage.getItem('relay_channel') || channelId);
+    if(ch) url += '?channel=' + encodeURIComponent(ch);
+    try{
+      setStatus('mengambil...');
+      const res = await fetch(url, {cache:'no-store'});
+      if(!res.ok) { setStatus('relay error: ' + res.status); return; }
+      const data = await res.json();
+      if(!Array.isArray(data)) { setStatus('relay: format tidak valid'); return; }
+      setStatus('connected');
+      let newMsgs = [];
+      for(let m of data){
+        if(!lastMessageId || m.id === lastMessageId) break;
+        newMsgs.push(m);
+      }
+      if(newMsgs.length>0){
+        messages = data.concat([]);
+        lastMessageId = data[0].id;
+        localStorage.setItem('last_msg_id', lastMessageId);
+        renderMessages();
+        for(let nm of newMsgs.reverse()){
+          showNotificationFromMain(nm.author && (nm.author.name||nm.author.username) || 'Unknown', nm.content || (nm.embeds && nm.embeds[0] && nm.embeds[0].title) || '[no text]');
         }
+      } else {
+        messages = data.concat([]);
+        renderMessages();
       }
+    }catch(e){
+      setStatus('fetch error');
+      console.error(e);
+    }
+  }
 
-      function renderLogin(){ elements.mainContent.innerHTML=`<div class="card" style="max-width:520px;margin:auto"><div class="small muted">Masuk</div><h2 style="margin:8px 0">Log Masuk</h2><form id="loginForm"><input id="loginEmail" type="email" placeholder="Email" required><input id="loginPassword" type="password" placeholder="Kata sandi" required><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" type="submit">Masuk</button><button class="btn" type="button" onclick="Portal.mockLogin()">Masuk Demo</button></div></form><div class="small muted" style="margin-top:12px">Gunakan demo untuk uji coba.</div></div>`; document.getElementById('loginForm').addEventListener('submit', e=>{ e.preventDefault(); showNotif('Autentikasi demo. Integrasi server diperlukan.', 'success'); Portal.mockLogin(); }); }
+  let pollTimer = null;
+  function startPolling(){
+    clearInterval(pollTimer);
+    pollTimer = setInterval(fetchOnce, (parseInt(localStorage.getItem('poll_interval')||pollInterval,10))*1000);
+    fetchOnce();
+  }
+  function stopPolling(){ if(pollTimer) clearInterval(pollTimer); pollTimer=null; }
 
-      function renderAccount(){
-        const user = state.user || { name:'Tamu' };
-        elements.mainContent.innerHTML = `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="small muted">Akun</div><div style="font-weight:800">${user.name}</div><div class="small muted">${user.email||''}</div></div><div style="display:flex;gap:8px;align-items:center"><button class="btn" onclick="Portal.toggleTheme()">Ganti Tema</button><button class="btn" id="installNow">Instal</button></div></div><div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap"><div class="card" style="min-width:200px"><div class="small muted">Notifikasi</div><div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="Portal.requestNotifPermission()">Izinkan Notif</button><button class="btn" onclick="Portal.resetNotifs()">Reset</button></div></div><div class="card" style="flex:1;min-width:280px"><div class="small muted">Tampilan</div><div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="Portal.setView('list')">List</button><button class="btn" onclick="Portal.setView('grid')">Grid</button></div></div><div class="card" style="min-width:220px"><div class="small muted">Aksi</div><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px"><button class="btn" onclick="Portal.exportTransactions()">Export CSV</button><button class="btn" onclick="Portal.clearAllDemo()">Hapus Demo</button></div></div></div><div style="margin-top:12px"><h3>Riwayat Transaksi</h3><div id="account-trans" class="card" style="margin-top:8px">${renderTransactionsTable()}</div></div></div>`;
-        document.getElementById('installNow').addEventListener('click', installApp);
-      }
+  let swReg = null;
+  async function initServiceWorker(){
+    if('serviceWorker' in navigator){
+      try{
+        const swCode = "self.addEventListener('install', event => {self.skipWaiting();});self.addEventListener('activate', event => {self.clients.claim();});self.addEventListener('message', event => {const data = event.data; if(data && data.type === 'show-notification'){const title = data.title || 'Pesan baru'; const options = {body: data.body || '',tag: data.tag||Date.now().toString(),icon: data.icon||'',badge: data.badge||'',data:data}; self.registration.showNotification(title, options);}});self.addEventListener('notificationclick', event => {event.notification.close(); event.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(all=>{ if(all.length>0) return all[0].focus(); return clients.openWindow('/'); }));});";
+        const blob = new Blob([swCode], {type:'application/javascript'});
+        const swUrl = URL.createObjectURL(blob);
+        swReg = await navigator.serviceWorker.register(swUrl);
+      }catch(err){ console.warn('SW error', err); }
+    }
+  }
 
-      function setView(v){ state.view = v; renderPage(state.page); }
-      function toggleTheme(){ const b=document.body; const next = b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme', next); localStorage.setItem('site-theme', next); }
-      function installApp(){ if(state.installPromptEvent){ state.installPromptEvent.prompt(); state.installPromptEvent.userChoice.then(choice=>{ if(choice.outcome==='accepted') showNotif('Aplikasi terpasang', 'success'); else showNotif('Instal dibatalkan', 'error'); state.installPromptEvent=null; document.getElementById('installBtn').classList.add('hidden'); }); } else showNotif('Install tersedia pada browser/OS yang mendukung.', 'error'); }
-      function requestNotifPermission(){ Notification.requestPermission().then(p=>{ if(p==='granted') showNotif('Notifikasi diizinkan', 'success'); else showNotif('Notifikasi ditolak', 'error'); }); }
+  async function requestPermission(){
+    if(!('Notification' in window)) return;
+    if(Notification.permission === 'default'){
+      try{ await Notification.requestPermission(); } catch(e){ console.warn(e); }
+    }
+  }
 
-      function addMessage(m, fromDb){ m.time = m.time || m.timestamp || Date.now(); state.messages.push(m); state.unreadCount++; updateNotifBadge(); showNotif(`Pesan baru dari ${m.from||m.user||'Anon'}`, 'success'); renderPage(state.page); }
-      function addTransaction(t, fromDb){ t.time = t.time || t.timestamp || Date.now(); t._id = t._id || t.id || ('l-'+Math.random().toString(36).slice(2,9)); state.transactions.push(t); renderPage(state.page); }
-      function updateNotifBadge(){ const el = document.getElementById('notif-count'); if(state.unreadCount>0){ el.innerText = state.unreadCount; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
+  function showNotificationFromMain(title, body){
+    if(Notification.permission !== 'granted') return;
+    if(navigator.serviceWorker && navigator.serviceWorker.controller){
+      navigator.serviceWorker.controller.postMessage({type:'show-notification', title, body});
+    } else if(swReg){
+      swReg.active && swReg.active.postMessage({type:'show-notification', title, body});
+    } else {
+      try { new Notification(title, {body}); } catch(e){ console.warn(e); }
+    }
+  }
 
-      function openTransactionDetail(id){
-        const t = state.transactions.find(x=>x._id===id) || { _id:id, user:'Anon', amount:'0', note:'-' };
-        openModal('Detail Transaksi', `<div class="small muted">Pengguna</div><div style="font-weight:700">${t.user}</div><div class="small muted" style="margin-top:8px">Jumlah</div><div style="font-weight:800">Rp ${t.amount}</div><div class="small muted" style="margin-top:8px">Catatan</div><div>${t.note}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="Portal.copyText('${escapeJs(t.note||'')}')">Salin catatan</button><button class="btn" onclick="Portal.downloadPng('${escapeJs('Transaksi - '+(t.user||'Anon'))}')">Download PNG</button></div>`);
-      }
+  await initServiceWorker();
+  await requestPermission();
+  if(!relay && !localStorage.getItem('relay_url')) setStatus('relay belum diset - buka Pengaturan');
+  else { setStatus('ready'); startPolling(); }
 
-      function openMessageDetail(encoded){
-        try {
-          const m = JSON.parse(decodeURIComponent(encoded));
-          openModal('Detail Pesan', `<div class="small muted">Dari</div><div style="font-weight:700">${m.from||m.user||'Anon'}</div><div class="small muted" style="margin-top:8px">Pesan</div><div>${m.text||m.note||''}</div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn" onclick="Portal.copyText('${escapeJs(m.text||'')}')">Salin</button><button class="btn" onclick="Portal.downloadPng('${escapeJs(m.text||'')}')">Download PNG</button></div>`);
-        } catch(e){ console.warn(e); }
-      }
+  window.addEventListener('storage', (e)=> { if(e.key === 'poll_interval') startPolling(); });
 
-      function openModal(title, html){ const wrap=document.createElement('div'); wrap.style.position='fixed'; wrap.style.left=0; wrap.style.top=0; wrap.style.width='100%'; wrap.style.height='100%'; wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.justifyContent='center'; wrap.style.background='rgba(0,0,0,0.4)'; wrap.style.zIndex=9999; const box=document.createElement('div'); box.className='card'; box.style.maxWidth='520px'; box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><div class="small muted">${title}</div></div><div><button class="btn" id="closeModal">Tutup</button></div></div><div style="margin-top:10px">${html}</div>`; wrap.appendChild(box); document.body.appendChild(wrap); document.getElementById('closeModal').addEventListener('click', ()=>wrap.remove()); }
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){ stopPolling(); pollTimer = setInterval(fetchOnce, Math.max(10, (localStorage.getItem('poll_interval')||pollInterval)*4)*1000); }
+    else { startPolling(); fetchOnce(); }
+  });
 
-      function copyText(txt){ navigator.clipboard.writeText(txt).then(()=>showNotif('Teks disalin', 'success')).catch(()=>showNotif('Gagal salin', 'error')); }
-      function downloadPng(text){ const c=document.createElement('canvas'); c.width=900; c.height=480; const ctx=c.getContext('2d'); ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--card').trim()||'#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text').trim()||'#000'; ctx.font='22px Inter, Arial'; wrapText(ctx,text,40,80,820,32); c.toBlob(blob=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='detail.png'; a.click(); URL.revokeObjectURL(a.href); }); }
-      function wrapText(ctx,text,x,y,maxW,lineH){ const words=text.split(' '); let line=''; for(let n=0;n<words.length;n++){ const test=line+words[n]+' '; const m=ctx.measureText(test); if(m.width>maxW && n>0){ ctx.fillText(line,x,y); line=words[n]+' '; y+=lineH; } else line=test; } ctx.fillText(line,x,y); }
+  setInterval(()=>{ if(document.visibilityState!=='hidden') fetchOnce(); }, 10000);
 
-      function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n'); }
-      function clearAllDemo(){ state.messages=[]; state.transactions=[]; state.unreadCount=0; updateNotifBadge(); renderPage(state.page); showNotif('Data demo direset', 'success'); }
-      function exportTransactions(){ const csv=toCSV(state.transactions); const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='transactions.csv'; a.click(); }
-      function toCSV(arr){ if(!arr.length) return ''; const keys=Object.keys(arr[0]||{}); const rows=[keys.join(',')].concat(arr.map(r=>keys.map(k=>`"${((r[k]||'')+'').replace(/"/g,'""')}"`).join(','))); return rows.join('\n'); }
-      function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60) return `${s}s lalu`; if(s<3600) return `${Math.floor(s/60)}m lalu`; if(s<86400) return `${Math.floor(s/3600)}j lalu`; return `${Math.floor(s/86400)}h lalu`; }
-      function statsCountDays(days){ const since=Date.now()-days*24*3600*1000; return state.transactions.filter(t=> (t.time||t.timestamp||Date.now())>=since ).length; }
+})();
+</script>
 
-      function showNotif(message,type="success"){ const container=document.getElementById('notification-center'); if(!container) return; if(container.children.length>=4){ const oldest=container.firstElementChild; oldest.style.opacity='0'; setTimeout(()=>oldest.remove(),300); } const notif=document.createElement('div'); notif.className='ios-notif'; const icon = type==='success' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'; notif.innerHTML = icon + `<span style="margin-left:8px">${message}</span>`; container.appendChild(notif); requestAnimationFrame(()=>notif.classList.add('active')); setTimeout(()=>{ notif.classList.remove('active'); setTimeout(()=>notif.remove(),400); },4200); }
+<script>
+(async function(){
+  const manifest = {
+    name: "ADITdeveloper — Discord Viewer",
+    short_name: "ADIT Discord",
+    start_url: ".",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#071729",
+    theme_color: "#0b74de",
+    icons: [
+      {src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='24' fill='%230b74de'/%3E%3Ctext x='50%25' y='55%25' font-size='64' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3EAD%3C/text%3E%3C/svg%3E", sizes:"128x128", type:"image/svg+xml"}
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('link'); link.rel='manifest'; link.href = url;
+  document.head.appendChild(link);
+})();
+</script>
 
-      /* Contact submit (sends to Discord webhook inserted above) */
-      async function handleContactSubmit(e){
-        e.preventDefault();
-        const f = e.target;
-        const btn = f.querySelector('button[type="submit"]'); if(btn) btn.disabled = true;
-        const name = (f.querySelector('#name')||{}).value || '';
-        const email = (f.querySelector('#email')||{}).value || '';
-        const message = (f.querySelector('#message')||{}).value || '';
-        if(!name || !email || !message){ showNotif('Data tidak lengkap', 'error'); if(btn) btn.disabled=false; return; }
-        const last = localStorage.getItem('lastMsgTime'); const now=Date.now(); if(last && (now - last < 30000)){ const wait=Math.ceil((30000 - (now-last))/1000); showNotif(`Tunggu ${wait}s sebelum mengirim lagi`, 'error'); if(btn) btn.disabled=false; return; }
-        let ipInfo={ ip:'Hidden', city:'Unknown', country_name:'Unknown' };
-        try{ const ipRes = await fetch('https://ipapi.co/json/'); if(ipRes.ok) ipInfo = await ipRes.json(); }catch(e){}
-        const payload = {
-          username: "ADIT Security Bot",
-          avatar_url: DATA.penulis?.foto || "",
-          embeds: [{
-            title: "Pesan Website Masuk",
-            color: 5263440,
-            fields: [
-              { name: "Pengirim", value: `${name} (${email})`, inline: true },
-              { name: "Lokasi", value: `${ipInfo.city}, ${ipInfo.country_name} | IP: ||${ipInfo.ip}||`, inline: true },
-              { name: "Isi Pesan", value: "```" + message + "```" }
-            ],
-            footer: { text: `Dikirim: ${new Date().toLocaleString('id-ID')}` }
-          }]
-        };
-        const webhook = DATA.kontak?.discordWebhook || window.__DISCORD_WEBHOOK__ || "";
-        try {
-          if(!webhook) throw new Error('Webhook Discord belum dikonfigurasi');
-          const res = await fetch(webhook, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
-          if(!res.ok && res.status !== 204) throw new Error('Server menolak pesan');
-          localStorage.setItem('lastMsgTime', Date.now()); f.reset(); showNotif('Pesan terkirim', 'success'); if(DATA.fitur?.aktifkanKonfetiKontak) createConfetti();
-        } catch(err){ console.error(err); showNotif('Gagal mengirim: '+err.message, 'error'); } finally { if(btn) btn.disabled=false; }
-      }
-
-      function createConfetti(){ const container=document.createElement('div'); container.style.position='fixed'; container.style.left=0; container.style.top=0; container.style.width='100%'; container.style.height='100%'; container.style.pointerEvents='none'; container.style.zIndex=9999; document.body.appendChild(container); for(let i=0;i<30;i++){ const el=document.createElement('div'); el.style.cssText=`position:absolute;width:10px;height:10px;border-radius:2px;background:var(--accent);left:${50+Math.random()*30-15}%;top:50%;transform-origin:center;`; container.appendChild(el); el.animate([{transform:'translateY(0) rotate(0deg)',opacity:1},{transform:`translate(${(Math.random()*300-150)}px,${(Math.random()*400-200)}px) rotate(${Math.random()*360}deg)`,opacity:0}], {duration:1000+Math.random()*800}).onfinish=()=>el.remove(); } setTimeout(()=>container.remove(),1400); }
-
-      /* Expose minimal API used by UI */
-      return {
-        initialize,
-        renderPage,
-        setView: v=>{ state.view=v; renderPage(state.page); },
-        toggleTheme: ()=>{ const b=document.body; const next=b.getAttribute('data-theme')==='dark'?'light':'dark'; b.setAttribute('data-theme',next); localStorage.setItem('site-theme', next); },
-        requestNotifPermission: ()=>{ Notification.requestPermission().then(p=>{ if(p==='granted') showNotif('Notifikasi diizinkan','success'); else showNotif('Notifikasi ditolak','error'); }); },
-        addMessage: (m,db)=>addMessage(m,db),
-        addTransaction: (t,db)=>addTransaction(t,db),
-        openTransactionDetail: id=>openTransactionDetail(id),
-        openMessageDetail: encoded=>openMessageDetail(encoded),
-        copyText: txt=>copyText(txt),
-        downloadPng: txt=>downloadPng(txt),
-        mockLogin: ()=>{ state.user={name:'Demo User', email:'demo@local'}; showNotif('Masuk sebagai Demo User','success'); renderPage('account'); },
-        clearAllDemo, exportTransactions, resetNotifs: ()=>{ state.unreadCount=0; updateNotifBadge(); showNotif('Notifikasi diset ulang','success'); },
-        handleContactSubmit
-      };
-    })();
-
-    /* Ensure PWA files and register in-memory sw if needed */
-    (function ensurePwaFiles(){
-      fetch('manifest.json').catch(()=>{});
-      if('serviceWorker' in navigator){
-        fetch('sw.js').then(r=>{ if(!r.ok) throw 0; }).catch(()=>{
-          const swCode = `
-self.addEventListener('install', e=>{ self.skipWaiting(); });
-self.addEventListener('activate', e=>{ self.clients.claim(); });
-self.addEventListener('fetch', e=>{});
-self.addEventListener('push', e=>{ const d = e.data?.json() || {}; e.waitUntil(self.registration.showNotification(d.title||'Notifikasi', { body:d.body||'', icon:d.icon||'' })); });
-self.addEventListener('notificationclick', e=>{ e.notification.close(); e.waitUntil(self.clients.matchAll().then(c=>c[0].focus())); });
-          `;
-          const blob = new Blob([swCode], { type:'application/javascript' });
-          const url = URL.createObjectURL(blob);
-          navigator.serviceWorker.register(url).catch(()=>{});
-        });
-      }
-    })();
-
-    /* Global showNotif used by some legacy parts (keamanan UX) */
-    function showNotif(message, type="success"){ const container=document.getElementById('notification-center'); if(!container) return; if(container.children.length>=4){ const oldest=container.firstElementChild; oldest.style.opacity='0'; setTimeout(()=>oldest.remove(),300); } const notif=document.createElement('div'); notif.className='ios-notif'; const icon = type==='success' ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'; notif.innerHTML = icon + `<span style="margin-left:8px">${message}</span>`; container.appendChild(notif); requestAnimationFrame(()=>notif.classList.add('active')); setTimeout(()=>{ notif.classList.remove('active'); setTimeout(()=>notif.remove(),400); },4200); }
-
-    /* Boot */
-    (async function boot(){ Portal.initialize(); window.addEventListener('submit', function(e){ if(e.target && e.target.matches('.contact-form')){ e.preventDefault(); Portal.handleContactSubmit(e); } }, true); })();
-
-  </script>
 </body>
 </html>
