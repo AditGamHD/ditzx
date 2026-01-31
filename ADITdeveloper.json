@@ -5,7 +5,21 @@
     "tema": "light",
     "teksMerekSetiapNBlok": 5,
     "bawaanKurangiGerakan": false,
-    "maksProyekPerHalaman": 9
+    "maksProyekPerHalaman": 9,
+    "shortcuts": [
+      {
+        "nama": "Kunjungi UVOSHOP",
+        "warna": "#2563eb",
+        "url": "https://uvoshop.my.id",
+        "nomor": "1"
+      },
+      {
+        "nama": "Mainkan MAP Gunung",
+        "warna": "#10b981",
+        "url": "https://roblox.com",
+        "nomor": "2"
+      }
+    ]
   },
   "penulis": {
     "nama": "ADITdeveloper",
