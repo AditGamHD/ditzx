@@ -8,15 +8,15 @@
     "maksProyekPerHalaman": 9,
     "shortcuts": [
       {
-        "nama": "Kunjungi UVOSHOP",
-        "warna": "#2563eb",
-        "url": "https://uvoshop.my.id",
+        "nama": "Jasa",
+        "warna": "#808080",
+        "url": "https://ditzx.my.id/jasa/",
         "nomor": "1"
       },
       {
-        "nama": "Mainkan MAP Gunung",
-        "warna": "#10b981",
-        "url": "https://roblox.com",
+        "nama": "Store",
+        "warna": "#ff7f00",
+        "url": "https://store.ditzx.my.id",
         "nomor": "2"
       }
     ]
