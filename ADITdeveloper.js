@@ -1,22 +1,44 @@
-// ADITdeveloper.js - Secured Portfolio Module
+// ADITdeveloper.js - Fixed Build (paste replace file)
 const portfolio = (() => {
   let DATA = {};
   let elements = {};
 
   async function initialize() {
     try {
-      const response = await fetch('ADITdeveloper.json');
-      if (!response.ok) throw new Error('Gagal koneksi database');
-      DATA = await response.json();
+      // coba beberapa base path agar robust saat di-host di subfolder
+      const baseCandidates = [
+        './ADITdeveloper.json',
+        'ADITdeveloper.json',
+        window.location.pathname.replace(/\/[^\/]*$/, '/') + 'ADITdeveloper.json',
+        '/ADITdeveloper.json'
+      ].map(p => p.replace(/\/\/+/g,'/'));
+
+      let response = null;
+      for (const p of baseCandidates) {
+        try {
+          response = await fetch(p, { cache: 'no-store' });
+          if (response && response.ok) {
+            DATA = await response.json();
+            break;
+          }
+        } catch (e) {
+          // coba candidate lain
+        }
+      }
+      if (!DATA || !DATA.penulis) {
+        // fallback: coba path yang paling sederhana sekali lagi untuk log
+        throw new Error('Gagal memuat ADITdeveloper.json (periksa path dan case-sensitive).');
+      }
 
       setupElements();
 
-      document.body.setAttribute('data-theme', DATA.situs.tema || 'light');
-      elements.brandName.innerText = DATA.penulis.nama;
-      elements.logoImg.src = DATA.penulis.foto;
-      elements.footerText.innerText = `© ${new Date().getFullYear()} ${DATA.penulis.nama}`;
+      document.body.setAttribute('data-theme', DATA.situs?.tema || 'light');
+      elements.brandName.innerText = DATA.penulis.nama || 'ADIT';
+      elements.logoImg.src = DATA.penulis.foto || '';
+      elements.footerText.innerText = `© ${new Date().getFullYear()} ${DATA.penulis.nama || 'ADIT'}`;
 
       renderPage('home');
+      console.log('System Secure & Ready.');
     } catch (error) {
       console.error(error);
       showNotif('Gagal memuat data sistem.', 'error');
@@ -49,7 +71,7 @@ const portfolio = (() => {
     void elements.mainContent.offsetWidth;
     elements.mainContent.classList.add('animate-fade-in-up');
 
-    switch(page) {
+    switch (page) {
       case 'home': renderHome(); break;
       case 'projects': renderProjects(); break;
       case 'contact': renderContact(); break;
@@ -57,8 +79,9 @@ const portfolio = (() => {
     }
   }
 
+  /* ---------- HOME ---------- */
   function renderHome() {
-    const keahlianHTML = (DATA.penulis.keahlian || []).map(s => `<span class="pill">${escapeHTML(String(s))}</span>`).join('');
+    const keahlianHTML = (DATA.penulis?.keahlian || []).map(s => `<span class="pill">${escapeHTML(String(s))}</span>`).join('');
     const socialHTML = Object.entries(DATA.sosial || {})
       .filter(([_, value]) => value.terlihat)
       .map(([key, value]) => `
@@ -70,7 +93,7 @@ const portfolio = (() => {
 
     const timelineHTML = (DATA.linimasa || []).map((item, index) => `
       <div class="timeline-item" style="animation-delay: ${0.6 + (index * 0.1)}s">
-        <div class="timeline-year">${escapeHTML(String(item.tahun))}</div>
+        <div class="timeline-year">${escapeHTML(String(item.tahun || ''))}</div>
         <div>
           <div style="font-weight:700">${escapeHTML(item.peran || '')}</div>
           <div style="color:var(--muted); font-size:14px;">${escapeHTML(item.deskripsi || '')}</div>
@@ -78,12 +101,12 @@ const portfolio = (() => {
       </div>
     `).join('');
 
-    const shortcuts = (DATA.situs && Array.isArray(DATA.situs.shortcuts)) ? DATA.situs.shortcuts : [];
-
+    const shortcuts = Array.isArray(DATA.situs?.shortcuts) ? DATA.situs.shortcuts : [];
     const shortcutsHTML = shortcuts.length ? `
       <div class="shortcuts" style="margin-top:20px;">
         ${shortcuts.map((s, idx) => `
-          <a class="shortcut-btn" href="${escapeAttr(s.url || '#')}" target="_blank" rel="noopener noreferrer" style="display:block;margin-bottom:10px;padding:12px;border-radius:12px;text-decoration:none;font-weight:700;color:#fff;background:${escapeAttr(s.warna || '#2563eb')}">
+          <a class="shortcut-btn" href="${escapeAttr(s.url || '#')}" target="_blank" rel="noopener noreferrer"
+             style="display:block;margin-bottom:10px;padding:12px;border-radius:12px;text-decoration:none;font-weight:700;color:#fff;background:${escapeAttr(s.warna || '#2563eb')}">
             ${escapeHTML(s.nama || `Link ${idx+1}`)}
             ${s.nomor ? `<span style="float:right;opacity:0.85">#${escapeHTML(String(s.nomor))}</span>` : ''}
           </a>
@@ -92,8 +115,8 @@ const portfolio = (() => {
     ` : '';
 
     elements.mainContent.innerHTML = `
-      <h1 class="animate-fade-in-up" style="animation-delay: 0.1s">${escapeHTML(DATA.penulis.nama)}.</h1>
-      <p class="animate-fade-in-up" style="animation-delay: 0.2s">${escapeHTML(DATA.penulis.bioSingkat)}</p>
+      <h1 class="animate-fade-in-up" style="animation-delay: 0.1s">${escapeHTML(DATA.penulis?.nama || '')}.</h1>
+      <p class="animate-fade-in-up" style="animation-delay: 0.2s">${escapeHTML(DATA.penulis?.bioSingkat || '')}</p>
 
       <div class="skill-pills stagger-child" style="animation-delay: 0.3s">
         ${keahlianHTML}
@@ -113,9 +136,10 @@ const portfolio = (() => {
     setTimeout(() => { animateElementsSequentially('.timeline-item', 150); }, 600);
   }
 
+  /* ---------- PROJECTS ---------- */
   function renderProjects() {
     const visibleProjects = (DATA.proyek || []).filter(p => p.terlihat);
-    const maxProjects = DATA.situs.maksProyekPerHalaman || 9;
+    const maxProjects = DATA.situs?.maksProyekPerHalaman || 9;
 
     elements.mainContent.innerHTML = `
       <h1 class="animate-fade-in-up" style="animation-delay: 0.1s">Projek Kreatif.</h1>
@@ -132,13 +156,13 @@ const portfolio = (() => {
               ${(project.teknologi || []).map(t => `<span class="card-tag">${escapeHTML(t)}</span>`).join('')}
             </div>
             <div class="card-actions">
-              ${project.tombol.linkUtama ? `
+              ${project.tombol?.linkUtama ? `
                 <a href="${escapeAttr(project.tombol.linkUtama)}" target="_blank" class="card-btn demo" rel="noopener noreferrer">
                   <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                   ${escapeHTML(project.tombol.teksUtama || "Buka")}
                 </a>
               ` : ''}
-              ${project.tombol.linkSekunder ? `
+              ${project.tombol?.linkSekunder ? `
                 <a href="${escapeAttr(project.tombol.linkSekunder)}" target="_blank" class="card-btn" rel="noopener noreferrer">
                    <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
                    ${escapeHTML(project.tombol.teksSekunder || "Info")}
@@ -152,6 +176,7 @@ const portfolio = (() => {
     setTimeout(() => { animateElementsSequentially('.card', 100); }, 300);
   }
 
+  /* ---------- CONTACT ---------- */
   function renderContact() {
     elements.mainContent.innerHTML = `
       <h1 class="animate-fade-in-up">Hubungi Saya.</h1>
@@ -169,15 +194,15 @@ const portfolio = (() => {
       <div class="contact-links-container animate-fade-in-up" style="margin-top: 40px;">
         <p style="color: var(--muted); text-align: center; margin-bottom: 20px;">Atau hubungi via:</p>
         <div class="direct-contact-grid">
-          <a href="mailto:${escapeAttr(DATA.kontakLangsung.email)}" class="direct-item">
+          <a href="mailto:${escapeAttr(DATA.kontakLangsung?.email || '')}" class="direct-item">
             <svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <span>Email</span>
           </a>
-          <a href="https://wa.me/${escapeAttr(DATA.kontakLangsung.whatsapp.nomor)}" target="_blank" class="direct-item" rel="noopener noreferrer">
+          <a href="https://wa.me/${escapeAttr(DATA.kontakLangsung?.whatsapp?.nomor || '')}" target="_blank" class="direct-item" rel="noopener noreferrer">
             <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             <span>WhatsApp</span>
           </a>
-          <a href="${escapeAttr(DATA.kontakLangsung.tiktok.link)}" target="_blank" class="direct-item" rel="noopener noreferrer">
+          <a href="${escapeAttr(DATA.kontakLangsung?.tiktok?.link || '')}" target="_blank" class="direct-item" rel="noopener noreferrer">
             <svg class="icon" viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
             <span>TikTok</span>
           </a>
@@ -185,7 +210,6 @@ const portfolio = (() => {
       </div>
     `;
 
-    // Force textarea to be vertically resizable only (some browsers ignore CSS until element exists)
     const ta = document.getElementById('message');
     if (ta) {
       ta.style.resize = 'vertical';
@@ -224,16 +248,14 @@ const portfolio = (() => {
 
       if (!nama || !email || !pesan) throw new Error('Data tidak lengkap');
 
-      // Limit length to avoid abuse
       if (nama.length > 100) nama = nama.slice(0, 100);
       if (email.length > 200) email = email.slice(0, 200);
       if (pesan.length > 1000) pesan = pesan.slice(0, 1000);
 
-      // IP Tracking (best-effort, non-blocking)
       let ipInfo = { ip: 'Hidden', city: 'Unknown', country_name: 'Unknown' };
       try {
         const ipRes = await fetch('https://ipapi.co/json/');
-        if(ipRes.ok) {
+        if (ipRes.ok) {
           const ipData = await ipRes.json();
           ipInfo = {
             ip: ipData.ip || 'Hidden',
@@ -243,14 +265,10 @@ const portfolio = (() => {
         }
       } catch (e) { console.warn('IP Tracking failed', e); }
 
-      // Sanitasi dan proteksi: escape karakter berbahaya dan hapus triple-backticks
       function sanitizeInput(str) {
         if (!str) return '';
-        // replace backticks to avoid breaking code block formatting
         str = str.replace(/`/g, "'");
-        // normalize suspicious control characters
         str = str.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-        // escape HTML special chars
         return escapeHTML(str);
       }
 
@@ -258,7 +276,6 @@ const portfolio = (() => {
       const safeEmail = sanitizeInput(email);
       const safePesan = sanitizeInput(pesan);
 
-      // Build Discord embed payload (fields limited - Discord limits field value to 1024 chars)
       const embedFields = [
         { name: "👤 Pengirim", value: `**${safeNama}**\n${safeEmail}`, inline: true },
         { name: "🌍 Lokasi", value: `${escapeHTML(ipInfo.city)}, ${escapeHTML(ipInfo.country_name)}\nIP: ||${escapeHTML(ipInfo.ip)}||`, inline: true },
@@ -267,7 +284,7 @@ const portfolio = (() => {
 
       const payload = {
         username: "ADIT Security Bot",
-        avatar_url: DATA.penulis.foto,
+        avatar_url: DATA.penulis?.foto,
         embeds: [{
           title: "🛡️ Pesan Web Masuk",
           color: 0x4ade80,
@@ -276,7 +293,7 @@ const portfolio = (() => {
         }]
       };
 
-      const res = await fetch(DATA.kontak.discordWebhook, {
+      const res = await fetch(DATA.kontak?.discordWebhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -299,6 +316,7 @@ const portfolio = (() => {
     }
   }
 
+  /* ---------- Notifications & Utilities ---------- */
   function showNotif(message, type = "success") {
     const container = document.getElementById('notification-center');
 
@@ -341,18 +359,22 @@ const portfolio = (() => {
   }
 
   function createConfetti() {
+    // safe confetti without template literal inside template literal
     const c = document.querySelector('.container');
-    for(let i=0; i<30; i++) {
-        let e = document.createElement('div');
-        e.style.cssText = `position:absolute;width:8px;height:8px;background:var(--accent);top:50%;left:50%;pointer-events:none;`;
-        c.appendChild(e);
-        e.animate([{transform:'translate(0,0)',opacity:1},{transform:\`translate(${Math.random()*200-100}px,${Math.random()*200-100}px)\`,opacity:0}], {duration:1000}).onfinish=()=>e.remove();
+    if (!c) return;
+    for (let i = 0; i < 30; i++) {
+      const e = document.createElement('div');
+      e.style.cssText = 'position:absolute;width:8px;height:8px;background:var(--accent);top:50%;left:50%;pointer-events:none;';
+      c.appendChild(e);
+      const dx = Math.floor(Math.random() * 200) - 100;
+      const dy = Math.floor(Math.random() * 200) - 100;
+      const transformTo = 'translate(' + dx + 'px,' + dy + 'px)';
+      e.animate([{ transform: 'translate(0,0)', opacity: 1 }, { transform: transformTo, opacity: 0 }], { duration: 1000 }).onfinish = () => e.remove();
     }
   }
 
-  // Utility: escape HTML for safe insertion
   function escapeHTML(str) {
-    return String(str)
+    return String(str || '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -361,7 +383,13 @@ const portfolio = (() => {
   }
 
   function escapeAttr(str) {
-    return String(str).replace(/"/g, '%22').replace(/'/g, '%27');
+    // safer for URLs/attrs
+    try {
+      if (!str) return '';
+      return encodeURI(String(str));
+    } catch (e) {
+      return '';
+    }
   }
 
   return { initialize, renderPage, toggleTheme, handleContactSubmit, showNotif };
