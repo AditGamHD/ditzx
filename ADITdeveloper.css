@@ -1,4 +1,3 @@
-/* ADITdeveloper.css - Updated */
 :root {
   --bg: #121212; --card: #1e1e1e; --text: #ededed; --muted: #a1a1aa;
   --accent: #60a5fa; --grid: rgba(255,255,255,0.03); --glass: rgba(30,30,30,0.8);
@@ -114,13 +113,23 @@ input, textarea {
 }
 input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 
+/* MAKE TEXTAREA VERTICAL-ONLY & WRAP */
+textarea {
+  resize: vertical;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* Buttons */
 .btn {
   width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700;
   background: var(--text); color: var(--bg); cursor: pointer;
 }
 .btn:disabled { opacity: 0.5; cursor: wait; }
 
-/* NEW: Direct Contact Grid */
+/* Direct Contact Grid */
 .direct-contact-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px;
 }
@@ -131,6 +140,11 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 }
 .direct-item:hover { border-color: var(--accent); transform: translateY(-3px); }
 .direct-item svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 2; }
+
+.shortcut-btn {
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.shortcut-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
 
 @media (max-width: 600px) {
   .hero h1 { font-size: 32px; }
