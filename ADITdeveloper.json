@@ -42,14 +42,24 @@
   },
   "linimasa": [
     {
-      "tahun": 2025,
+      "tahun": 2026,
       "peran": "Web & Game dev",
       "deskripsi": "Mengintegrasikan teknologi web modern dengan mekanik game interaktif."
     },
     {
-      "tahun": 2024,
+      "tahun": 2025,
       "peran": "Game dev",
-      "deskripsi": "Mengembangkan logika permainan kompleks menggunakan Unity dan Godot."
+      "deskripsi": "Membuat Game kompleks dan rumit di Godod dan Roblox Studio"
+    }
+    {
+      "tahun": 2024,
+      "peran": "Web & Game dev",
+      "deskripsi": "Membuat Website dan game"
+    }
+    {
+      "tahun": 2023,
+      "peran": "Game Dev",
+      "deskripsi": "Membuat Game di Mobile menggunakan Max2d "
     }
   ],
   "proyek": [
